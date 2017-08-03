@@ -49,8 +49,20 @@
                 border-bottom-style: ridge;
                 border-bottom-width: 3;
             }
-            
-                #squadronchoose
+                
+                .squadronheader
+                {
+                    border-bottom-style: ridge;
+                    border-bottom-width: 3;
+                    padding: 5;
+                }
+                
+                    .squadronname
+                    {
+                        font-size: 26;
+                    }
+                
+                #squadronchoose, #squadronchoosediv button
                 {
                     text-align: center;
                     font-size: 16;
@@ -325,7 +337,6 @@
                     try
                     {
                         var equipmentlist = {};
-                        var shipdata = shipdataload(id);
                         var equipment = chardata.characterdata.equipment;
                         var ammos = chardata.characterdata.ammo;
                         var itemdata;
@@ -394,7 +405,8 @@
                         try
                         {
                             var shipdata;
-                            if(id == "ship") shipdata = chardata.characterdata.ship;
+                            if(id == 0) shipdata = null;
+                            else if(id == "ship") shipdata = chardata.characterdata.ship;
                             else shipdata = chardata.squadrons[id].squadrondata;
                         }
                         catch(err)
@@ -558,6 +570,15 @@
                         
                         var div = document.createElement("DIV");
                             div.id = "squadronchoosediv";
+                           
+                            if(Object.keys(squadrons).length)
+                            {
+                                    var rename = document.createElement("BUTTON");
+                                        rename.innerHTML = "Átnevezés";
+                                        rename.addEventListener("click", squadronrename);
+                                div.appendChild(rename);
+                            }
+                                
                             
                             var select = document.createElement("SELECT");
                                 select.id = "squadronchoose";
@@ -567,7 +588,7 @@
                             {
                                 var opt = document.createElement("OPTION");
                                     opt.innerHTML = "Nincs felszerelt raj";
-                                    opt.value = "";
+                                    opt.value = 0;
                                 select.appendChild(opt);
                             }
                             else
@@ -582,6 +603,15 @@
                                 }
                             }
                         div.appendChild(select);
+                        
+                            if(Object.keys(squadrons).length)
+                            {
+                                    var squaddelete = document.createElement("BUTTON");
+                                        squaddelete.innerHTML = "Leszerelés";
+                                        squaddelete.addEventListener("click", function(){squadronunequip(undefined, 1);});
+                                div.appendChild(squaddelete)
+                            }
+                            
                     }
                     catch(err)
                     {
@@ -593,25 +623,32 @@
                     }
                 }
                 
+                    function squadronrename()
+                    {
+                        alert(target);
+                    }
+                
                 function squadronequip()
                 //Raj felszerelésének betöltése
                 {
                     try
                     {
-                        itemsload();
                         var squadronid = document.getElementById("squadronchoose").value;
                         target = squadronid;
+                        if(squadronid == 0) return;
+                        
+                        var squadrondata = shipdataload(squadronid);
+                        var equipmentlist = equipmentlistload(squadronid);
                         var container = document.getElementById("squadronequipdiv");
                             container.innerHTML = "";
+                            
+                            container.appendChild(squadronheaderload(squadrondata));
                             
                             var empty = document.createElement("BUTTON");
                                 empty.className = "unequipall";
                                 empty.innerHTML = "Raj kiürítése";
                                 empty.addEventListener("click", function(){unequipall("all", squadronid);});
                         container.appendChild(empty);
-                        
-                        var squadrondata = shipdataload(squadronid);
-                        var equipmentlist = equipmentlistload(squadronid);
                         
                         var slots = 
                         {
@@ -638,6 +675,31 @@
                     }
                 }
             
+                    function squadronheaderload(squadrondata)
+                    {
+                        try
+                        {
+                            var div = document.createElement("DIV");
+                                div.className = "squadronheader";
+                                var name = document.createElement("DIV");
+                                    name.className = "squadronname";
+                                    name.innerHTML = squadrondata.squadronname;
+                            div.appendChild(name);
+                                var type = document.createElement("DIV");
+                                    type.className = "squadrontype";
+                                    type.innerHTML = "(" + gamedata.items[squadrondata.itemid].name + ")";
+                            div.appendChild(type);
+                        }
+                        catch(err)
+                        {
+                            alert(arguments.callee.name + err.name + ": " + err.message);
+                        }
+                        finally
+                        {
+                            return div;
+                        }
+                    }
+            
             function itemsload()
             //Betölti a hangár felszereléseit
             {
@@ -648,7 +710,7 @@
                     var equipmentlist = equipmentlistload(target);
                     var shipdata = shipdataload(target);
                     var equipped = equippedload(target);
-                    var allslots = new allslotscreate(shipdata);
+                    var allslots = allslotscreate(shipdata);
                     
                     var container = document.getElementById("itemsdiv");
                         container.innerHTML = "";
@@ -801,6 +863,7 @@
                     {
                         try
                         {
+                            if(allslots == null) return 0;
                             var itemdata = gamedata.items[itemid];
                             var equipable = 1;
                             
@@ -848,58 +911,68 @@
                     
                         function allslotscreate(shipdata)
                         {
-                            try
-                            {
-                                if(shipdata.cannonslot) this.cannon = {slot: shipdata.cannonslot, max: shipdata.maxcannonlevel};
-                                else this.cannon = {slot: 0, max: 0};
-                                
-                                if(shipdata.rocketlauncherslot) this.rocketlauncher = {slot: shipdata.rocketlauncherslot, max: shipdata.maxrocketlauncherlevel};
-                                else this.rocketlauncher = {slot: 0, max: 0};
-                                
-                                if(shipdata.rifleslot) this.rifle = {slot: shipdata.rifleslot, max: shipdata.maxriflelevel};
-                                else this.rifle = {slot: 0, max: 0};
-                                
-                                switch(shipdata.type)
-                                {
-                                    case "ship":
-                                        this.ship = {slot: 1, max: 10};
-                                        this.squadron = {slot: squadronplaceload(), max: shipdata.maxsquadronlevel};
-                                        if(shipdata.basicammostorage) this.ammo = {slot: shipdata.basicammostorage, max: 10};
-                                        if(shipdata.shieldslot) this.shield = {slot: shipdata.shieldslot, max: shipdata.maxshieldlevel};
-                                        if(shipdata.hullslot) this.hull = {slot: shipdata.hullslot, max: shipdata.maxhulllevel};
-                                    break;
-                                    case "squadron":
-                                        this.ship = {slot: 0, max: 0};
-                                        this.squadron = {slot: 0, max: 0};
-                                        this.ammo = {slot: 0, max: 0};
-                                        if(shipdata.shieldslot) this.squadronshield = {slot: shipdata.shieldslot, max: shipdata.maxshieldlevel};
-                                        if(shipdata.hullslot) this.squadronullslot = {slot: shipdata.hullslot, max: shipdata.maxhulllevel};
-                                    break;
-                                }
-                                
-                                if(shipdata.generatorslot) this.generator = {slot: shipdata.generatorslot, max: shipdata.maxgeneratorlevel};
-                                else this.generator = {slot: 0, max: 0};
-                                
-                                if(shipdata.batteryslot) this.battery = {slot: shipdata.batteryslot, max: shipdata.maxbatterylevel};
-                                else this.battery = {slot: 0, max: 0};
-                                
-                                if(shipdata.hangarslot) this.hangar = {slot: shipdata.hangarslot, max: shipdata.maxhangarlevel};
-                                else this.hangar = {slot: 0, max: 0};
-                                
-                                if(shipdata.equipmentslot) this.equipment = {slot: shipdata.equipmentslot, max: 10};
-                                else this.equipment = {slot: 0, max: 0};
-                                
-                                if(shipdata.extenderslot) this.extender = {slot: shipdata.extenderslot, max: shipdata.maxextenderlevel};
-                                else this.extender = {slot: 0, max: 0};
-                                
-                                if(shipdata.weaponslot) this.squadronweapon = {slot: shipdata.weaponslot, max: shipdata.maxweaponlevel};
-                                else this.squadronweapon = {slot: 0, max: 0};
-                            }
-                            catch(err)
-                            {
-                                alert(arguments.callee.name + err.name + ": " + err.message);
-                            }
+                            if(shipdata == null) return null;
+                            else return new allslotsobject(shipdata);
                         }
+                        
+                            function allslotsobject(shipdata)
+                            {
+                                try
+                                {
+                                    if(shipdata.cannonslot) this.cannon = {slot: shipdata.cannonslot, max: shipdata.maxcannonlevel};
+                                    else this.cannon = {slot: 0, max: 0};
+                                    
+                                    if(shipdata.rocketlauncherslot) this.rocketlauncher = {slot: shipdata.rocketlauncherslot, max: shipdata.maxrocketlauncherlevel};
+                                    else this.rocketlauncher = {slot: 0, max: 0};
+                                    
+                                    if(shipdata.rifleslot) this.rifle = {slot: shipdata.rifleslot, max: shipdata.maxriflelevel};
+                                    else this.rifle = {slot: 0, max: 0};
+                                    
+                                    switch(shipdata.type)
+                                    {
+                                        case "ship":
+                                            this.ship = {slot: 1, max: 10};
+                                            this.squadron = {slot: squadronplaceload(), max: shipdata.maxsquadronlevel};
+                                            if(shipdata.basicammostorage) this.ammo = {slot: shipdata.basicammostorage, max: 10};
+                                            if(shipdata.shieldslot) this.shield = {slot: shipdata.shieldslot, max: shipdata.maxshieldlevel};
+                                            if(shipdata.hullslot) this.hull = {slot: shipdata.hullslot, max: shipdata.maxhulllevel};
+                                            this.squadronshield = {slot: 0, max: 0};
+                                            this.squadronhull = {slot: 0, max: 0};
+                                        break;
+                                        case "squadron":
+                                            this.ship = {slot: 0, max: 0};
+                                            this.squadron = {slot: 0, max: 0};
+                                            this.ammo = {slot: 0, max: 0};
+                                            if(shipdata.shieldslot) this.squadronshield = {slot: shipdata.shieldslot, max: shipdata.maxshieldlevel};
+                                            this.shield = {slot: 0, max: 0};
+                                            this.hull = {slot: 0, max: 0};
+                                            if(shipdata.hullslot) this.squadronhull = {slot: shipdata.hullslot, max: shipdata.maxhulllevel};
+                                        break;
+                                    }
+                                    
+                                    if(shipdata.generatorslot) this.generator = {slot: shipdata.generatorslot, max: shipdata.maxgeneratorlevel};
+                                    else this.generator = {slot: 0, max: 0};
+                                    
+                                    if(shipdata.batteryslot) this.battery = {slot: shipdata.batteryslot, max: shipdata.maxbatterylevel};
+                                    else this.battery = {slot: 0, max: 0};
+                                    
+                                    if(shipdata.hangarslot) this.hangar = {slot: shipdata.hangarslot, max: shipdata.maxhangarlevel};
+                                    else this.hangar = {slot: 0, max: 0};
+                                    
+                                    if(shipdata.equipmentslot) this.equipment = {slot: shipdata.equipmentslot, max: 10};
+                                    else this.equipment = {slot: 0, max: 0};
+                                    
+                                    if(shipdata.extenderslot) this.extender = {slot: shipdata.extenderslot, max: shipdata.maxextenderlevel};
+                                    else this.extender = {slot: 0, max: 0};
+                                    
+                                    if(shipdata.weaponslot) this.squadronweapon = {slot: shipdata.weaponslot, max: shipdata.maxweaponlevel};
+                                    else this.squadronweapon = {slot: 0, max: 0};
+                                }
+                                catch(err)
+                                {
+                                    alert(arguments.callee.name + err.name + ": " + err.message);
+                                }
+                            }
                         
                             function squadronplaceload()
                             //megadja, hány raj fér el a hangárakban
@@ -936,7 +1009,7 @@
             {
                 var itemdata = gamedata.items[itemid];
                 var shipdata = shipdataload(target);
-                var allslots = new allslotscreate(shipdata);
+                var allslots = allslotscreate(shipdata);
                 var equipped = equippedload(target);
                 var equipmentlist = equipmentlistload(target);
                 amount = Number(amount);
@@ -982,7 +1055,7 @@
                     {
                         item = equipment[x];
                         
-                        if(item.itemid == itemid && item.place == "hangar")
+                        if(item.itemid == itemid && item.place == "hangar" && amount)
                         {
                             item.place = target;
                             amount--;
@@ -1007,8 +1080,6 @@
                                 break;
                             }
                         }
-                        
-                        if(!amount) break;
                     }
                 }
                 
@@ -1123,11 +1194,15 @@
                     break;
                     case "hangar":
                         unequip(itemid, amount, place);
+                        
+                        squadronnumset();
+                        
                     break;
                     case "extender":
                         var shipdata = shipdataload(place);
                             shipdata[itemdata.effect] = gamedata.items[shipdata.itemid][itemdata.effect];
-                        unequip(itemid, amount, place);
+                            unequip(itemid, amount, place);
+                            equippedset();
                     break;
                     default:
                         unequip(itemid, amount, place);
@@ -1148,6 +1223,82 @@
                 alert(arguments.callee.name + err.name + ": " + err.message);
             }
         }
+        
+            function squadronnumset()
+            {
+                try
+                {
+                    var squadronids = Object.keys(chardata.squadrons);
+                    var squadronplace = squadronplaceload()
+                    var squadronnum = squadronids.length - squadronplace;
+                    var x;
+                    for(x in squadronids)
+                    {
+                        if(squadronnum > 0)
+                        {
+                            squadronunequip(squadronids[x]);
+                            squadronnum--;
+                        }
+                    }
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+            }
+        
+            function equippedset()
+            {
+                try
+                {
+                    var ammos = chardata.characterdata.ammo;
+                    var equipment = chardata.characterdata.equipment;
+                    var shipdata = shipdataload("ship");
+                    var equipped = equippedload("ship");
+                    var allslots = allslotscreate(shipdata);
+                    
+                    if(equipped.ammo > shipdata.basicammostorage)
+                    {
+                        var overload =  equipped.ammo - shipdata.basicammostorage;
+                        var x, ammo, amount;
+                        for(x in ammos)
+                        {
+                            ammo = ammos[x];
+                            if(ammo.place == "ship" && overload > 0)
+                            {
+                                amount = overload;
+                                if(ammo.amount < amount) amount = ammo.amount;
+                                itemunequip(ammo.itemid, amount, "ship", 1);
+                                overload -= amount;
+                            }
+                        }
+                    }
+                    
+                    var y, item, itemdata, overload;
+                    for(x in equipped)
+                    {
+                        if(x != "ammo" && x != "squadron")
+                        {
+                            overload = equipped[x] - allslots[x].slot;
+                            
+                            for(y in equipment)
+                            {
+                                item = equipment[y];
+                                itemdata = gamedata.items[item.itemid];
+                                if(overload > 0 && itemdata.slot == x && item.place == "ship")
+                                {
+                                    itemunequip(item.itemid, 1, "ship", 1);
+                                    overload--;
+                                }
+                            }
+                        }
+                    }
+                 }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+            }
         
             function unequip(itemid, amount, place)
             //egyszerű felszerelések leszerelése
@@ -1175,9 +1326,82 @@
                 }
             }
             
-        function unequipall(slot, place)
+            function squadronunequip(squadronid, caller)
+            {
+                try
+                {
+                    if(squadronid == undefined) squadronid = target;
+
+                    unequipall("all", squadronid, 1);
+                    var squadrondata = chardata.squadrons[squadronid];
+                        unequip(squadrondata.squadrondata.itemid, 1, "ship");
+                    delete chardata.squadrons[squadronid];
+                    
+                    //Törlés adatbázisból
+                    
+                    if(caller)
+                    {
+                        //save();
+                        headervalueset();
+                        if(target == "ship") shipequipload();
+                        else squadronequipload();
+                        itemsload();
+                    }
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+            }
+            
+        function unequipall(slot, place, caller)
         {
-            alert(slot + place);
+            try
+            {
+                var ammos = chardata.characterdata.ammo;
+                var equipment = chardata.characterdata.equipment;
+                
+                var x;
+                if(slot == "all" || slot == "ammo")
+                {
+                    var ammo;
+                    for(x in ammos)
+                    {
+                        ammo = ammos[x];
+                        if(ammo.place == place)
+                        {
+                            itemunequip(ammo.itemid, ammo.amount, place, 1);
+                        }
+                    }
+                }
+                
+                if(slot != "ammo")
+                {
+                    var item, itemdata;
+                    for(x in equipment)
+                    {
+                        item = equipment[x];
+                        itemdata = gamedata.items[item.itemid];
+                        if(slot == "all" || slot == itemdata.slot)
+                        {
+                            if(item.place == place) itemunequip(item.itemid, -1, place, 1);
+                        }
+                    }
+                }
+                
+                if(!caller)
+                {
+                    //save();
+                    itemsload();
+                    headervalueset();
+                    if(target == "ship") shipequipload();
+                    else squadronequip();
+                }
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
         }
     </SCRIPT>
     
