@@ -804,9 +804,37 @@
                             var itemdata = gamedata.items[itemid];
                             var equipable = 1;
                             
-                            if(itemdata.level > allslots[itemdata.slot].max) equipable = 0;
-                            if(equipped[itemdata.slot] >= allslots[itemdata.slot].slot) equipable = 0;
-                            
+                            switch(itemdata.slot)
+                            {
+                                case "squadron":
+                                    if(itemdata.level > allslots[itemdata.slot].max) equipable = 0;
+                                    if(Object.keys(chardata.squadrons).length >= allslots[itemdata.slot].slot) equipable = 0;
+                                break;
+                                default:
+                                    if(itemdata.level > allslots[itemdata.slot].max) equipable = 0;
+                                    if(equipped[itemdata.slot] >= allslots[itemdata.slot].slot) equipable = 0;
+                                    if(itemdata.slot == "extender" && equipmentlist.extender)
+                                    {
+                                        var x, equipment, equipmentdata;
+                                        for(x in equipmentlist.extender)
+                                        {
+                                            equipment = equipmentlist.extender[x];
+                                            equipmentdata = gamedata.items[equipment.itemid];
+                                            if(equipmentdata.effect == itemdata.effect) equipable = 0;
+                                        }
+                                    }
+                                    if(itemdata.slot == "equipment" && equipmentlist.equipment)
+                                    {
+                                        var x, equipment, equipmentdata;
+                                        for(x in equipmentlist.equipment)
+                                        {
+                                            equipment = equipmentlist.equipment[x];
+                                            equipmentdata = gamedata.items[equipment.itemid];
+                                            if(equipmentdata.effect == itemdata.effect) equipable = 0;
+                                        }
+                                    }
+                                break;
+                            }
                         }
                         catch(err)
                         {
@@ -834,11 +862,15 @@
                                 switch(shipdata.type)
                                 {
                                     case "ship":
+                                        this.ship = {slot: 1, max: 10};
+                                        this.squadron = {slot: squadronplaceload(), max: shipdata.maxsquadronlevel};
                                         if(shipdata.basicammostorage) this.ammo = {slot: shipdata.basicammostorage, max: 10};
                                         if(shipdata.shieldslot) this.shield = {slot: shipdata.shieldslot, max: shipdata.maxshieldlevel};
                                         if(shipdata.hullslot) this.hull = {slot: shipdata.hullslot, max: shipdata.maxhulllevel};
                                     break;
                                     case "squadron":
+                                        this.ship = {slot: 0, max: 0};
+                                        this.squadron = {slot: 0, max: 0};
                                         this.ammo = {slot: 0, max: 0};
                                         if(shipdata.shieldslot) this.squadronshield = {slot: shipdata.shieldslot, max: shipdata.maxshieldlevel};
                                         if(shipdata.hullslot) this.squadronullslot = {slot: shipdata.hullslot, max: shipdata.maxhulllevel};
@@ -868,6 +900,34 @@
                                 alert(arguments.callee.name + err.name + ": " + err.message);
                             }
                         }
+                        
+                            function squadronplaceload()
+                            //megadja, hány raj fér el a hangárakban
+                            {
+                                try
+                                {
+                                    var equipment = chardata.characterdata.equipment;
+                                    var squadronplace = 0;
+                                    var x, item, itemdata;
+                                    for(x in equipment)
+                                    {
+                                        item = equipment[x];
+                                        itemdata = gamedata.items[item.itemid];
+                                        if(item.place == "ship" && itemdata.slot == "hangar")
+                                        {
+                                            squadronplace += itemdata.squadronplace;
+                                        }
+                                    }
+                                }
+                                catch(err)
+                                {
+                                    alert(arguments.callee.name + err.name + ": " + err.message);
+                                }
+                                finally
+                                {
+                                    return squadronplace;
+                                }
+                            }
         
         function itemequip(itemid, amount, target)
         //Felszereli az adott tárgyat
@@ -926,6 +986,26 @@
                         {
                             item.place = target;
                             amount--;
+                            
+                            if(itemdata.slot == "extender" || itemdata.slot == "equipment")
+                            {
+                                if(itemdata.slot == "extender")
+                                {
+                                    if(itemdata.effect == "basicammostorage")
+                                    {
+                                        shipdata.basicammostorage *= itemdata.slotextend;
+                                    }
+                                    else if(itemdata.effect == "basiccargo")
+                                    {
+                                        shipdata.basiccargo *= itemdata.slotextend;
+                                    }
+                                    else
+                                    {
+                                        shipdata[itemdata.effect] += itemdata.slotextend;
+                                    }
+                                }
+                                break;
+                            }
                         }
                         
                         if(!amount) break;
@@ -1045,7 +1125,9 @@
                         unequip(itemid, amount, place);
                     break;
                     case "extender":
-                    
+                        var shipdata = shipdataload(place);
+                            shipdata[itemdata.effect] = gamedata.items[shipdata.itemid][itemdata.effect];
+                        unequip(itemid, amount, place);
                     break;
                     default:
                         unequip(itemid, amount, place);
