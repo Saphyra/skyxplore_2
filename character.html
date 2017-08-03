@@ -1,0 +1,742 @@
+﻿<HTML>
+    <HEAD>
+        <TITLE>Karakter - SkyXplore</TITLE>
+        <BASE href='http://localhost/workdir/skyxplore2/'>
+        <link rel="stylesheet" type="text/css" href="common.css">
+        
+        <SCRIPT src='gamedata.js'></SCRIPT>
+        <SCRIPT src='common.js'></SCRIPT>
+        <SCRIPT>
+            characterload();
+        </SCRIPT>
+        
+        <STYLE>
+            .err
+            {
+                display: none;
+                position: absolute;
+                top: 0;
+                right: 0;
+                color: red;
+                border-style: ridge;
+                border-width: 5;
+                padding: 3;
+                font-size: 16;
+                background-color: black;
+                z-index: 1;
+                border-radius: 10px 10px 10px 10px;
+            }
+            
+                .used
+                {
+                    display: none;
+                }
+                .err:hover .used
+                {
+                    display: inline;
+                }
+                
+            #pagecontentcontainer
+            {
+                margin: 10;
+                margin-top: 20;
+                overflow: auto;
+                box-sizing: border-box;
+            }
+            
+                .pagecontentcontainertd
+                {
+                    border-style: ridge;
+                    border-width: 3;
+                }
+                    
+                    #leftmenu
+                    {
+                        width: 20%;
+                        vertical-align: top;
+                    }
+                    
+                        .leftmenudiv
+                        {
+                            text-align: center;
+                            margin: 15;
+                        }
+                        
+                            .leftmenubutton
+                            {
+                                font-size: 36;
+                                width: 100%;
+                            }
+                            
+                    #shiptable
+                    {
+                        width: 100%;
+                        border-collapse: collapse;
+                    }
+                    
+                        #shipname
+                        {
+                            text-align: center;
+                            font-size: 30;
+                        }
+                        
+                        #company
+                        {
+                            text-align: center;
+                            border-bottom-style: ridge;
+                            border-bottom-width: 3;
+                            font-size: 20;
+                        }
+                            
+                            .propertycell
+                            {
+                                padding: 2;
+                                font-size: 20;
+                                width: 33%;
+                            }
+                            
+                                .prop
+                                {
+                                    text-decoration: underline;
+                                }
+            #squadrons
+            {
+                vertical-align: top;
+            }
+            
+                .squadronstitle
+                {
+                    text-align: center;
+                    font-size: 30;
+                    border-bottom-style: ridge;
+                    border-bottom-width: 3;
+                }
+                
+                #squadronstable
+                {
+                    width: 100%;
+                    margin-top: 10;
+                    margin-bottom: 10;
+                }
+                
+                    .squadroncell
+                    {
+                        border-style: ridge;
+                        border-width: 2;
+                    }
+                    
+                        .squadrontable
+                        {
+                            width: 100%;
+                        }
+                            .squadrontable td
+                            {
+                                padding-top: 2;
+                                padding-bottom: 2;
+                            }
+                        
+                            .squadronnamecell
+                            {
+                                text-align: center;
+                                font-weight: bold;
+                                font-size: 20;
+                                border-bottom-style: ridge;
+                                border-bottom-width: 2;
+                            }
+        </STYLE>
+    </HEAD>
+<BODY>
+    
+    <DIV id='maincontainer' class='maincontainer'>
+        <DIV id='header'>
+            <TABLE style='width: 100%;'>
+                <TR>
+                    <TD>
+                        <TABLE style='border-collapse: collapse;'>
+                            <TR style='font-size: 20;'>
+                                <TD style='border-right-style: ridge; border-right-width: 5; padding: 3;'>KarakterID: <SPAN id='headercharid'></SPAN></TD>
+                                <TD style='border-right-style: ridge; border-right-width: 5; padding: 3;'>Karakternév: <SPAN id='headercharname'></SPAN></TD>
+                                <TD style='border-right-style: ridge; border-right-width: 5; padding: 3;'>Kredit: <SPAN id='headercredit'></SPAN></TD>
+                                <TD style='border-right-style: ridge; border-right-width: 5; padding: 3;'>Gyémánt: <SPAN id='headerdiamond'></SPAN></TD>
+                            </TR>
+                        </TABLE>
+                    </TD>
+                    <TD style='text-align: right;'><INPUT type='image' id='settingsbutton' src='settingsbutton.png' onclick='settingsmenu()'></TD>
+                </TR>
+            </TABLE>
+        </DIV>
+        
+        <TABLE id='pagecontentcontainer'>
+            <TR>
+                <TD rowspan='2' id='leftmenu' class='pagecontentcontainertd'>
+                    <DIV class='leftmenudiv'><BUTTON class='leftmenubutton' onclick='window.location.href = "equipment.html"'>Felszerelés</BUTTON></DIV>
+                    <DIV class='leftmenudiv'><BUTTON class='leftmenubutton' onclick='window.location.href = "construction.html"'>Tárgykészítés</BUTTON></DIV>
+                    <DIV class='leftmenudiv'><BUTTON class='leftmenubutton' onclick='window.location.href = "shop.html"'>Bolt</BUTTON></DIV>
+                    <DIV class='leftmenudiv'><BUTTON class='leftmenubutton' onclick='window.location.href = "abilities.html"'>Képességek</BUTTON></DIV>
+                    <DIV class='leftmenudiv'><BUTTON class='leftmenubutton' onclick='window.location.href = "launch.html"'>Felszállás</BUTTON></DIV>
+                 </TD>
+                <TD id='ship' class='pagecontentcontainertd'>
+                    <TABLE id='shiptable'>
+                        <TR>
+                            <TD colspan='3' id='shipname'></TD>
+                        </TR>
+                        <TR>
+                            <TD colspan='3' id='company'></TD>
+                        </TR>
+                        <TR>
+                            <TD class='propertycell'><SPAN class='prop'>Magburkolat:</SPAN> <SPAN class='value' id='corehull'></SPAN></TD>
+                            <TD class='propertycell' style='text-align: center;'><SPAN class='prop'>Burkolat:</SPAN> <SPAN class='value' id='hull'></SPAN></TD>
+                            <TD class='propertycell' style='text-align: right;'><SPAN class='prop'>Pajzserő:</SPAN> <SPAN class='value' id='shield'></SPAN> (+ <SPAN class='value' id='shieldregen'></SPAN>/kör)</TD>
+                        </TR>
+                        <TR>
+                            <TD class='propertycell'><SPAN class='prop'>Energia:</SPAN> <SPAN class='value' id='energy'></SPAN> (max. +<SPAN class='value' id='maxenergyregen'></SPAN>/kör)</TD>
+                            <TD class='propertycell' style='text-align: center;'><SPAN class='prop'>Energiatermelés:</SPAN> <SPAN class='value' id='energyregen'></SPAN>/kör</TD>
+                            <TD class='propertycell' style='text-align: right;'><SPAN class='prop'>Energiafelhasználás:</SPAN> <SPAN class='value' id='energyusage'></SPAN>/kör</TD>
+                        </TR>
+                        <TR>
+                            <TD class='propertycell' colspan='3'>
+                                <TABLE>
+                                    <TR>
+                                        <TD class='propertycell' style='padding: 0;'><SPAN class='prop'>Sebzés:</SPAN> <SPAN class='value' id='hulldamage'></SPAN> (burkolat) / <SPAN class='value' id='shielddamage'></SPAN> (pajzs) / <SPAN class='value' id='squadrondamage'></SPAN> (raj)</TD>
+                                        <TD class='propertycell' style='padding: 0; text-align: right;'><SPAN class='prop'>Rakétasebzés:</SPAN> <SPAN class='value' id='rockethulldamage'></SPAN> (burkolat) / <SPAN class='value' id='rocketshielddamage'></SPAN> (pajzs)</TD>
+                                    </TR>
+                                </TABLE>
+                            </TD>
+                        </TR>
+                    </TABLE>
+                </TD>
+            </TR>
+            <TR>
+                <TD id='squadrons' class='pagecontentcontainertd'>
+                    
+                </TD>
+        </TABLE>
+    </DIV>
+    
+    <DIV class='menucontainer' id='settingscontainer'>
+       <DIV class='menutitle'>Beállítások</DIV>
+       <DIV class='menuexit' id='settingsexit'><BUTTON onclick='document.getElementById("settingscontainer").style.display = "none";'>X</BUTTON></DIV>
+       <DIV class='menubar'><BUTTON onclick='logout()'>Kijelentkezés</BUTTON></DIV>
+       <DIV class='menubar' style='border-bottom-style: ridge; border-bottom-width: 3;'><BUTTON onclick='window.location.href = "account.html"'>Karakterváltás</BUTTON></DIV>
+       <DIV class='menubar'><BUTTON onclick='document.getElementById("settingscontainer").style.display = "none"; document.getElementById("characterrenamecontainer").style.display = "block";'>Karakter átnevezése</BUTTON></DIV>
+       <DIV class='menubar'><BUTTON onclick='document.getElementById("settingscontainer").style.display = "none"; document.getElementById("characterdeletecontainer").style.display = "block";'>Karakter törlése</BUTTON></DIV>
+    </DIV>
+    
+    <DIV class='menucontainer' id='characterrenamecontainer'>
+        <DIV class='menutitle'>Karakter átnevezése</DIV>
+        <DIV class='menuexit' id='settingsexit'><BUTTON onclick='document.getElementById("characterrenamecontainer").style.display = "none";'>X</BUTTON></DIV>
+        <TABLE class='menutable'>
+            <TR>
+                <TD class='menutabletext'>Új karakternév:</TD>
+                <TD class='menutableinput' style='position: relative;'>
+                    <INPUT type='text' id='newcharname' placeholder='Karakternév'>
+                    <DIV class='err' id='charnameerr'>
+                        X
+                        <DIV class='used'>Karakternév foglalt.</DIV>
+                    </DIV>
+                </TD>
+            </TR>
+            <TR>
+                <TD class='menutabletext'>Jelszó:</TD>
+                <TD class='menutableinput'><INPUT type='password' id='newcharnamepassword' placeholder='Jelszó'></TD>
+            </TR>
+            <TR>
+                <TD colspan='2' class='menubutton'><BUTTON onclick='newcharname()'>Karakternév megváltoztatása</BUTTON></TD>
+            </TR>
+        </TABLE>
+    </DIV>
+    
+    <DIV class='menucontainer' id='characterdeletecontainer'>
+        <DIV class='menutitle'>Karakter átnevezése</DIV>
+        <DIV class='menuexit' id='settingsexit'><BUTTON onclick='document.getElementById("characterdeletecontainer").style.display = "none";'>X</BUTTON></DIV>
+        <TABLE class='menutable'>
+            <TR>
+                <TD class='menutabletext'>Jelszó:</TD>
+                <TD class='menutableinput'><INPUT type='password' id='characterdeletepassword' placeholder='Jelszó'></TD>
+            </TR>
+            <TR>
+                <TD colspan='2' class='menubutton'><BUTTON onclick='characterdelete()'>Karakter törlése</BUTTON></TD>
+            </TR>
+        </TABLE>
+    </DIV>
+    
+    <SCRIPT>
+        (function headervalueset()
+        {
+            try
+            {
+                document.getElementById("headercharid").innerHTML = chardata.charid;
+                document.getElementById("headercharname").innerHTML = chardata.charname;
+                document.getElementById("headercredit").innerHTML = chardata.credit;
+                document.getElementById("headerdiamond").innerHTML = chardata.diamond;
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        })();
+        
+        (function listeneradd()
+        {
+            try
+            {
+                document.getElementById("newcharname").addEventListener("keypress", function(){if(event.which == 13) newcharname();});
+                document.getElementById("newcharname").addEventListener("keyup", charnameexists);
+                document.getElementById("newcharnamepassword").addEventListener("keypress", function(){if(event.which == 13) newcharname();});
+                
+                document.getElementById("characterdeletepassword").addEventListener("keypress", function(){if(event.which == 13) characterdelete();});
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        })();
+            
+            function charnameexists()
+            {
+                try
+                {
+                    var charname = document.getElementById("newcharname").value;
+                    var errdiv = document.getElementById("charnameerr");
+                    
+                    if(charname)
+                    {
+                        var request = new XMLHttpRequest();
+                            request.open("POST", "charnameexists.php", 1);
+                            request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                            request.send("charname=" + charname);
+                            request.onreadystatechange = function()
+                            {
+                                if(request.readyState == 4 && request.status == 200)
+                                {
+                                    if(request.responseText == 0)
+                                    {
+                                        errdiv.style.display = "none";
+                                    }
+                                    else
+                                    {
+                                        errdiv.style.display = "block";
+                                    }
+                                }
+                            }
+                    }
+                    else
+                    {
+                        errdiv.style.display = "none";
+                    }
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+            }
+            
+        function newcharname()
+        {
+            try
+            {
+                var newcharname = document.getElementById("newcharname").value;
+                var password = document.getElementById("newcharnamepassword").value;
+                
+                if(newcharname == "")
+                {
+                    alert("Adja meg új karakternevét!");
+                }
+                else if(chcharnameexists(newcharname) == 0)
+                {
+                    alert("Karakternév foglalt.");
+                }
+                else if(password == "")
+                {
+                    alert("Adja meg jelszavát!");
+                }
+                else if(password != sessionStorage.password)
+                {
+                    alert("Hibás jelszó.");
+                }
+                else
+                {
+                    var request = new XMLHttpRequest();
+                        request.open("POST", "characternamechange.php", 0);
+                        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                        request.send("charid=" + sessionStorage.charid + "&newcharname=" + newcharname);
+                        
+                        alert("Karakter átnevezve.");
+                        window.location.href = "character.html";
+                }
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        }
+        
+            function chcharnameexists(charname)
+            {
+                try
+                {
+                     var request = new XMLHttpRequest();
+                        request.open("POST", "charnameexists.php", 0);
+                        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                        request.send("charname=" + charname);
+                        if(request.responseText == 1) return 0;
+                        else return 1;
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+            }
+            
+        function characterdelete()
+        {
+            try
+            {
+                var password = document.getElementById("characterdeletepassword").value;
+                
+                if(password == "")
+                {
+                    alert("Adja meg jelszavát!");
+                }
+                else if(password != sessionStorage.password)
+                {
+                    alert("Hibás jelszó.");
+                }
+                else if(confirm("Biztosan törölni szeretné karakterét?\nA törölt karakter adatait már nem lehet visszahonzi."));
+                {
+                    var request = new XMLHttpRequest();
+                        request.open("POST", "characterdelete.php", 0);
+                        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                        request.send("charid=" + sessionStorage.charid);
+                        
+                        delete sessionStorage.charid;
+                        alert("Karakter törölve.");
+                        window.location.href = "account.html";
+                }
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        }
+        
+        (function shipdataload()
+        {
+            try
+            {
+                document.getElementById("shipname").innerHTML = gamedata.items[chardata.shipid].name;
+                document.getElementById("company").innerHTML = gamedata.companies[chardata.company].name;
+                document.getElementById("corehull").innerHTML = chardata.characterdata.ship.corehull;
+                
+                var shipproperties = shippropertyset();
+                
+                document.getElementById("hull").innerHTML = shipproperties.hull;
+                document.getElementById("shield").innerHTML = shipproperties.shield;
+                document.getElementById("shieldregen").innerHTML = shipproperties.shieldregen;
+                document.getElementById("energy").innerHTML = shipproperties.energy;
+                document.getElementById("maxenergyregen").innerHTML = shipproperties.maxenergyregen;
+                document.getElementById("energyregen").innerHTML = shipproperties.energyregen;
+                document.getElementById("energyusage").innerHTML = shipproperties.energyusage;
+                document.getElementById("hulldamage").innerHTML = shipproperties.hulldamage;
+                document.getElementById("shielddamage").innerHTML = shipproperties.shielddamage;
+                document.getElementById("squadrondamage").innerHTML = shipproperties.squadrondamage;
+                document.getElementById("rockethulldamage").innerHTML = shipproperties.rockethulldamage;
+                document.getElementById("rocketshielddamage").innerHTML = shipproperties.rocketshielddamage;
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + " - " + err.name + ": " + err.message);
+            }
+        })();
+        
+            function shippropertyset()
+            {
+                try
+                {
+                    var x;
+                    var shipproperties = 
+                    {
+                        hull: 0,
+                        shield: 0,
+                        shieldregen: 0,
+                        energy: 0,
+                        maxenergyregen: 0,
+                        energyregen: 0,
+                        energyusage: 0,
+                        hulldamage: 0,
+                        shielddamage: 0,
+                        squadrondamage: 0,
+                        rockethulldamage: 0,
+                        rocketshielddamage: 0,
+                    }
+                    
+                    var equipments = chardata.characterdata.equipment;
+                    var equipment, equipmentdata;
+                    for(x in equipments)
+                    {
+                        equipment = equipments[x];
+                        if(equipment.place == "ship")
+                        {
+                            equipmentdata = gamedata.items[equipment.itemid];
+                            
+                            switch(equipmentdata.slot)
+                            {
+                                case "hull":
+                                    shipproperties.hull += equipmentdata.hullenergy;
+                                break;
+                                case "shield":
+                                    shipproperties.shield += equipmentdata.shieldenergy;
+                                    shipproperties.shieldregen += equipmentdata.recharge;
+                                    shipproperties.energyusage += equipmentdata.energyusage;
+                                break;
+                                case "battery":
+                                    shipproperties.energy += equipmentdata.capacity;
+                                    shipproperties.maxenergyregen += equipmentdata.maxrecharge;
+                                break;
+                                case "generator":
+                                    shipproperties.energyregen += equipmentdata.energyregen;
+                                break;
+                                case "cannon":
+                                    shipproperties.hulldamage += equipmentdata.hulldamage;
+                                    shipproperties.shielddamage += equipmentdata.shielddamage;
+                                    shipproperties.energyusage += equipmentdata.energyusage;
+                                break;
+                                case "rifle":
+                                    shipproperties.squadrondamage += equipmentdata.squadrondamage;
+                                    shipproperties.energyusage += equipmentdata.energyusage;
+                                break;
+                                case "rocketlauncher":
+                                    shipproperties.rockethulldamage += equipmentdata.hulldamage;
+                                    shipproperties.rocketshielddamage += equipmentdata.shielddamage;
+                                    shipproperties.energyusage += equipmentdata.energyusage;
+                                break;
+                            }
+                        }
+                    }
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+                finally
+                {
+                    return shipproperties;
+                }
+            }
+            
+        (function squadronload()
+        {
+            try
+            {
+                var container = document.getElementById("squadrons");
+                var squadrons = chardata.squadrons;
+                var equipment = chardata.characterdata.equipment;
+                
+                if(squadrons.lenght == 0)
+                {
+                    var div = document.createElement("DIV");
+                        div.className = "squadronstitle";
+                        div.appendChild(document.createTextNode("Nincs felszerelt raj."));
+                    container.appendChild(div);
+                }
+                else
+                {
+                    var div = document.createElement("DIV");
+                        div.className = "squadronstitle";
+                        div.appendChild(document.createTextNode("Rajok"));
+                    container.appendChild(div);
+                    var table = document.createElement("TABLE");
+                        table.id = "squadronstable";
+                    
+                        var groups = [];
+                        var group = [];
+                        var count = 0;
+                        var squadronequipment = {};
+                        var x;
+                        for(x in squadrons)
+                        {
+                            group.push(x);
+                            count++;
+                            squadronequipment[x] = new squadronequip();
+                            
+                            if(count == 2)
+                            {
+                                count = 0;
+                                groups.push(group);
+                                group = [];
+                            }
+                        }
+                        if(count)
+                        {
+                            groups.push(group);
+                        }
+                        
+                        var itemdata, place;
+                        for(x in equipment)
+                        {
+                            place = equipment[x].place;
+                            if(place != "hangar" && place != "ship")
+                            {
+                                itemdata = gamedata.items[equipment[x].itemid];
+                                
+                                switch(itemdata.slot)
+                                {
+                                    case "squadronhull":
+                                        squadronequipment[place].squadronhull += itemdata.hullenergy;
+                                    break;
+                                    case "squadronshield":
+                                        squadronequipment[place].squadronshield += itemdata.shieldenergy;
+                                        squadronequipment[place].squadronshieldregen += itemdata.recharge;
+                                        squadronequipment[place].energyusage += itemdata.energyusage;
+                                    break;
+                                    case "battery":
+                                        squadronequipment[place].energy += itemdata.capacity;
+                                    break;
+                                    case "squadronweapon":
+                                        squadronequipment[place].hulldamage += itemdata.hulldamage;
+                                        squadronequipment[place].shielddamage += itemdata.shielddamage;
+                                        squadronequipment[place].squadrondamage += itemdata.squadrondamage;
+                                        squadronequipment[place].energyusage += itemdata.energyusage;
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        var row, y, squadrondata, cell;
+                        for(x in groups)
+                        {
+                            row = document.createElement("TR");
+                                for(y in groups[x])
+                                {
+                                    squadronid = groups[x][y];
+                                    squadrondata = squadrons[squadronid];
+                                    cell = document.createElement("TD");
+                                        cell.className = "squadroncell";
+                                        cell.appendChild(squadronwrite(squadrondata, squadronequipment[squadronid]));
+                                    row.appendChild(cell);
+                                }
+                            table.appendChild(row);
+                        }
+                    
+                    container.appendChild(table);
+                }
+                
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        })();
+        
+            function squadronequip()
+            {
+                try
+                {
+                    this.squadronhull = 0;
+                    this.squadronshield = 0;
+                    this.squadronshieldregen = 0;
+                    this.energy = 0;
+                    this.energyusage = 0;
+                    this.hulldamage = 0;
+                    this.shielddamage = 0;
+                    this.squadrondamage = 0;
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+            }
+        
+            function squadronwrite(squadrondata, stats)
+            {
+                try
+                {
+                    var table = document.createElement("TABLE");
+                        table.className = "squadrontable";
+                        
+                        var namerow = document.createElement("TR");
+                            var namecell = document.createElement("TD");
+                                namecell.className = "squadronnamecell";
+                                namecell.colSpan = 3;
+                                namecell.innerHTML = squadrondata.squadronname;
+                        namerow.appendChild(namecell);
+                    table.appendChild(namerow);
+                    
+                        var healthrow = document.createElement("TR");
+                            var corehullcell = document.createElement("TD");
+                                var corehullspan = document.createElement("SPAN");
+                                    corehullspan.className = "prop";
+                                    corehullspan.innerHTML = "Magburkolat:";
+                            corehullcell.appendChild(corehullspan);
+                            corehullcell.appendChild(document.createTextNode(" "));
+                            corehullcell.appendChild(document.createTextNode(squadrondata.squadrondata.corehull));
+                        healthrow.appendChild(corehullcell);
+                            var hullcell = document.createElement("TD");
+                                hullcell.style.textAlign = "center";
+                                var hullspan = document.createElement("SPAN");
+                                    hullspan.className = "prop";
+                                    hullspan.innerHTML = "Burkolat:";
+                            hullcell.appendChild(hullspan);
+                            hullcell.appendChild(document.createTextNode(" "));
+                            hullcell.appendChild(document.createTextNode(stats.squadronhull));
+                        healthrow.appendChild(hullcell);
+                            var shieldcell = document.createElement("TD");
+                                shieldcell.style.textAlign = "right";
+                                var shieldspan = document.createElement("SPAN");
+                                    shieldspan.className = "prop";
+                                    shieldspan.innerHTML = "Pajzs:";
+                            shieldcell.appendChild(shieldspan);
+                            shieldcell.appendChild(document.createTextNode(" "));
+                            shieldcell.appendChild(document.createTextNode(stats.squadronshield));
+                            shieldcell.appendChild(document.createTextNode(" (+" + stats.squadronshieldregen + "/kör)"));
+                        healthrow.appendChild(shieldcell);
+                    table.appendChild(healthrow);
+                    
+                        var energyrow = document.createElement("TR");
+                            var energycell = document.createElement("TD");
+                                energycell.colSpan = 2;
+                                var energyspan = document.createElement("SPAN");
+                                    energyspan.className = "prop";
+                                    energyspan.innerHTML = "Energia:";
+                            energycell.appendChild(energyspan);
+                            energycell.appendChild(document.createTextNode(" "));
+                            energycell.appendChild(document.createTextNode(stats.energy));
+                        energyrow.appendChild(energycell);
+                            var energyusagecell = document.createElement("TD");
+                                energyusagecell.style.textAlign = "right";
+                                var energyusagespan = document.createElement("SPAN");
+                                    energyusagespan.className = "prop";
+                                    energyusagespan.innerHTML = "Energiafelhasználás:";
+                            energyusagecell.appendChild(energyusagespan);
+                            energyusagecell.appendChild(document.createTextNode(" "));
+                            energyusagecell.appendChild(document.createTextNode(stats.energyusage));
+                        energyrow.appendChild(energyusagecell);
+                    table.appendChild(energyrow);
+                    
+                        var damagerow = document.createElement("TR");
+                            var damagecell = document.createElement("TD");
+                                damagecell.colSpan = 3;
+                                damagecell.style.textAlign = "center";
+                                var damagespan = document.createElement("SPAN");
+                                    damagespan.className = "prop";
+                                    damagespan.innerHTML = "Sebzés:";
+                            damagecell.appendChild(damagespan);
+                            damagecell.appendChild(document.createTextNode(" " + stats.hulldamage + " (burkolat) / " + stats.shielddamage + " (pajzs) / " + stats.squadrondamage + " (raj)"));
+                        damagerow.appendChild(damagecell);
+                    table.appendChild(damagerow);
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+                finally
+                {
+                    return table;
+                }
+            }
+            
+            
+    </SCRIPT>
+    
+</BODY>
+</HTML>

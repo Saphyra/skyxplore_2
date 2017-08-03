@@ -1,0 +1,270 @@
+﻿<HTML>
+    <HEAD>
+        <TITLE></TITLE>
+        <BASE href='http://localhost/workdir/skyxplore2/'>
+        <link rel="stylesheet" type="text/css" href="common.css">
+        
+        <SCRIPT src='gamedata.js'></SCRIPT>
+        <SCRIPT src='common.js'></SCRIPT>
+        <SCRIPT>
+            characterload();
+        </SCRIPT>
+        
+        <STYLE>
+            .item
+            {
+                margin: 20;
+                border-style: ridge;
+                border-width: 2;
+            }
+            .item:hover
+            {
+                background-color: rgb(100,100,100);
+            }
+            
+                .itemname
+                {
+                    text-align: center;
+                    font-size: 24;
+                    font-weight: bold;
+                    border-bottom-style: ridge;
+                    border-bottom-width: 2;
+                }
+                
+                .bardiv
+                {
+                    position: relative;
+                    margin-right: 40;
+                    margin-left: 40;
+                    margin-top: 10;
+                    margin-bottom: 10;
+                    text-align: center;
+                    border-style: solid;
+                    border-width: 2;
+                    border-radius: 10px 10px 10px 10px;
+                    background-image: url('pixelgreen.jpg');
+                    background-repeat: no-repeat;
+                }
+                
+                .finishdiv
+                {
+                    text-align: center;
+                    padding: 5;
+                }
+                
+                    .finishdiv button
+                    {
+                        font-size: 16;
+                    }
+        </STYLE>
+    </HEAD>
+<BODY>
+    
+    <DIV id='maincontainer' class='maincontainer'>
+        <DIV id='header'>
+            <TABLE style='width: 100%;'>
+                <TR>
+                    <TD>
+                        <TABLE style='border-collapse: collapse;'>
+                            <TR style='font-size: 20;'>
+                                <TD style='border-right-style: ridge; border-right-width: 5; padding: 3;'>KarakterID: <SPAN id='headercharid'></SPAN></TD>
+                                <TD style='border-right-style: ridge; border-right-width: 5; padding: 3;'>Karakternév: <SPAN id='headercharname'></SPAN></TD>
+                                <TD style='border-right-style: ridge; border-right-width: 5; padding: 3;'>Kredit: <SPAN id='headercredit'></SPAN></TD>
+                                <TD style='border-right-style: ridge; border-right-width: 5; padding: 3;'>Gyémánt: <SPAN id='headerdiamond'></SPAN></TD>
+                            </TR>
+                        </TABLE>
+                    </TD>
+                    <TD style='text-align: right;'><INPUT type='image' id='settingsbutton' src='settingsbutton.png' onclick='settingsmenu()'></TD>
+                </TR>
+            </TABLE>
+        </DIV>
+        
+        <DIV id='maintitle'>Bolt</DIV>
+            <DIV id='searchcontainer'>
+                Típus: 
+                <SELECT id='companysearch' onchange='itemsload()'>
+                    <OPTION value='0'>Összes</OPTION>
+                    <OPTION value='emf'>EMF - Earth Mothership Factory</OPTION>
+                    <OPTION value='pdm'>PDM - Planet Defender Military</OPTION>
+                    <OPTION value='idf'>IDF - Interplanetary Destroyer Forces</OPTION>
+                    <OPTION value='gaa'>GAA - Galactic Assassin Alliance</OPTION>
+                    <OPTION value='mfa'>MFA - Mining and Forwarding Association</OPTION>
+                    <OPTION value='cri'>CRI - Central Research Institute</OPTION>
+                </SELECT>
+                 Szint: 
+                <SELECT id='typesearch' onchange='itemsload()'>
+                    <OPTION value='0'>Összes</OPTION>
+                    <OPTION value='passive'>Passzív</OPTION>
+                    <OPTION value='active1'>Aktív 1</OPTION>
+                    <OPTION value='active2'>Aktív 2</OPTION>
+                    
+                </SELECT>
+                 Keresés: <INPUT type='text' id='searchbyname' placeholder='Tárgy neve' onkeyup='itemsload()'>
+            </DIV>
+            
+            <TABLE id='contenttable'>
+                <TR>
+                    <TD id='itemscell'>
+                        <DIV id='itemsdiv'></DIV>
+                    </TD>
+                    <TD id='descriptioncell'>
+                        <DIV id='descriptiontitle'>Leírás:</DIV>
+                        <DIV id='description'>DESC</DIV>
+                    </TD>
+                </TR>
+            </TABLE>
+            
+        <DIV id='footer'>
+            <BUTTON id='back' onclick='window.location.href = "character.html"'>Vissza</BUTTON>
+        </DIV>
+    </DIV>
+    
+    <DIV class='menucontainer' id='settingscontainer'>
+       <DIV class='menutitle'>Beállítások</DIV>
+       <DIV class='menuexit' id='settingsexit'><BUTTON onclick='document.getElementById("settingscontainer").style.display = "none";'>X</BUTTON></DIV>
+       <DIV class='menubar'><BUTTON onclick='logout()'>Kijelentkezés</BUTTON></DIV>
+       <DIV class='menubar' style='border-bottom-style: ridge; border-bottom-width: 3;'><BUTTON onclick='window.location.href = "account.html"'>Karakterváltás</BUTTON></DIV>
+    </DIV>
+    
+    <SCRIPT>
+        headervalueset();
+        contenttableset();
+        itemsload();
+        
+        function headervalueset()
+        {
+            try
+            {
+                document.getElementById("headercharid").innerHTML = chardata.charid;
+                document.getElementById("headercharname").innerHTML = chardata.charname;
+                document.getElementById("headercredit").innerHTML = chardata.credit;
+                document.getElementById("headerdiamond").innerHTML = chardata.diamond;
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        }
+        
+        function itemsload()
+        {
+            try
+            {
+                var container = document.getElementById("itemsdiv");
+                    container.innerHTML = "";
+                    
+                var companysearch = document.getElementById("companysearch").value;
+                var typesearch = document.getElementById("typesearch").value;
+                var searchbyname = document.getElementById("searchbyname").value;
+                
+                var abilities = gamedata.abilities;
+                var x, abilitydata;
+                var match = 0;
+                for(x in abilities)
+                {
+                    abilitydata = abilities[x];
+                    if(companysearch == 0 || companysearch == abilitydata.owner)
+                    {
+                        if(typesearch == 0 || typesearch == abilitydata.itemtype)
+                        {
+                            s = searchbyname.toLowerCase();
+                            n = abilitydata.name.toLowerCase();
+                            if(searchbyname == "" || n.indexOf(s) > -1)
+                            {
+                                match = 1;
+                                itemsdiv.appendChild(itemwrite(abilitydata));
+                            }
+                        }
+                    }
+                }
+                
+                if(match == 0)
+                {
+                    var div = document.createElement("DIV");
+                        div.id = "noitems";
+                        div.innerHTML = "Nincs a keresésnek megfelelő elem.";
+                    document.getElementById("itemsdiv").appendChild(div);
+                }
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        }
+        
+            function itemwrite(abilitydata)
+            {
+                try
+                {
+                    var div = document.createElement("DIV");
+                        div.className = "item";
+                        div.addEventListener("mouseenter", function(){document.getElementById("description").innerHTML = abilitydata.itemid;})
+                        div.addEventListener("mouseleave", function(){document.getElementById("description").innerHTML = "";})
+                        
+                        var ability = chardata.characterdata.abilities[abilitydata.itemid];
+                        var partsneed = (ability.level + 1) * (ability.level + 1) * abilitydata.upgradecost;
+                        var partsleft = partsneed - ability.parts
+                        var upgradecost = partsleft * 10;
+                        
+                        var namediv = document.createElement("DIV");
+                            namediv.className = "itemname";
+                            namediv.innerHTML = abilitydata.name + " (Szint: " + ability.level + ")";
+                    div.appendChild(namediv);
+                        var bardiv = document.createElement("DIV");
+                            bardiv.className = "bardiv";
+                            bardiv.style.backgroundSize = ability.parts / partsneed * 100 + "%";
+                            var bartext = document.createTextNode(Math.floor(ability.parts / partsneed * 100) + "% (" + ability.parts + " / " + partsneed + " rész)");
+                        bardiv.appendChild(bartext);
+                    div.appendChild(bardiv);
+                    
+                        var finishdiv = document.createElement("DIV");
+                            finishdiv.className = "finishdiv";
+                            var finishbutton = document.createElement("BUTTON");
+                                finishbutton.appendChild(document.createTextNode("Fejlesztés (" + upgradecost + " gyémánt)"))
+                                if(upgradecost > chardata.diamond)
+                                {
+                                    finishbutton.disabled = "disabled";
+                                    finishbutton.className = "dis";
+                                }
+                                else
+                                {
+                                    finishbutton.addEventListener("click", function(){abilityupgrade(ability, upgradecost, partsneed);});
+                                }
+                        finishdiv.appendChild(finishbutton);
+                    div.appendChild(finishdiv);
+                        
+                        
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+                finally
+                {
+                    return div;
+                }
+            }
+            
+                function abilityupgrade(ability, upgradecost, partsneed)
+                {
+                    try
+                    {
+                        chardata.diamond -= upgradecost;
+                        ability.parts -= partsneed;
+                        if(ability.parts < 0) ability.parts = 0;
+                        ability.level += 1;
+                        
+                        headervalueset();
+                        save();
+                        itemsload();
+                        
+                    }
+                    catch(err)
+                    {
+                        alert(arguments.callee.name + err.name + ": " + err.message);
+                    }
+                }
+    </SCRIPT>
+    
+</BODY>
+</HTML>

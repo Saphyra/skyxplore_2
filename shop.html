@@ -1,0 +1,325 @@
+﻿<HTML>
+    <HEAD>
+        <TITLE>Bolt - SkyXplore</TITLE>
+        <BASE href='http://localhost/workdir/skyxplore2/'>
+        <link rel="stylesheet" type="text/css" href="common.css">
+        
+        <SCRIPT src='gamedata.js'></SCRIPT>
+        <SCRIPT src='common.js'></SCRIPT>
+        <SCRIPT>
+            characterload();
+        </SCRIPT>
+            
+        <STYLE>
+            .item
+            {
+                margin: 20;
+                border-style: ridge;
+                border-width: 2;
+            }
+            .item:hover
+            {
+                background-color: rgb(100,100,100);
+            }
+            
+                .itemname
+                {
+                    text-align: center;
+                    font-size: 24;
+                    font-weight: bold;
+                    border-bottom-style: ridge;
+                    border-bottom-width: 2;
+                }
+                
+                .price
+                {
+                    text-align: center;
+                    font-size: 20;
+                    margin: 5;
+                }
+                
+                .buy
+                {
+                    text-align: center;
+                }
+                
+                    .buy input, .buy button
+                    {
+                        font-size: 18;
+                        margin: 10;
+                        padding: 2;
+                        margin-top: 0;
+                    }
+                    
+                    .buy input[type='number']
+                    {
+                        width: 100;
+                    }
+        </STYLE>
+    </HEAD>
+<BODY>
+    
+    <DIV id='maincontainer' class='maincontainer'>
+        <DIV id='header'>
+            <TABLE style='width: 100%;'>
+                <TR>
+                    <TD>
+                        <TABLE style='border-collapse: collapse;'>
+                            <TR style='font-size: 20;'>
+                                <TD style='border-right-style: ridge; border-right-width: 5; padding: 3;'>KarakterID: <SPAN id='headercharid'></SPAN></TD>
+                                <TD style='border-right-style: ridge; border-right-width: 5; padding: 3;'>Karakternév: <SPAN id='headercharname'></SPAN></TD>
+                                <TD style='border-right-style: ridge; border-right-width: 5; padding: 3;'>Kredit: <SPAN id='headercredit'></SPAN></TD>
+                                <TD style='border-right-style: ridge; border-right-width: 5; padding: 3;'>Gyémánt: <SPAN id='headerdiamond'></SPAN></TD>
+                            </TR>
+                        </TABLE>
+                    </TD>
+                    <TD style='text-align: right;'><INPUT type='image' id='settingsbutton' src='settingsbutton.png' onclick='settingsmenu()'></TD>
+                </TR>
+            </TABLE>
+        </DIV>
+        
+        <DIV id='maintitle'>Bolt</DIV>
+            <DIV id='searchcontainer'>
+                Típus: 
+                <SELECT id='typesearch' onchange='itemsload()'>
+                    <OPTION value='0'>Összes</OPTION>
+                    <OPTION value='ship'>Hajó</OPTION>
+                    <OPTION value='squadron'>Raj</OPTION>
+                    <OPTION value='cannon'>Ágyú</OPTION>
+                    <OPTION value='rocketlauncher'>Rakétakilövő</OPTION>
+                    <OPTION value='rifle'>Gépágyú</OPTION>
+                    <OPTION value='shield'>Csatahajó pajzs</OPTION>
+                    <OPTION value='hull'>Csatahaj burkolat</OPTION>
+                    <OPTION value='generator'>Generátor</OPTION>
+                    <OPTION value='battery'>Akkumulátor</OPTION>
+                    <OPTION value='hangar'>Hangár</OPTION>
+                    <OPTION value='equipment'>Felszerelés</OPTION>
+                    <OPTION value='extender'>Bővítő</OPTION>
+                    <OPTION value='ammo'>Lőszer</OPTION>
+                    <OPTION value='squadronweapon'>Raj fegyverzet</OPTION>
+                    <OPTION value='squadronshield'>Raj pajzs</OPTION>
+                    <OPTION value='squadronhull'>Raj burkolat</OPTION>
+                </SELECT>
+                 Szint: 
+                <SELECT id='levelsearch' onchange='itemsload()'>
+                    <OPTION value='0'>Összes</OPTION>
+                    <OPTION value='1'>1</OPTION>
+                    <OPTION value='2'>2</OPTION>
+                    <OPTION value='3'>3</OPTION>
+                    <OPTION value='4'>4</OPTION>
+                    <OPTION value='5'>5</OPTION>
+                    <OPTION value='6'>6</OPTION>
+                    <OPTION value='7'>7</OPTION>
+                    <OPTION value='8'>8</OPTION>
+                    <OPTION value='9'>9</OPTION>
+                    <OPTION value='10'>10</OPTION>
+                </SELECT>
+                 Keresés: <INPUT type='text' id='searchbyname' placeholder='Tárgy neve' onkeyup='itemsload()'>
+            </DIV>
+            
+            <TABLE id='contenttable'>
+                <TR>
+                    <TD id='itemscell'>
+                        <DIV id='itemsdiv'></DIV>
+                    </TD>
+                    <TD id='descriptioncell'>
+                        <DIV id='descriptiontitle'>Leírás:</DIV>
+                        <DIV id='description'>DESC</DIV>
+                    </TD>
+                </TR>
+            </TABLE>
+            
+        <DIV id='footer'>
+            <BUTTON id='back' onclick='window.location.href = "character.html"'>Vissza</BUTTON>
+        </DIV>
+        
+    </DIV>
+    
+    <DIV class='menucontainer' id='settingscontainer'>
+       <DIV class='menutitle'>Beállítások</DIV>
+       <DIV class='menuexit' id='settingsexit'><BUTTON onclick='document.getElementById("settingscontainer").style.display = "none";'>X</BUTTON></DIV>
+       <DIV class='menubar'><BUTTON onclick='logout()'>Kijelentkezés</BUTTON></DIV>
+       <DIV class='menubar' style='border-bottom-style: ridge; border-bottom-width: 3;'><BUTTON onclick='window.location.href = "account.html"'>Karakterváltás</BUTTON></DIV>
+    </DIV>
+    
+    <SCRIPT>
+        headervalueset();
+        contenttableset();
+        itemsload();
+        
+        function headervalueset()
+        {
+            try
+            {
+                document.getElementById("headercharid").innerHTML = chardata.charid;
+                document.getElementById("headercharname").innerHTML = chardata.charname;
+                document.getElementById("headercredit").innerHTML = chardata.credit;
+                document.getElementById("headerdiamond").innerHTML = chardata.diamond;
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        }
+        
+        function itemsload()
+        {
+            try
+            {
+                var container = document.getElementById("itemsdiv");
+                    container.innerHTML = "";
+                    
+                var typesearch = document.getElementById("typesearch").value;
+                var levelsearch = document.getElementById("levelsearch").value;
+                var searchbyname = document.getElementById("searchbyname").value;
+                
+                var items = gamedata.items;
+                
+                var x, itemdata;
+                var match = 0;
+                for(x in items)
+                {
+                    itemdata = items[x];
+                    if(levelsearch == 0 || levelsearch == itemdata.level)
+                    {
+                        if(typesearch == 0 || typesearch == itemdata.slot)
+                        {
+                            s = searchbyname.toLowerCase();
+                            n = itemdata.name.toLowerCase();
+                            if(searchbyname == "" || n.indexOf(s) > -1)
+                            {
+                                match = 1;
+                                itemsdiv.appendChild(itemwrite(itemdata));
+                            }
+                        }
+                    }
+                }
+                
+                if(match == 0)
+                {
+                    var div = document.createElement("DIV");
+                        div.id = "noitems";
+                        div.innerHTML = "Nincs a keresésnek megfelelő elem.";
+                    document.getElementById("itemsdiv").appendChild(div);
+                }
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        }
+        
+            function itemwrite(itemdata)
+            {
+                try
+                {
+                    var div = document.createElement("DIV");
+                        div.className = "item";
+                        div.addEventListener("mouseenter", function(){document.getElementById("description").innerHTML = itemdata.itemid;})
+                        div.addEventListener("mouseleave", function(){document.getElementById("description").innerHTML = "";})
+                        
+                        var namediv = document.createElement("DIV");
+                            namediv.className = "itemname";
+                            namediv.innerHTML = itemdata.name;
+                    div.appendChild(namediv);
+                        var pricediv = document.createElement("DIV");
+                            pricediv.className = "price";
+                            pricediv.innerHTML = itemdata.buyprice + " kredit";
+                    div.appendChild(pricediv);
+                        var buydiv = document.createElement("DIV");
+                            buydiv.className = "buy";
+                            var amount = document.createElement("INPUT");
+                                amount.type = "number";
+                                amount.min = 1;
+                                amount.max = Math.floor(chardata.credit / itemdata.buyprice);
+                                amount.value = 1;
+                                amount.addEventListener("keyup", function(){if(amount.value > Math.floor(chardata.credit / itemdata.buyprice)) amount.value = Math.floor(chardata.credit / itemdata.buyprice);});
+                        buydiv.appendChild(amount);
+                            var max = document.createElement("BUTTON");
+                                max.addEventListener("click", function(){amount.value = Math.floor(chardata.credit / itemdata.buyprice);});
+                                max.innerHTML = "(Max: " + Math.floor(chardata.credit / itemdata.buyprice) + ")";
+                        buydiv.appendChild(max);
+                            var buy = document.createElement("BUTTON");
+                                buy.addEventListener("click", function(){buyitem(itemdata, amount.value);});
+                                buy.innerHTML = "Vásárlás";
+                                if(itemdata.buyprice > chardata.credit)
+                                {
+                                    buy.className = "dis";
+                                    buy.disabled = "disabled";
+                                    buy.innerHTML = "Nincs elég pénz";
+                                }
+                            buydiv.appendChild(buy);
+                    div.appendChild(buydiv);
+                        
+                        
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+                finally
+                {
+                    return div;
+                }
+            }
+            
+                function buyitem(itemdata, amount)
+                {
+                    try
+                    {
+                        var x, ammodata, match = 0, namount;
+                        if(itemdata.slot == "ammo")
+                        {
+                            for(x in chardata.characterdata.ammo)
+                            {
+                                ammodata = chardata.characterdata.ammo[x];
+                                if(ammodata.itemid == itemdata.itemid && ammodata.place == "hangar")
+                                {
+                                    chardata.credit -= itemdata.buyprice * amount;
+                                    ammodata.amount += Number(amount);
+                                    match = 1;
+                                }
+                            }
+                            
+                            if(!match)
+                            {
+                                chardata.characterdata.ammo.push(new getammo(itemdata.itemid, "hangar", amount));
+                                chardata.credit -= itemdata.buyprice * amount;
+                            }
+                        }
+                        else
+                        {
+                            
+                            for(x = 0; x < amount; x++)
+                            {
+                                chardata.credit -= itemdata.buyprice;
+                                chardata.characterdata.equipment.push(new getequip(itemdata.itemid, "hangar"));
+                            }
+                        }
+                        
+                        headervalueset();
+                        save();
+                        itemsload();
+                    }
+                    catch(err)
+                    {
+                        alert(arguments.callee.name + err.name + ": " + err.message);
+                    }
+                }
+                
+                    function getequip(itemid, place)
+                    {
+                        this.itemid = itemid;
+                        this.place = place;
+                    }
+                    
+                    function getammo(itemid, place, amount)
+                    {
+                        this.itemid = itemid;
+                        this.place = place;
+                        this.amount = amount;
+                    }
+    </SCRIPT>
+    
+</BODY>
+</HTML>

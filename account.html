@@ -1,0 +1,969 @@
+﻿<HTML>
+    <HEAD>
+        <SCRIPT src='gamedata.js'></SCRIPT>
+        <TITLE>Account - SkyXplore</TITLE>
+        <BASE href='http://localhost/workdir/skyxplore2/'>
+        <link rel="stylesheet" type="text/css" href="common.css">
+        
+        <STYLE>
+            .err
+            {
+                display: none;
+                position: absolute;
+                top: 0;
+                right: 0;
+                color: red;
+                border-style: ridge;
+                border-width: 5;
+                padding: 3;
+                font-size: 16;
+                background-color: black;
+                z-index: 1;
+                border-radius: 10px 10px 10px 10px;
+            }
+            
+                .used
+                {
+                    display: none;
+                }
+                .err:hover .used
+                {
+                    display: inline;
+                }
+                
+            #charactercontainer
+            {
+                position: relative;
+            }
+            
+                #charactercontainertitle
+                {
+                    text-align: center;
+                    font-size: 40;
+                    border-bottom-style: ridge;
+                    border-bottom-width: 3;
+                }
+                
+                #newcharactercontainer
+                {
+                    text-align: center;
+                    margin: 5;
+                }
+                
+                    #newcharactercontainer button
+                    {
+                        font-size: 24;
+                    }
+                    
+                #nocharacters
+                {
+                    text-align: center;
+                    font-size: 30;
+                    margin-top: 30;
+                }
+                
+            #newcharacterinputcontainer
+            {
+                position: fixed;
+                width: 100%;
+                height: 100%;
+                box-sizing: border-box;
+                border-style: ridge;
+                border-width: 10;
+                background-color: rgba(0,0,0,0.8);
+                overflow: auto;
+                display: none;
+            }
+            
+                #newcharactertitle
+                {
+                    border-bottom-style: ridge;
+                    border-bottom-width: 5;
+                    text-align: center;
+                    font-size: 40;
+                }
+                
+                #newcharacterexit button
+                {
+                    font-size: 28;
+                }
+                
+                #newcharactername
+                {
+                    text-align: center;
+                    font-size: 28;
+                    padding: 5;
+                }
+                
+                    #newcharactername input
+                    {
+                        font-size: 20;
+                        padding: 2;
+                    }
+                    
+                #companytable
+                {
+                    width: 100%;
+                }
+                    
+                    .companycell
+                    {
+                        border-style: ridge;
+                        border-width: 3;
+                        width: 33%;
+                        vertical-align: top;
+                        cursor: pointer;
+                    }
+                    .companycell:hover
+                    {
+                        border-color: red;
+                        color: red;
+                    }
+                    
+                        .companytitle
+                        {
+                            border-bottom-style: ridge;
+                            border-bottom-width: 3;
+                            text-align: center;
+                            font-size: 24;
+                            font-weight: bold;
+                        }
+                        
+                        .companydescription
+                        {
+                            font-size: 20;
+                            text-align: justify;
+                            padding: 10;
+                        }
+                        
+            .charactercontainertable
+            {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            
+                .charactercontainertable th
+                {
+                    font-size: 30;
+                }
+                
+                .characterrow
+                {
+                    cursor: pointer;
+                }
+                .characterrow:hover
+                {
+                    background-color: rgba(80,80,80,1);
+                }
+                
+                    .charactercell
+                    {
+                        font-size: 24;
+                        padding: 5;
+                    }
+        </STYLE>
+        
+        <SCRIPT src='common.js'></SCRIPT>
+        <SCRIPT>
+            function settingsmenu()
+            {
+                try
+                {
+                    var dialogs = document.getElementsByClassName("menucontainer");
+                    var x = 0;
+                    for(x; x < dialogs.length; x++)
+                    {
+                        dialogs[x].style.display = "none";
+                    }
+                    document.getElementById("settingscontainer").style.display = "block";
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+            }
+        </SCRIPT>
+    </HEAD>
+<BODY>
+    
+    <DIV class='maincontainer' id='maincontainer'>
+        <DIV id='header'>
+            <TABLE style='width: 100%;'>
+                <TR>
+                    <TD>
+                        <TABLE style='border-collapse: collapse;'>
+                            <TR style='font-size: 20;'>
+                                <TD style='border-right-style: ridge; border-right-width: 5; padding: 3;'>UserID: <SPAN id='headerid'></SPAN></TD>
+                                <TD style='border-right-style: ridge; border-right-width: 5; padding: 3;'>Felhasználónév: <SPAN id='headerusername'></SPAN></TD>
+                            </TR>
+                        </TABLE>
+                    </TD>
+                    <TD style='text-align: right;'><INPUT type='image' id='settingsbutton' src='settingsbutton.png' onclick='settingsmenu()'></TD>
+                </TR>
+            </TABLE>
+        </DIV>
+        
+        <DIV id='charactercontainer'>
+            <DIV id='charactercontainertitle'>Karakterek</DIV>
+            <DIV id='newcharactercontainer'><BUTTON onclick='newcharacter()'>Új karakter létrehozása</BUTTON></DIV>
+        </DIV>
+    </DIV>
+    
+    <DIV class='menucontainer' id='settingscontainer'>
+       <DIV class='menutitle'>Beállítások</DIV>
+       <DIV class='menuexit' id='settingsexit'><BUTTON onclick='document.getElementById("settingscontainer").style.display = "none";'>X</BUTTON></DIV>
+       <DIV class='menubar' style='border-bottom-style: ridge; border-bottom-width: 3;'><BUTTON onclick='logout()'>Kijelentkezés</BUTTON></DIV>
+       <DIV class='menubar'><BUTTON onclick='document.getElementById("settingscontainer").style.display = "none"; document.getElementById("changeusernamecontainer").style.display = "block";'>Felhasználónév megváltoztatása</BUTTON></DIV>
+       <DIV class='menubar'><BUTTON onclick='document.getElementById("settingscontainer").style.display = "none"; document.getElementById("changepasswordcontainer").style.display = "block";'>Jelszó megváltoztatása</BUTTON></DIV>
+       <DIV class='menubar'><BUTTON onclick='document.getElementById("settingscontainer").style.display = "none"; document.getElementById("changeemailcontainer").style.display = "block";'>E-mail cím megváltoztatása</BUTTON></DIV>
+       <DIV class='menubar'><BUTTON onclick='document.getElementById("settingscontainer").style.display = "none"; document.getElementById("deleteaccountcontainer").style.display = "block";'>Account törlése</BUTTON></DIV>
+    </DIV>
+    
+    <DIV class='menucontainer' id='changeusernamecontainer'>
+        <DIV class='menutitle'>Felhasználónév megváltoztatása</DIV>
+        <DIV class='menuexit' id='settingsexit'><BUTTON onclick='document.getElementById("changeusernamecontainer").style.display = "none";'>X</BUTTON></DIV>
+        <TABLE class='menutable'>
+            <TR>
+                <TD class='menutabletext'>Új felhasználónév:</TD>
+                <TD class='menutableinput' style='position: relative;'>
+                    <INPUT type='text' id='newusername' placeholder='Felhasználónév'>
+                    <DIV class='err' id='usernameerr'>
+                        X
+                        <DIV class='used'>Felhasználónév foglalt.</DIV>
+                    </DIV>
+                </TD>
+            </TR>
+            <TR>
+                <TD class='menutabletext'>Jelszó:</TD>
+                <TD class='menutableinput'><INPUT type='password' id='newusernamepassword' placeholder='Jelszó'></TD>
+            </TR>
+            <TR>
+                <TD colspan='2' class='menubutton'><BUTTON onclick='newusername()'>Felhasználónév megváltoztatása</BUTTON></TD>
+            </TR>
+        </TABLE>
+    </DIV>
+    
+    <DIV class='menucontainer' id='changepasswordcontainer'>
+        <DIV class='menutitle'>Jelszó megváltoztatása</DIV>
+        <DIV class='menuexit' id='settingsexit'><BUTTON onclick='document.getElementById("changepasswordcontainer").style.display = "none";'>X</BUTTON></DIV>
+        <TABLE class='menutable'>
+            <TR>
+                <TD class='menutabletext'>Új jelszó:</TD>
+                <TD class='menutableinput'><INPUT type='password' id='newpassword1' placeholder='Új jelszó'></TD>
+            </TR>
+            <TR>
+                <TD class='menutabletext'>Új jelszó újra:</TD>
+                <TD class='menutableinput'><INPUT type='password' id='newpassword2' placeholder='Új jelszó megismétlése'></TD>
+            </TR>
+            <TR>
+                <TD class='menutabletext'>Jelszó:</TD>
+                <TD class='menutableinput'><INPUT type='password' id='newpassword' placeholder='Jelszó'></TD>
+            </TR>
+            <TR>
+                <TD colspan='2' class='menubutton'><BUTTON onclick='newpassword()'>Jelszó megváltoztatása</BUTTON></TD>
+            </TR>
+        </TABLE>
+    </DIV>
+    
+    <DIV class='menucontainer' id='changeemailcontainer'>
+        <DIV class='menutitle'>E-mail cím megváltoztatása</DIV>
+        <DIV class='menuexit' id='settingsexit'><BUTTON onclick='document.getElementById("changeemailcontainer").style.display = "none";'>X</BUTTON></DIV>
+        <TABLE class='menutable'>
+            <TR>
+                <TD class='menutabletext'>Új e-mail cím:</TD>
+                <TD class='menutableinput' style='position: relative;'>
+                    <INPUT type='text' id='newemail' placeholder='email@valami.hu'>
+                    <DIV class='err' id='emailerr'>
+                        X
+                        <DIV class='used'><SPAN id='emailerrmessage'></SPAN></DIV>
+                    </DIV>
+                </TD>
+            </TR>
+            <TR>
+                <TD class='menutabletext'>Jelszó:</TD>
+                <TD class='menutableinput'><INPUT type='password' id='newemailpassword' placeholder='Jelszó'></TD>
+            </TR>
+            <TR>
+                <TD colspan='2' class='menubutton'><BUTTON onclick='newemail()'>E-mail cím megváltoztatása</BUTTON></TD>
+            </TR>
+        </TABLE>
+    </DIV>
+    
+    <DIV class='menucontainer' id='deleteaccountcontainer'>
+        <DIV class='menutitle'>Felhasználói fiók törlése</DIV>
+        <DIV class='menuexit' id='settingsexit'><BUTTON onclick='document.getElementById("deleteaccountcontainer").style.display = "none";'>X</BUTTON></DIV>
+        <TABLE class='menutable'>
+            <TR>
+                <TD class='menutabletext'>Jelszó:</TD>
+                <TD class='menutableinput'><INPUT type='password' id='deleteaccountpassword' placeholder='Jelszó'></TD>
+            </TR>
+            <TR>
+                <TD colspan='2' class='menubutton'><BUTTON onclick='deleteaccount()'>Fiók törlése</BUTTON></TD>
+            </TR>
+        </TABLE>
+    </DIV>
+    
+    <DIV id='newcharacterinputcontainer'>
+        <DIV id='newcharactertitle'>Új karakter létrehozása</DIV>
+        <DIV class='menuexit' id='newcharacterexit'><BUTTON onclick='document.getElementById("newcharacterinputcontainer").style.display = "none"; document.getElementById("maincontainer").style.visibility = "visible";'>X</BUTTON></DIV>
+        <DIV id='newcharactername'>Karakternév: <INPUT type='text' id='charactername' placeholder='Karakternév'></DIV>
+        <TABLE id='companytable'>
+            <TR>
+                <TD class='companycell' onclick='newcharactergenerate("emf")'>
+                    <DIV class='companytitle'>EMF - Earth Mothership Factory</DIV>
+                    <DIV class='companydescription'>Az EMF gyártja az emberi faj legjobb hordozóit. Bevált stratégiájuk, hogy az anyahajóról indított kisebb vadászok legyengítik az ellenséget, míg a vezérhajó hatótávon kívülről irányítja őket. A vadászpilótákat a galaxis legelitebbjei közül válogatják össze, így mindig győztesként kerülnek ki a harcokból.</DIV>
+                </TD>
+                <TD class='companycell' onclick='newcharactergenerate("pdm")'>
+                    <DIV class='companytitle'>PDM - Planet Defender Military</DIV>
+                    <DIV class='companydescription'>Bolygónk legerősebb védelemmel ellátott hajói mind a PDM üzemeiből kerülnek ki. Nincs az a fegyver, ami áthatolhatna a pajzsukon, ezért nem csoda, hogy mindig a frontvonal első soraiban repülnek megvédve sérülékenyebb társaikat az ellenséges tűztől. Az egységek különleges pajzsokkal és rakétaelhárító rendszerekkel vannak felszerelve, így bátran vethetik magukat a legkeményebb tűzharcba is.</DIV>
+                </TD>
+                <TD class='companycell' onclick='newcharactergenerate("idf")'>
+                    <DIV class='companytitle'>IDF - Interplanetary Destroyer Forces</DIV>
+                    <DIV class='companydescription'>Aki szereti a robbanásokat, annak mindenképp az IDF kötelékében a helye! Masszív rakétahordozó hajóik pusztító erejével utat törnek maguknak, még a csillagok sem állíthatják meg rohamukat. Fejlett rakétakilövőiknél csak a robbanófejeik erősebbek, megspékelve szoftveres irányítással, így az ellenség számára kellemetlen tűzijáték mindig ott okozza a legnagyobb kárt, ahol a legjobban fáj.</DIV>
+                </TD>
+            </TR>
+            <TR>
+                <TD class='companycell' onclick='newcharactergenerate("gaa")'>
+                    <DIV class='companytitle'>GAA - Galactic Assassin Alliance</DIV>
+                    <DIV class='companydescription'>Aki az űr mélyeibe repül, mindig számolnia kell a váratlanul felbukkanó, hatalmas tűzerővel rendelkező Assassinok megjelenésével. Nem sokat tudni ezekről az elvetemült gazfickókról, csak azt, hogy támadásuk mindig célba talál, és megbénítja a célpontját, miközben a saját pajzsát erősíti.</DIV>
+                </TD>
+                <TD class='companycell' onclick='newcharactergenerate("mfa")'>
+                    <DIV class='companytitle'>MFA - Mining and Forwarding Association</DIV>
+                    <DIV class='companydescription'>Az univerzum áruforgalmának nagy részét MFA jelzéssel ellátott teherhajók szállítják. Bejárják a galaxis bolgyóit, így nem csoda, hogy mindig a legkorszerűbb felszerelésekkel rendelkeznek. Habár a robosztus szállítóknak nem a harctér a kedvenc tartózkodási helyük, fejlett raj elleni védelemmel vannak ellátva, ezzel okozva fejtörést a támadóknak.</DIV>
+                </TD>
+                <TD class='companycell' onclick='newcharactergenerate("cri")'>
+                    <DIV class='companytitle'>CRI - Central Researcher Institute</DIV>
+                    <DIV class='companydescription'>Ha az új technika érdekel, a CRI hajókban megtalálod. Energiafelhasználás csökkentésében kiváló eredményeket értek el, így a gyorsan újratöltődő speciális fegyvereik szünet nélkül szólhatnak. Szofverfejlesztés terén is a világranglista élén állnak, és bármikor fel tudják törni az ellenség központi számítógépét, hogy blokkolva funkcióit tehetetlenné tegyék a szövetséges tűzzel szemben.</DIV>
+                </TD>
+            </TR>
+    </DIV>
+    
+    <SCRIPT id='accountadatok'>
+        document.getElementById("headerid").innerHTML = sessionStorage.id;
+        document.getElementById("headerusername").innerHTML = sessionStorage.username;
+        
+        (function listeneradd()
+        {
+            try
+            {
+                document.getElementById("newusername").addEventListener("keypress", function(){if(event.which == 13) newusername();});
+                document.getElementById("newusername").addEventListener("keyup", usernameexists);
+                document.getElementById("newusernamepassword").addEventListener("keypress", function(){if(event.which == 13) newusername();});
+                
+                document.getElementById("newpassword1").addEventListener("keypress", function(){if(event.which == 13) newpassword();});
+                document.getElementById("newpassword2").addEventListener("keypress", function(){if(event.which == 13) newpassword();});
+                document.getElementById("newpassword").addEventListener("keypress", function(){if(event.which == 13) newpassword();});
+                
+                document.getElementById("newemail").addEventListener("keypress", function(){if(event.which == 13) newemail();});
+                document.getElementById("newemail").addEventListener("keyup", emailcheck);
+                document.getElementById("newemailpassword").addEventListener("keypress", function(){if(event.which == 13) newemail();});
+                
+                document.getElementById("deleteaccountpassword").addEventListener("keypress", function(){if(event.which == 13) deleteaccount();});
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        })();
+        
+        function deleteaccount()
+        {
+            try
+            {
+                var password = document.getElementById("deleteaccountpassword").value;
+                
+                if(password == "")
+                {
+                    alert("Adja meg jelszavát!");
+                }
+                else if(password != sessionStorage.password)
+                {
+                    alert("Hibás jelszó.");
+                }
+                else if(!confirm("Biztosan törölni akarja fiókját? Az adatokat már nem lehet visszaállítani!"))
+                {
+                    return;
+                }
+                else
+                {
+                    var request = new XMLHttpRequest();
+                        request.open("POST", "deleteaccount.php", 0);
+                        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                        request.send("id=" + sessionStorage.id);
+                        if(request.responseText == 1)
+                        {
+                            alert("Felhasználói fiók törölve.");
+                            logout();
+                        }
+                        else
+                        {
+                            alert("Hiba" + request.responseText);
+                        }
+                }
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        }
+        
+        function usernameexists()
+        {
+            try
+            {
+                var errdiv = document.getElementById("usernameerr");
+                var username = document.getElementById("newusername").value;
+                
+                if(username)
+                {
+                    var request = new XMLHttpRequest();
+                        request.open("POST", "usernameexists.php", 1);
+                        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                        request.send("username=" + username);
+                        request.onreadystatechange = function()
+                        {
+                            if(request.readyState == 4 && request.status == 200)
+                            {
+                                if(request.responseText == 0)
+                                {
+                                    errdiv.style.display = "none";
+                                }
+                                else
+                                {
+                                    errdiv.style.display = "block";
+                                }
+                            }
+                        }
+                }
+                else
+                {
+                    errdiv.style.display = "none";
+                }
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        }
+        
+        function emailcheck()
+        {
+            try
+            {
+                var errdiv = document.getElementById("emailerr");
+                var errmessage = document.getElementById("emailerrmessage");
+                var email = document.getElementById("newemail").value;
+                
+                if(email)
+                {
+                    if(emailvalidcheck(email) == 0)
+                    {
+                        errdiv.style.display = "block";
+                        errmessage.innerHTML = "Érvénytelen e-mail cím";
+                    }
+                    else
+                    {
+                        var request = new XMLHttpRequest()
+                            request.open("POST", "emailexists.php", 1)
+                            request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                            request.send("email=" + email);
+                            request.onreadystatechange = function()
+                            {
+                                if(request.readyState == 4 && request.status == 200)
+                                {
+                                    if(request.responseText == 0)
+                                    {
+                                        errdiv.style.display = "none";
+                                    }
+                                    else
+                                    {
+                                        errdiv.style.display = "block";
+                                        errmessage.innerHTML = "Az e-mail cím már regisztrálva van.";
+                                    }
+                                }
+                            }
+                    }
+                }
+                else
+                {
+                    errdiv.style.display = "none";
+                }
+                
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        }
+        
+            function emailvalidcheck(email)
+            //ellenőrzi az email címet
+            {
+                try
+                {
+                    var result;
+                    if(email.indexOf("@") < 1) 
+                    {
+                        result = 0;
+                    }
+                    else if(email.lenght < 4)
+                    {
+                        result = 0;
+                    }
+                    else if(email.indexOf(".") < 0)
+                    {
+                        result = 0;
+                    }
+                    else if(email.lastIndexOf(".") > email.length - 3)
+                    {
+                        result = 0;
+                    }
+                    else
+                    {
+                        result = 1;
+                    }
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+                finally
+                {
+                    return result;
+                }
+            }
+        
+        function newusername()
+        {
+            try
+            {
+                var newusername = document.getElementById("newusername").value;
+                var password = document.getElementById("newusernamepassword").value;
+                
+                if(newusername == "")
+                {
+                    alert("Adja meg új felhasználónevét!");
+                }
+                else if(regusernameexist(newusername) == 0)
+                {
+                    alert("Felhasználónév foglalt.");
+                }
+                else if(password == "")
+                {
+                    alert("Adja meg jelszavát!");
+                }
+                else if(password != sessionStorage.password)
+                {
+                    alert("Hibás jelszó.");
+                }
+                else
+                {
+                    var request = new XMLHttpRequest();
+                        request.open("POST", "accountchange.php", 0);
+                        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                        request.send("key=username&value=" + newusername + "&id=" + sessionStorage.id);
+                        var code = request.responseText;
+                            var result = 0, input;
+                            while(!result)
+                            {
+                                input = prompt("Megerősítő kód a regisztrált e-mail címre elküldve.\nÍrja be a megerősítő kódot:");
+                                if(input == null)
+                                {
+                                    result = 1;
+                                    var cancel = new XMLHttpRequest();
+                                        cancel.open("POST", "accountchangecancel.php", 1);
+                                        cancel.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                                        cancel.send("id=" + sessionStorage.id);
+                                }
+                                else if(input == request.responseText)
+                                {
+                                    result = 1;
+                                    var conf = new XMLHttpRequest();
+                                        conf.open("POST", "accountchangeconfirm.php", 1);
+                                        conf.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                                        conf.send("id=" + sessionStorage.id);
+
+                                    document.cookie = "username=" + newusername + "; path=/";
+                                    window.location.href = "index.html";
+                                }
+                            }
+                }
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        }
+        
+            function regusernameexist(username)
+            {
+                try
+                {
+                    var request = new XMLHttpRequest();
+                        request.open("POST", "usernameexists.php", 0);
+                        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                        request.send("username=" + username);
+                    if(request.responseText == 0) return 1;
+                    else return 0;
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+            }
+            
+        function newpassword()
+        {
+            try
+            {
+                var password = document.getElementById("newpassword").value;
+                var newpassword1 = document.getElementById("newpassword1").value;
+                var newpassword2 = document.getElementById("newpassword2").value;
+                
+                if(newpassword1 == "" || newpassword2 == "")
+                {
+                    alert("Adja meg új jelszavát!");
+                }
+                else if(newpassword1 != newpassword2)
+                {
+                    alert("A jelszavak nem egyeznek.");
+                }
+                else if(password == "")
+                {
+                    alert("Adja meg jelszavát!");
+                }
+                else if(password != sessionStorage.password)
+                {
+                    alert("Hibás jelszó.");
+                }
+                else
+                {
+                    var request = new XMLHttpRequest();
+                        request.open("POST", "accountchange.php", 0);
+                        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                        request.send("key=password&value=" + newpassword1 + "&id=" + sessionStorage.id);
+                        var code = request.responseText;
+                            var result = 0, input;
+                            while(!result)
+                            {
+                                input = prompt("Megerősítő kód a regisztrált e-mail címre elküldve.\nÍrja be a megerősítő kódot:");
+                                if(input == null)
+                                {
+                                    result = 1;
+                                    var cancel = new XMLHttpRequest();
+                                        cancel.open("POST", "accountchangecancel.php", 1);
+                                        cancel.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                                        cancel.send("id=" + sessionStorage.id);
+                                }
+                                else if(input == request.responseText)
+                                {
+                                    result = 1;
+                                    var conf = new XMLHttpRequest();
+                                        conf.open("POST", "accountchangeconfirm.php", 1);
+                                        conf.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                                        conf.send("id=" + sessionStorage.id);
+
+                                    document.cookie = "password=" + newpassword + "; path=/";
+                                    sessionStorage.password = newpassword1;
+                                }
+                            }
+                }
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        }
+        
+        function newemail()
+        {
+            try
+            {
+                var newemail = document.getElementById("newemail").value;
+                var password = document.getElementById("newemailpassword").value;
+                
+                if(newemail == "")
+                {
+                    alert("Adja meg új e-mail címát!");
+                }
+                else if(emailvalidcheck(newemail) == 0)
+                {
+                    alert("Érvénytelen e-mail cím.");
+                }
+                else if(regemailexists(newemail) == 0)
+                {
+                    alert("Az e-mail cím már regisztrálva van.");
+                }
+                else if(password == "")
+                {
+                    alert("Adja meg jelszavát!");
+                }
+                else if(password != sessionStorage.password)
+                {
+                    alert("Hibás jelszó.");
+                }
+                else
+                {
+                    var request = new XMLHttpRequest();
+                        request.open("POST", "accountchange.php", 0);
+                        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                        request.send("key=email&value=" + newemail + "&id=" + sessionStorage.id);
+                        var code = request.responseText;
+                            var result = 0, input;
+                            while(!result)
+                            {
+                                input = prompt("Megerősítő kód a regisztrált e-mail címre elküldve.\nÍrja be a megerősítő kódot:");
+                                if(input == null)
+                                {
+                                    result = 1;
+                                    var cancel = new XMLHttpRequest();
+                                        cancel.open("POST", "accountchangecancel.php", 1);
+                                        cancel.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                                        cancel.send("id=" + sessionStorage.id);
+                                }
+                                else if(input == request.responseText)
+                                {
+                                    result = 1;
+                                    var conf = new XMLHttpRequest();
+                                        conf.open("POST", "accountchangeconfirm.php", 1);
+                                        conf.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                                        conf.send("id=" + sessionStorage.id);
+
+                                    sessionStorage.email = newemail;
+                                }
+                            }
+                }
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+            
+                function regemailexists(email)
+                {
+                    try
+                    {
+                        var request = new XMLHttpRequest();
+                            request.open("POST", "emailexists.php", 0);
+                            request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                            request.send("email=" + email);
+                        if(request.responseText == 0) return 1;
+                        else return 0;
+                    }
+                    catch(err)
+                    {
+                        alert(arguments.callee.name + err.name + ": " + err.message);
+                    }
+                }
+        }
+    </SCRIPT>
+    
+    <SCRIPT id='karakterbetoltes'>
+        (function characterload()
+        {
+            try
+            {
+                var request = new XMLHttpRequest()
+                    request.open("POST", "characterlistload.php", 0);
+                    request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    request.send("id=" + sessionStorage.id);
+                    if(request.responseText == 0)
+                    {
+                        var div = document.createElement("DIV");
+                            div.id = "nocharacters";
+                            div.appendChild(document.createTextNode("Nem található karakter"));
+                        document.getElementById("charactercontainer").appendChild(div);
+                    }
+                    else
+                    {
+                        characterlist(JSON.parse(request.responseText));
+                    }
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        })();
+        
+            function characterlist(characters)
+            {
+                try
+                {
+                    var table = document.createElement("TABLE");
+                        table.border = "3";
+                        table.className = "charactercontainertable";
+                        
+                            var tablehead = document.createElement("TR");
+                                var namehead = document.createElement("TH");
+                                    namehead.innerHTML = "Karakternév";
+                            tablehead.appendChild(namehead);
+                                var levelhead = document.createElement("TH");
+                                    levelhead.innerHTML = "Szint";
+                            tablehead.appendChild(levelhead);
+                                var companyhead = document.createElement("TH");
+                                    companyhead.innerHTML = "Megbízó";
+                            tablehead.appendChild(companyhead);
+                                var shipnamehead = document.createElement("TH");
+                                    shipnamehead.innerHTML = "Hajó";
+                            tablehead.appendChild(shipnamehead);
+                        table.appendChild(tablehead);
+                    
+                        var x;
+                        for(x in characters)
+                        {
+                            table.appendChild(characterwrite(characters[x]));
+                        }
+                    document.getElementById("charactercontainer").appendChild(table);
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+            }
+            
+                function characterwrite(character)
+                {
+                    try
+                    {
+                        var row = document.createElement("TR");
+                            row.className = "characterrow";
+                            row.addEventListener("click", function(){characterchoose(character.charid);});
+                            var namecell = document.createElement("TD");
+                                namecell.innerHTML = character.charname;
+                                namecell.className = "charactercell";
+                        row.appendChild(namecell);
+                            var levelcell = document.createElement("TD");
+                                levelcell.innerHTML = character.level;
+                                levelcell.className = "charactercell";
+                        row.appendChild(levelcell);
+                            var companycell = document.createElement("TD");
+                                companycell.innerHTML = gamedata.property(character.company, "name", "companies");
+                                companycell.className = "charactercell";
+                        row.appendChild(companycell);
+                            var shipcell = document.createElement("TD");
+                                shipcell.innerHTML = gamedata.property(character.shipid, "name", "items");
+                                shipcell.className = "charactercell";
+                        row.appendChild(shipcell);
+                        
+                    }
+                    catch(err)
+                    {
+                        alert(arguments.callee.name + err.name + ": " + err.message);
+                    }
+                    finally
+                    {
+                        return row;
+                    }
+                }
+                
+        function newcharacter()
+        {
+            try
+            {
+                document.getElementById("maincontainer").style.visibility = "hidden";
+                document.getElementById("newcharacterinputcontainer").style.display = "block";
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        }
+        
+        function newcharactergenerate(company)
+        {
+            try
+            {
+                var charname = document.getElementById("charactername").value;
+                
+                if(charname == "")
+                {
+                    alert("Adja meg a karakter nevét!");
+                }
+                else if(characternameexists(charname) == 0)
+                {
+                    alert("Karakternév foglalt.");
+                }
+                else
+                {
+                    var request = new XMLHttpRequest();
+                        request.open("POST", "newcharacter.php", 0);
+                        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                        request.send("charname=" + charname + "&company=" + company + "&ownerid=" + sessionStorage.id + "&shipid=" + shipidset(company) + "&data=" + characterdataset(company));
+                        
+                        var squadrons = JSON.parse(sessionStorage.squadrons);
+                        delete sessionStorage.squadrons;
+                        
+                        var x, request2;
+                        for(x in squadrons)
+                        {
+                            request2 = new XMLHttpRequest();
+                            request2.open("POST", "squadronowneridupload.php", 0);
+                            request2.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                            request2.send("squadronid=" + squadrons[x].id + "&ownerid=" + request.responseText);
+                        }
+                        
+                        window.location.href = "account.html";
+                }
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        }
+        
+            function shipidset(company)
+            {
+                try
+                {
+                    var searchdata = 
+                    {
+                        type: "ship",
+                        level: 1,
+                        company: company
+                    }
+                    var shipid = gamedata.search(searchdata);
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+                finally
+                {
+                    return shipid;
+                }
+            }
+            
+            function characternameexists(charname)
+            {
+                try
+                {
+                    var request = new XMLHttpRequest();
+                        request.open("POST", "characternameexists.php", 0);
+                        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                        request.send("charname=" + charname);
+                        return request.responseText;
+                        
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+            }
+            
+        function characterchoose(id)
+        {
+            try
+            {
+                sessionStorage.charid = id;
+                window.location.href = "character.html";
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        }
+    </SCRIPT>
+    
+    <SCRIPT src='characterdataset.js'></SCRIPT>
+</BODY>
+</HTML>

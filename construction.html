@@ -1,0 +1,318 @@
+﻿<HTML>
+    <HEAD>
+        <TITLE>Tárgykészítés - SkyXplore</TITLE>
+        <BASE href='http://localhost/workdir/skyxplore2/'>
+        <link rel="stylesheet" type="text/css" href="common.css">
+        
+        <SCRIPT src='gamedata.js'></SCRIPT>
+        <SCRIPT src='common.js'></SCRIPT>
+        <SCRIPT>
+            characterload();
+        </SCRIPT>
+        
+        <STYLE>
+            .item
+            {
+                margin: 20;
+                border-style: ridge;
+                border-width: 2;
+            }
+            .item:hover
+            {
+                background-color: rgb(100,100,100);
+            }
+            
+                .itemname
+                {
+                    text-align: center;
+                    font-size: 24;
+                    font-weight: bold;
+                    border-bottom-style: ridge;
+                    border-bottom-width: 2;
+                }
+                
+                .bardiv
+                {
+                    position: relative;
+                    margin-right: 40;
+                    margin-left: 40;
+                    margin-top: 10;
+                    margin-bottom: 10;
+                    text-align: center;
+                    border-style: solid;
+                    border-width: 2;
+                    border-radius: 10px 10px 10px 10px;
+                    background-image: url('pixelgreen.jpg');
+                    background-repeat: no-repeat;
+                }
+                
+                .finishdiv
+                {
+                    text-align: center;
+                    padding: 5;
+                }
+                
+                    .finishdiv button
+                    {
+                        font-size: 16;
+                    }
+        </STYLE>
+    </HEAD>
+<BODY>
+    
+    <DIV id='maincontainer' class='maincontainer'>
+        
+        <DIV id='header'>
+            <TABLE style='width: 100%;'>
+                <TR>
+                    <TD>
+                        <TABLE style='border-collapse: collapse;'>
+                            <TR style='font-size: 20;'>
+                                <TD style='border-right-style: ridge; border-right-width: 5; padding: 3;'>KarakterID: <SPAN id='headercharid'></SPAN></TD>
+                                <TD style='border-right-style: ridge; border-right-width: 5; padding: 3;'>Karakternév: <SPAN id='headercharname'></SPAN></TD>
+                                <TD style='border-right-style: ridge; border-right-width: 5; padding: 3;'>Kredit: <SPAN id='headercredit'></SPAN></TD>
+                                <TD style='border-right-style: ridge; border-right-width: 5; padding: 3;'>Gyémánt: <SPAN id='headerdiamond'></SPAN></TD>
+                            </TR>
+                        </TABLE>
+                        <SCRIPT>
+                            headervalueset();
+                            function headervalueset()
+                            {
+                                try
+                                {
+                                    document.getElementById("headercharid").innerHTML = chardata.charid;
+                                    document.getElementById("headercharname").innerHTML = chardata.charname;
+                                    document.getElementById("headercredit").innerHTML = chardata.credit;
+                                    document.getElementById("headerdiamond").innerHTML = chardata.diamond;
+                                }
+                                catch(err)
+                                {
+                                    alert(arguments.callee.name + err.name + ": " + err.message);
+                                }
+                            }
+                        </SCRIPT>
+                    </TD>
+                    <TD style='text-align: right;'><INPUT type='image' id='settingsbutton' src='settingsbutton.png' onclick='settingsmenu()'></TD>
+                </TR>
+            </TABLE>
+        </DIV>
+        
+            <DIV id='maintitle'>Tárgykészítés</DIV>
+            <DIV id='searchcontainer'>
+                Típus: 
+                <SELECT id='typesearch' onchange='itemsload()'>
+                    <OPTION value='0'>Összes</OPTION>
+                    <OPTION value='ship'>Hajó</OPTION>
+                    <OPTION value='squadron'>Raj</OPTION>
+                    <OPTION value='cannon'>Ágyú</OPTION>
+                    <OPTION value='rocketlauncher'>Rakétakilövő</OPTION>
+                    <OPTION value='rifle'>Gépágyú</OPTION>
+                    <OPTION value='shield'>Csatahajó pajzs</OPTION>
+                    <OPTION value='hull'>Csatahaj burkolat</OPTION>
+                    <OPTION value='generator'>Generátor</OPTION>
+                    <OPTION value='battery'>Akkumulátor</OPTION>
+                    <OPTION value='hangar'>Hangár</OPTION>
+                    <OPTION value='equipment'>Felszerelés</OPTION>
+                    <OPTION value='extender'>Bővítő</OPTION>
+                    <OPTION value='ammo'>Lőszer</OPTION>
+                    <OPTION value='squadronweapon'>Raj fegyverzet</OPTION>
+                    <OPTION value='squadronshield'>Raj pajzs</OPTION>
+                    <OPTION value='squadronhull'>Raj burkolat</OPTION>
+                </SELECT>
+                 Szint: 
+                <SELECT id='levelsearch' onchange='itemsload()'>
+                    <OPTION value='0'>Összes</OPTION>
+                    <OPTION value='1'>1</OPTION>
+                    <OPTION value='2'>2</OPTION>
+                    <OPTION value='3'>3</OPTION>
+                    <OPTION value='4'>4</OPTION>
+                    <OPTION value='5'>5</OPTION>
+                    <OPTION value='6'>6</OPTION>
+                    <OPTION value='7'>7</OPTION>
+                    <OPTION value='8'>8</OPTION>
+                    <OPTION value='9'>9</OPTION>
+                    <OPTION value='10'>10</OPTION>
+                </SELECT>
+                 Keresés: <INPUT type='text' id='searchbyname' placeholder='Tárgy neve' onkeyup='itemsload()'>
+            </DIV>
+            
+            <TABLE id='contenttable'>
+                <TR>
+                    <TD id='itemscell'>
+                        <DIV id='itemsdiv'></DIV>
+                    </TD>
+                    <TD id='descriptioncell'>
+                        <DIV id='descriptiontitle'>Leírás:</DIV>
+                        <DIV id='description'>DESC</DIV>
+                    </TD>
+                </TR>
+            </TABLE>
+        <DIV id='footer'>
+            <BUTTON id='back' onclick='window.location.href = "character.html"'>Vissza</BUTTON>
+        </DIV>
+        
+    </DIV>
+    
+    <DIV class='menucontainer' id='settingscontainer'>
+       <DIV class='menutitle'>Beállítások</DIV>
+       <DIV class='menuexit' id='settingsexit'><BUTTON onclick='document.getElementById("settingscontainer").style.display = "none";'>X</BUTTON></DIV>
+       <DIV class='menubar'><BUTTON onclick='logout()'>Kijelentkezés</BUTTON></DIV>
+       <DIV class='menubar' style='border-bottom-style: ridge; border-bottom-width: 3;'><BUTTON onclick='window.location.href = "account.html"'>Karakterváltás</BUTTON></DIV>
+    </DIV>
+    
+    <SCRIPT>
+        contenttableset();
+        itemsload();
+        function itemsload()
+        {
+            try
+            {
+                var container = document.getElementById("itemsdiv");
+                    container.innerHTML = "";
+                    
+                var typesearch = document.getElementById("typesearch").value;
+                var levelsearch = document.getElementById("levelsearch").value;
+                var searchbyname = document.getElementById("searchbyname").value;
+                
+                var items = chardata.characterdata.construction;
+                
+                var x, itemdata, dispitems = [], s, n;
+                for(x in items)
+                {
+                    itemdata = gamedata.items[x];
+                    if(levelsearch == 0 || levelsearch == itemdata.level)
+                    {
+                        if(typesearch == 0 || typesearch == itemdata.slot)
+                        {
+                            s = searchbyname.toLowerCase();
+                            n = itemdata.name.toLowerCase();
+                            if(searchbyname == "" || n.indexOf(s) > -1)
+                            {
+                                dispitems.push(items[x]);
+                            }
+                        }
+                    }
+                }
+                
+                if(!dispitems.length)
+                {
+                    var div = document.createElement("DIV");
+                        div.id = "noitems";
+                        div.innerHTML = "Nincs a keresésnek megfelelő elem.";
+                    document.getElementById("itemsdiv").appendChild(div);
+                }
+                else
+                {
+                    dispitems.sort(function(a, b){return b.parts / b.construction - a.parts / a.construction});
+                    
+                    for(x in dispitems)
+                    {
+                        container.appendChild(itemwrite(dispitems[x]));
+                    }
+                }
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        }
+        
+            function itemwrite(item)
+            {
+                try
+                {
+                    var div = document.createElement("DIV");
+                        div.className = "item";
+                        div.addEventListener("mouseenter", function(){document.getElementById("description").innerHTML = item.itemid;})
+                        div.addEventListener("mouseleave", function(){document.getElementById("description").innerHTML = "";})
+                        
+                        var namediv = document.createElement("DIV");
+                            namediv.className = "itemname";
+                            namediv.innerHTML = gamedata.items[item.itemid].name;
+                    div.appendChild(namediv);
+                        var bardiv = document.createElement("DIV");
+                            bardiv.className = "bardiv";
+                            bardiv.style.backgroundSize = item.parts / item.construction * 100 + "% 20";
+                            var bartext = document.createTextNode(Math.floor(item.parts / item.construction * 100) + "% (" + item.parts + " / " + item.construction + " rész)");
+                        bardiv.appendChild(bartext);
+                    div.appendChild(bardiv);
+                    
+                        var finishdiv = document.createElement("DIV");
+                            finishdiv.className = "finishdiv";
+                            var finishbutton = document.createElement("BUTTON");
+                                var cost = costset(item);
+                                finishbutton.appendChild(document.createTextNode("Befejezés (" + cost + " kredit)"))
+                                if(cost > chardata.credit)
+                                {
+                                    finishbutton.disabled = "disabled";
+                                    finishbutton.className = "dis";
+                                }
+                                else
+                                {
+                                    finishbutton.addEventListener("click", function(){constructionfinish(item, cost);});
+                                }
+                        finishdiv.appendChild(finishbutton);
+                    div.appendChild(finishdiv);
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+                finally
+                {
+                    return div;
+                }
+            }
+            
+                function costset(item)
+                {
+                    try
+                    {
+                        var cost = gamedata.items[item.itemid].craftprice;
+                        
+                        if(item.parts < item.construction)
+                        {
+                            cost += (100 - (item.parts / item.construction * 100)) / 2.5 * cost;
+                        }
+                        
+                        cost = Math.floor(cost);
+                    }
+                    catch(err)
+                    {
+                        alert(arguments.callee.name + err.name + ": " + err.message);
+                    }
+                    finally
+                    {
+                        return cost;
+                    }
+                }
+                
+                function constructionfinish(item, cost)
+                {
+                    try
+                    {
+                        chardata.credit -= cost;
+                        item.parts -= item.construction;
+                        if(item.parts < 0) item.parts = 0;
+                        headervalueset();
+                        
+                        chardata.characterdata.equipment.push(new getequip(item.itemid, "hangar"));
+                        save();
+                        itemsload();
+                        
+                    }
+                    catch(err)
+                    {
+                        alert(arguments.callee.name + err.name + ": " + err.message);
+                    }
+                }
+                
+                    function getequip(itemid, place)
+                    {
+                        this.itemid = itemid;
+                        this.place = place;
+                    }
+    </SCRIPT>
+    
+</BODY>
+</HTML>

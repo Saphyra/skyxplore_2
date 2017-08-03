@@ -1,0 +1,244 @@
+﻿body
+{
+    margin: 0;
+    background-image: url("background.jpg");
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: center;
+	background-size: cover;
+	color: white;
+}
+
+a:visited, a:link
+{
+	color: white;
+}
+
+input, button
+{
+    border-width: 2px;
+	border-style: ridge;
+	border-radius: 10px 10px 10px 10px;
+	outline: none;
+    background-color: transparent;
+    color: white;
+}
+.dis
+{
+    color: rgb(130,130,130);
+}
+
+
+input:focus, button:hover
+{
+    border-color: red;
+}
+
+select
+{
+    color: white;
+    background-color: black;
+    border-width: 3px;
+    border-style: solid;
+    border-radius: 10px 10px 10px 10px;
+    outline: none;
+    text-align: center;
+}
+
+
+    .maincontainer
+    {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        border-style: ridge;
+        border-width: 10;
+        background-color: rgba(0,0,0,0.8);
+        overflow: auto;
+    }
+        
+        #header
+        {
+            border-bottom-style: ridge;
+            border-bottom-width: 5px;
+            position: relative;
+            height: 35;
+        }
+        
+            #settingsbutton
+            {
+                text-align: right;
+                width: 24;
+                border-width: 3;
+            }
+            #settingsbutton:hover
+            {
+                border-color: red;
+            }
+        
+            #maintitle
+            {
+                text-align: center;
+                font-size: 36;
+                border-bottom-style: ridge;
+                border-bottom-width: 3;
+                padding: 3;
+            }
+            
+            #searchcontainer
+            {
+                font-size: 26;
+                border-bottom-style: ridge;
+                border-bottom-width: 2;
+                text-align: center;
+                padding: 3;
+            }
+            
+                #typesearch, #levelsearch, #searchbyname, #companysearch
+                {
+                    font-size: 20;
+                    background-color: black;
+                }
+                
+            #contenttable
+            {
+                width: 100%;
+                margin-top: 15;
+            }
+            
+                #contenttable td
+                {
+                    border-style: ridge;
+                    border-width: 3;
+                }
+                
+                #itemscell
+                {
+                    vertical-align: top;
+                }
+                
+                    #itemsdiv, #shipequip
+                    {
+                        overflow: auto;
+                        height: 100%;
+                    }
+                    
+                        #noitems
+                        {
+                            text-align: center;
+                            font-size: 28;
+                        }
+                
+                #descriptioncell
+                {
+                    width: 25%;
+                    vertical-align: top;
+                }
+                
+                    #descriptiontitle
+                    {
+                        font-size: 24;
+                        text-align: center;
+                        border-bottom-style: ridge;
+                        border-bottom-width: 3;
+                    }
+            
+        #footer
+        {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 99%;
+            text-align: center;
+            border-top-style: ridge;
+            border-top-width: 3;
+            padding: 5;
+            height: 35;
+        }
+        
+            #footer button
+            {
+                font-size: 24;
+            }
+        
+.menucontainer
+{
+    position: fixed;
+    left: 30%;
+    width: 40%;
+    top: 10%;
+    border-style: ridge;
+    border-width: 5;
+    border-radius: 10px 10px 10px 10px;
+    background-color: black;
+    z-index: 1;
+    display: none;
+}
+    
+    .menuexit
+    {
+        position: absolute;
+        right: 0;
+        top: 3;
+        margin: 2;
+    }
+    
+        .menuexit button
+        {
+            font-size: 22;
+        }
+    
+    .menutitle
+    {
+        text-align: center;
+        font-size: 30;
+        font-weight: bold;
+        border-bottom-style: ridge;
+        border-bottom-width: 5;
+        padding: 3;
+    }
+    
+    .menubar
+    {
+        text-align: center;
+        padding: 5;
+    }
+    
+        .menubar button
+        {
+            font-size: 20;
+        }
+    
+    .menutable
+    {
+        width: 100%;
+    }
+        .menutable td
+        {
+            width: 50%;
+        }
+    
+        .menutabletext
+        {
+            text-align: right;
+            font-size: 24;
+        }
+        
+        .menutableinput input
+        {
+            font-size: 20;
+            padding: 2;
+        }
+        
+        .menubutton
+        {
+            padding-top: 5;
+            text-align: center;
+        }
+        
+            .menubutton button
+            {
+                font-size: 22;
+            }
+        

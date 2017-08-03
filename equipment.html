@@ -1,0 +1,1103 @@
+﻿<HTML>
+    <HEAD>
+        <TITLE>Felszerelés - SkyXplore</TITLE>
+        <BASE href='http://localhost/workdir/skyxplore2/'>
+        <link rel="stylesheet" type="text/css" href="common.css">
+        
+        <SCRIPT src='gamedata.js'></SCRIPT>
+        <SCRIPT src='common.js'></SCRIPT>
+        <SCRIPT>
+            characterload();
+        </SCRIPT>
+        
+        <STYLE>
+            #equipment, #items
+            {
+                width: 37%;
+                vertical-align: top;
+                text-align: center;
+            }
+            
+                #shipchoose
+                {
+                    width: 100%;
+                    text-align: center;
+                    border-bottom-style: ridge;
+                    border-bottom-width: 3;
+                    padding: 3;
+                }
+                
+                .unequipall
+                {
+                    margin: 5;
+                    margin-bottom: 0;
+                    font-size: 18;
+                }
+                
+                    #shipchoose td
+                    {
+                        border: none;
+                    }
+                    
+                        #shipchoose button
+                        {
+                            font-size: 26;
+                        }
+                  
+            #squadronchoosediv
+            {
+                border-bottom-style: ridge;
+                border-bottom-width: 3;
+            }
+            
+                #squadronchoose
+                {
+                    text-align: center;
+                    font-size: 16;
+                    margin: 5;
+                }
+                
+            .slotdiv
+            {
+                margin: 10;
+                border-style: ridge;
+                border-width: 2;
+            }
+            
+                .slotname
+                {
+                    font-size: 22;
+                    font-weight: bold;
+                    border-bottom-style: ridge;
+                    border-bottom-width: 2;
+                }
+                
+                    .equipitem
+                    {
+                        border-style: ridge;
+                        border-width: 1;
+                        margin: 5;
+                        font-size: 16;
+                        font-weight: bold;
+                    }
+                    .equipitem:hover
+                    {
+                        border-color: red;
+                    }
+                    
+                        .equipitemname
+                        {
+                            font-size: 18;
+                            border-bottom-style: ridge;
+                            border-bottom-width: 1;
+                        }
+                
+            .item
+            {
+                margin: 10;
+                border-style: ridge;
+                border-width: 2;
+            }
+            .item:hover
+            {
+                border-color: red;
+            }
+            
+                .itemname
+                {
+                    font-size: 18;
+                    font-weight: bold;
+                    border-bottom-style: ridge;
+                    border-bottom-width: 2;
+                }
+                
+                .item input, .item button, .equipitem input, .equipitem button
+                {
+                    font-size: 16;
+                    margin: 5;
+                    text-align: right;
+                }
+        </STYLE>
+    </HEAD>
+<BODY>
+    
+    <DIV id='maincontainer' class='maincontainer'>
+        <DIV id='header'>
+            <TABLE style='width: 100%;'>
+                <TR>
+                    <TD>
+                        <TABLE style='border-collapse: collapse;'>
+                            <TR style='font-size: 20;'>
+                                <TD style='border-right-style: ridge; border-right-width: 5; padding: 3;'>KarakterID: <SPAN id='headercharid'></SPAN></TD>
+                                <TD style='border-right-style: ridge; border-right-width: 5; padding: 3;'>Karakternév: <SPAN id='headercharname'></SPAN></TD>
+                                <TD style='border-right-style: ridge; border-right-width: 5; padding: 3;'>Kredit: <SPAN id='headercredit'></SPAN></TD>
+                                <TD style='border-right-style: ridge; border-right-width: 5; padding: 3;'>Gyémánt: <SPAN id='headerdiamond'></SPAN></TD>
+                            </TR>
+                        </TABLE>
+                    </TD>
+                    <TD style='text-align: right;'><INPUT type='image' id='settingsbutton' src='settingsbutton.png' onclick='settingsmenu()'></TD>
+                </TR>
+            </TABLE>
+        </DIV>
+            
+            <TABLE id='contenttable'>
+                <TR>
+                    <TD id='equipment'>
+                        <TABLE id='shipchoose'>
+                            <TR>
+                                <TD style='border-right-style: ridge; border-right-width: 3;'><BUTTON onclick='shipchoose("ship")'>Hajó</BUTTON></TD>
+                                <TD><BUTTON onclick='shipchoose("squadrons")'>Rajok</BUTTON></TD>
+                            </TR>
+                        </TABLE>
+                        <DIV id='shipequip'></DIV>
+                    </TD>
+                    <TD id='items'>
+                        <DIV id='maintitle'>Felszerelés</DIV>
+                        <DIV id='searchcontainer'>
+                            Típus: 
+                            <SELECT id='typesearch' onchange='itemsload()'>
+                                <OPTION value='0'>Összes</OPTION>
+                                <OPTION value='ship'>Hajó</OPTION>
+                                <OPTION value='squadron'>Raj</OPTION>
+                                <OPTION value='cannon'>Ágyú</OPTION>
+                                <OPTION value='rocketlauncher'>Rakétakilövő</OPTION>
+                                <OPTION value='rifle'>Gépágyú</OPTION>
+                                <OPTION value='shield'>Csatahajó pajzs</OPTION>
+                                <OPTION value='hull'>Csatahaj burkolat</OPTION>
+                                <OPTION value='generator'>Generátor</OPTION>
+                                <OPTION value='battery'>Akkumulátor</OPTION>
+                                <OPTION value='hangar'>Hangár</OPTION>
+                                <OPTION value='equipment'>Felszerelés</OPTION>
+                                <OPTION value='extender'>Bővítő</OPTION>
+                                <OPTION value='ammo'>Lőszer</OPTION>
+                                <OPTION value='squadronweapon'>Raj fegyverzet</OPTION>
+                                <OPTION value='squadronshield'>Raj pajzs</OPTION>
+                                <OPTION value='squadronhull'>Raj burkolat</OPTION>
+                            </SELECT>
+                             Szint: 
+                            <SELECT id='levelsearch' onchange='itemsload()'>
+                                <OPTION value='0'>Összes</OPTION>
+                                <OPTION value='1'>1</OPTION>
+                                <OPTION value='2'>2</OPTION>
+                                <OPTION value='3'>3</OPTION>
+                                <OPTION value='4'>4</OPTION>
+                                <OPTION value='5'>5</OPTION>
+                                <OPTION value='6'>6</OPTION>
+                                <OPTION value='7'>7</OPTION>
+                                <OPTION value='8'>8</OPTION>
+                                <OPTION value='9'>9</OPTION>
+                                <OPTION value='10'>10</OPTION>
+                            </SELECT>
+                            <BR>
+                             Keresés: <INPUT type='text' id='searchbyname' placeholder='Tárgy neve' onkeyup='itemsload()'>
+                        </DIV>
+                        <DIV id='itemsdiv'></DIV>
+                    </TD>
+                    <TD id='descriptioncell'>
+                        <DIV id='maintitle'>Leírás:</DIV>
+                        <DIV id='description'>DESC</DIV>
+                    </TD>
+                </TR>
+            </TABLE>
+            
+        <DIV id='footer'>
+            <BUTTON id='back' onclick='window.location.href = "character.html"'>Vissza</BUTTON>
+        </DIV>
+    </DIV>
+    
+    <DIV class='menucontainer' id='settingscontainer'>
+       <DIV class='menutitle'>Beállítások</DIV>
+       <DIV class='menuexit' id='settingsexit'><BUTTON onclick='document.getElementById("settingscontainer").style.display = "none";'>X</BUTTON></DIV>
+       <DIV class='menubar'><BUTTON onclick='logout()'>Kijelentkezés</BUTTON></DIV>
+       <DIV class='menubar' style='border-bottom-style: ridge; border-bottom-width: 3;'><BUTTON onclick='window.location.href = "account.html"'>Karakterváltás</BUTTON></DIV>
+    </DIV>
+    
+    <SCRIPT>
+        headervalueset();
+        window.target = "ship";
+        shipequipload();
+        itemsload();
+        
+        document.getElementById("contenttable").style.height = window.innerHeight - 135;
+        document.getElementById("shipequip").style.height = window.innerHeight - 200;
+        
+        (function()
+        //Táblázat középső oszlopmagasságának beállítása
+        {
+            var container = document.getElementById("items");
+            var div = document.getElementById("itemsdiv");
+            var contheight = container.scrollHeight;
+            div.style.height = window.innerHeight - 270;
+        })();
+        
+        function headervalueset()
+        //Header adatok betöltése
+        {
+            try
+            {
+                document.getElementById("headercharid").innerHTML = chardata.charid;
+                document.getElementById("headercharname").innerHTML = chardata.charname;
+                document.getElementById("headercredit").innerHTML = chardata.credit;
+                document.getElementById("headerdiamond").innerHTML = chardata.diamond;
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        }
+        
+        function shipchoose(choose)
+        //Váltás a hajó és rajok megjelenítése között
+        {
+            try
+            {
+                switch(choose)
+                {
+                    case "ship":
+                        target = "ship";
+                        shipequipload();
+                        itemsload();
+                    break;
+                    case "squadrons":
+                        squadronequipload();
+                        itemsload();
+                    break;
+                }
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        }
+        
+            function shipequipload()
+            //Betölti a hajó felszerelését
+            {
+                try
+                {
+                    var shipdata = shipdataload("ship");
+                    var equipmentlist = equipmentlistload("ship");
+                    var container = document.getElementById("shipequip");
+                        container.innerHTML = "";
+                        
+                        var emptyship = document.createElement("BUTTON");
+                            emptyship.innerHTML = "Hajó kiürítése";
+                            emptyship.addEventListener("click", function(){unequipall("all", "ship");});
+                            emptyship.className = "unequipall";
+                    container.appendChild(emptyship);
+                    
+                    var slots = 
+                    {
+                        ammo: {slot: shipdata.basicammostorage, max: 10, name: "Lőszer"},
+                        cannon: {slot: shipdata.cannonslot, max: shipdata.maxcannonlevel, name: "Ágyú"},
+                        rocketlauncher: {slot: shipdata.rocketlauncherslot, max: shipdata.maxrocketlauncherlevel, name: "Rakétakilövő"},
+                        rifle: {slot: shipdata.rifleslot, max: shipdata.maxriflelevel, name: "Gépágyú"},
+                        shield: {slot: shipdata.shieldslot, max: shipdata.maxshieldlevel, name: "Pajzs"},
+                        hull: {slot: shipdata.hullslot, max: shipdata.maxhulllevel, name: "Burkolat"},
+                        generator: {slot: shipdata.generatorslot, max: shipdata.maxgeneratorlevel, name: "Generátor"},
+                        battery: {slot: shipdata.battery, max: shipdata.maxbatterylevel, name: "Akkumulátor"},
+                        hangar: {slot: shipdata.hangarslot, max: shipdata.maxhangarlevel, name: "Hangár"},
+                        equipment: {slot: shipdata.equipmentslot, max: 10, name: "Felszerelés"},
+                        extender: {slot: shipdata.extenderslot, max: shipdata.maxextenderlevel, name: "Bővítő"},
+                        //: {slot: shipdata., max: shipdata., name: ""},
+                    }
+                    
+                    var equipped = equippedload("ship");
+                    
+                    var x, y, slot;
+                    for(x in slots)
+                    {
+                        slot = slots[x];
+                        if(equipped[x] == undefined) equipped[x] = 0;
+                        
+                        if(slot.slot) container.appendChild(slotdivcreate(slot, equipped, x, equipmentlist, "ship"));
+                    }
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+            }
+            
+                function equipmentlistload(id)
+                //Csoportosítja az egység felszerelését
+                {
+                    try
+                    {
+                        var equipmentlist = {};
+                        var shipdata = shipdataload(id);
+                        var equipment = chardata.characterdata.equipment;
+                        var ammos = chardata.characterdata.ammo;
+                        var itemdata;
+                        
+                        var x, item;
+                        
+                        for(x in ammos)
+                        {
+                            item = ammos[x];
+                            if(item.place == id)
+                            {
+                                itemdata = gamedata.items[item.itemid];
+                                
+                                if(equipmentlist[itemdata.slot] == undefined)
+                                {
+                                    equipmentlist[itemdata.slot] = {};
+                                }
+                                
+                                if(equipmentlist[itemdata.slot][item.itemid] == undefined)
+                                {
+                                    equipmentlist[itemdata.slot][item.itemid] = new dispitem(item.itemid, item.amount);
+                                }
+                                else
+                                {
+                                    equipmentlist[itemdata.slot][item.itemid].amount += item.amount;
+                                }
+                            }
+                        }
+                        
+                        for(x in equipment)
+                        {
+                            item = equipment[x];
+                            if(item.place == id)
+                            {
+                                itemdata = gamedata.items[item.itemid];
+                                
+                                if(equipmentlist[itemdata.slot] == undefined)
+                                {
+                                    equipmentlist[itemdata.slot] = {};
+                                }
+                                
+                                if(equipmentlist[itemdata.slot][item.itemid] == undefined)
+                                {
+                                    equipmentlist[itemdata.slot][item.itemid] = new dispitem(item.itemid, 1);
+                                }
+                                else
+                                {
+                                    equipmentlist[itemdata.slot][item.itemid].amount += 1;
+                                }
+                            }
+                        }
+                    }
+                    catch(err)
+                    {
+                        alert(arguments.callee.name + err.name + ": " + err.message);
+                    }
+                    finally
+                    {
+                        return equipmentlist;
+                    }
+                }
+            
+                    function shipdataload(id)
+                    //Betölti az egység adatait
+                    {
+                        try
+                        {
+                            var shipdata;
+                            if(id == "ship") shipdata = chardata.characterdata.ship;
+                            else shipdata = chardata.squadrons[id].squadrondata;
+                        }
+                        catch(err)
+                        {
+                            alert(arguments.callee.name + err.name + ": " + err.message);
+                        }
+                        finally
+                        {
+                            return shipdata;
+                        }
+                    }
+            
+                function equippedload(id)
+                //Megadja az adott slotokba szerelt felszerelés számát
+                {
+                    try
+                    {
+                        var equipped = {};
+                        var equipment = chardata.characterdata.equipment;
+                        var ammos = chardata.characterdata.ammo;
+                        
+                        var x, item, itemdata;
+                        equipped.ammo = 0;
+                        for(x in ammos)
+                        {
+                            if(ammos[x].place == id) equipped.ammo += ammos[x].amount;
+                        }
+                        
+                        for(x in equipment)
+                        {
+                            item = equipment[x];
+                            if(item.place == id)
+                            {
+                                itemdata = gamedata.items[item.itemid];
+                                
+                                if(equipped[itemdata.slot] == undefined) equipped[itemdata.slot] = 0;
+                                
+                                equipped[itemdata.slot] += 1;
+                            }
+                        }
+                    }
+                    catch(err)
+                    {
+                        alert(arguments.callee.name + err.name + ": " + err.message);
+                    }
+                    finally
+                    {
+                        return equipped;
+                    }
+                }
+                
+                function slotdivcreate(slot, equipped, x, equipmentlist, place)
+                {
+                    try
+                    {
+                        
+                        var slotdiv = document.createElement("DIV");
+                            slotdiv.className = "slotdiv";
+                            var slotname = document.createElement("DIV");
+                                slotname.className = "slotname";
+                                slotname.innerHTML = slot.name + " (" + equipped[x] + " / " + slot.slot + " - Max szint: " + slot.max + ")";
+                        slotdiv.appendChild(slotname);
+                            var slotunequip = document.createElement("BUTTON");
+                                slotunequip.className = "unequipall";
+                                slotunequip.innerHTML = "Mindet leszerel";
+                                slotunequip.addEventListener("click", function(){unequipall(x, place);});
+                        slotdiv.appendChild(slotunequip);
+                            
+                        for(y in equipmentlist[x])
+                        {
+                            item = equipmentlist[x][y];
+                            
+                            if(item.amount) slotdiv.appendChild(equipwrite(item, place));
+                        }
+                        
+                        
+                        if(slot.slot - equipped[x] && x != "ammo")
+                        {
+                            var equipitem = document.createElement("DIV");
+                                equipitem.className = "equipitem";
+                                equipitem.innerHTML = "Üres hely (" + (slot.slot - equipped[x]) + ")";
+                            slotdiv.appendChild(equipitem);
+                        }
+                    }
+                    catch(err)
+                    {
+                        alert(arguments.callee.name + err.name + ": " + err.message);
+                    }
+                    finally
+                    {
+                        return slotdiv;
+                    }
+                }
+                
+                    function equipwrite(item, place)
+                    //Felszerelésblokk kiírása
+                    {
+                        try
+                        {
+                            itemdata = gamedata.items[item.itemid];
+                            
+                            var itemdiv = document.createElement("DIV");
+                                itemdiv.className = "equipitem";
+                                var name = document.createElement("DIV");
+                                    name.className = "equipitemname";
+                                    name.innerHTML = itemdata.name;
+                            itemdiv.appendChild(name);
+                                var amount = document.createElement("INPUT");
+                                    amount.type = "number";
+                                    amount.min = 1;
+                                    amount.max = item.amount;
+                                    amount.value = item.amount;
+                            itemdiv.appendChild(amount);
+                                var sell = document.createElement("BUTTON");
+                                    sell.innerHTML = "Eladás";
+                                    sell.addEventListener("click", function(){itemsell(item.itemid, amount.value, place);});
+                            itemdiv.appendChild(sell);
+                                var unequip = document.createElement("BUTTON");
+                                    unequip.innerHTML = "Leszerel";
+                                    unequip.addEventListener("click", function(){itemunequip(item.itemid, amount.value, place);});
+                            itemdiv.appendChild(unequip);
+                        }
+                        catch(err)
+                        {
+                            alert(arguments.callee.name + err.name + ": " + err.message);
+                        }
+                        finally
+                        {
+                            return itemdiv;
+                        }
+                    }
+                
+            function squadronequipload()
+            //Betölti a raj felszerelésoldalt
+            {
+                try
+                {
+                    var container = document.getElementById("shipequip");
+                        container.innerHTML = "";
+                    container.appendChild(squadronchooseload());
+                    
+                        var squadronequipdiv = document.createElement("DIV");
+                            squadronequipdiv.id = "squadronequipdiv";
+                    container.appendChild(squadronequipdiv);
+                    
+                    squadronequip();
+                    
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+            }
+            
+                function squadronchooseload()
+                //Rajválasztó menü hozzáadása
+                {
+                    try
+                    {
+                        var squadrons = chardata.squadrons;
+                        
+                        var div = document.createElement("DIV");
+                            div.id = "squadronchoosediv";
+                            
+                            var select = document.createElement("SELECT");
+                                select.id = "squadronchoose";
+                                select.addEventListener("change", function(){target = select.value; squadronequip();});
+                            
+                            if(!Object.keys(squadrons).length)
+                            {
+                                var opt = document.createElement("OPTION");
+                                    opt.innerHTML = "Nincs felszerelt raj";
+                                    opt.value = "";
+                                select.appendChild(opt);
+                            }
+                            else
+                            {
+                                var x, opt;
+                                for(x in squadrons)
+                                {
+                                    opt = document.createElement("OPTION");
+                                    opt.value = squadrons[x].squadronid;
+                                    opt.innerHTML = squadrons[x].squadronname;
+                                    select.appendChild(opt);
+                                }
+                            }
+                        div.appendChild(select);
+                    }
+                    catch(err)
+                    {
+                        alert(arguments.callee.name + err.name + ": " + err.message);
+                    }
+                    finally
+                    {
+                        return div;
+                    }
+                }
+                
+                function squadronequip()
+                //Raj felszerelésének betöltése
+                {
+                    try
+                    {
+                        itemsload();
+                        var squadronid = document.getElementById("squadronchoose").value;
+                        target = squadronid;
+                        var container = document.getElementById("squadronequipdiv");
+                            container.innerHTML = "";
+                            
+                            var empty = document.createElement("BUTTON");
+                                empty.className = "unequipall";
+                                empty.innerHTML = "Raj kiürítése";
+                                empty.addEventListener("click", function(){unequipall("all", squadronid);});
+                        container.appendChild(empty);
+                        
+                        var squadrondata = shipdataload(squadronid);
+                        var equipmentlist = equipmentlistload(squadronid);
+                        
+                        var slots = 
+                        {
+                            squadronweapon: {slot: squadrondata.weaponslot, max: squadrondata.maxweaponlevel, name: "Fegyverzet"},
+                            squadronshield: {slot: squadrondata.shieldslot, max: squadrondata.maxshieldlevel, name: "Pajzs"},
+                            squadronhull: {slot: squadrondata.hullslot, max: squadrondata.maxhulllevel, name: "Burkolat"},
+                            battery: {slot: squadrondata.battery, max: squadrondata.maxbatterylevel, name: "Akkumulátor"},
+                        }
+                        
+                        var equipped = equippedload(squadronid);
+                    
+                        var x, y, slot
+                        for(x in slots)
+                        {
+                            slot = slots[x];
+                            if(equipped[x] == undefined) equipped[x] = 0;
+
+                            if(slot.slot) container.appendChild(slotdivcreate(slot, equipped, x, equipmentlist, squadronid));
+                        }
+                    }
+                    catch(err)
+                    {
+                        alert(arguments.callee.name + err.name + ": " + err.message);
+                    }
+                }
+            
+            function itemsload()
+            //Betölti a hangár felszereléseit
+            {
+                try
+                {
+                    var items = chardata.characterdata.equipment;
+                    var ammos = chardata.characterdata.ammo;
+                    var equipmentlist = equipmentlistload(target);
+                    var shipdata = shipdataload(target);
+                    var equipped = equippedload(target);
+                    var allslots = new allslotscreate(shipdata);
+                    
+                    var container = document.getElementById("itemsdiv");
+                        container.innerHTML = "";
+                        
+                    var typesearch = document.getElementById("typesearch").value;
+                    var levelsearch = document.getElementById("levelsearch").value;
+                    var searchbyname = document.getElementById("searchbyname").value;
+                    
+                    var x, item, itemdata, dispitems = {}, match = 0;
+                    
+                    for(x in ammos)
+                    {
+                        item = ammos[x];
+                        itemdata = gamedata.items[item.itemid];
+                        if(item.place == "hangar" && item.amount)
+                        {
+                            if(levelsearch == 0 || levelsearch == itemdata.level)
+                            {
+                                if(typesearch == 0 || typesearch == itemdata.slot)
+                                {
+                                    s = searchbyname.toLowerCase();
+                                    n = itemdata.name.toLowerCase();
+                                    if(searchbyname == "" || n.indexOf(s) > -1)
+                                    {
+                                        match = 1;
+                                        if(dispitems[item.itemid] == undefined) dispitems[item.itemid] = new dispitem(item.itemid, item.amount);
+                                        else
+                                        {
+                                            dispitems[item.itemid].amount += 1;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    for(x in items)
+                    {
+                        item = items[x];
+                        itemdata = gamedata.items[item.itemid];
+                        
+                        if(item.place == "hangar")
+                        {
+                            if(levelsearch == 0 || levelsearch == itemdata.level)
+                            {
+                                if(typesearch == 0 || typesearch == itemdata.slot)
+                                {
+                                    s = searchbyname.toLowerCase();
+                                    n = itemdata.name.toLowerCase();
+                                    if(searchbyname == "" || n.indexOf(s) > -1)
+                                    {
+                                        match = 1;
+                                        if(dispitems[item.itemid] == undefined) dispitems[item.itemid] = new dispitem(item.itemid, 1);
+                                        else
+                                        {
+                                            dispitems[item.itemid].amount += 1;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    if(match == 0)
+                    {
+                        var noitems = document.createElement("DIV");
+                            noitems.id = "noitems";
+                            noitems.innerHTML = "Nincs a keresésnek megfelelő elem.";
+                        container.appendChild(noitems);
+                    }
+                    else
+                    {
+                        for(x in dispitems)
+                        {
+                            container.appendChild(itemwrite(dispitems[x], shipdata, equipmentlist, equipped, allslots));
+                        }
+                    }
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+            }
+            
+                function dispitem(itemid, amount)
+                //Konstruktor a csoportosított felszerelésekhez
+                {
+                    try
+                    {
+                        this.itemid = itemid;
+                        this.amount = amount;
+                    }
+                    catch(err)
+                    {
+                        alert(arguments.callee.name + err.name + ": " + err.message);
+                    }
+                }
+                
+                function itemwrite(item, shipdata, equipmentlist, equipped, allslots)
+                //Kiír egy hangár elemet
+                {
+                    try
+                    {
+                        var itemdata = gamedata.items[item.itemid];
+                        
+                        var div = document.createElement("DIV");
+                            div.className = "item";
+                            
+                            var namediv = document.createElement("DIV");
+                                namediv.className = "itemname";
+                                namediv.innerHTML = itemdata.name + " (" + item.amount + ")";
+                        div.appendChild(namediv);
+                            
+                            var amount = document.createElement("INPUT");
+                                amount.type = "number";
+                                amount.value = item.amount;
+                                amount.min = 1;
+                                amount.max = item.amount;
+                        div.appendChild(amount);
+                        
+                            var sellbutton = document.createElement("BUTTON");
+                                sellbutton.innerHTML = "Eladás";
+                                sellbutton.addEventListener("click", function(){itemsell(item.itemid, amount.value, "hangar");});
+                        div.appendChild(sellbutton);
+                        
+                            var equipbutton = document.createElement("BUTTON");
+                                equipbutton.innerHTML = "Felszerel";
+                                if(equipable(item.itemid, target, shipdata, equipmentlist, equipped, allslots))
+                                {
+                                    equipbutton.addEventListener("click", function(){itemequip(item.itemid, amount.value, target);});
+                                }
+                                else
+                                {
+                                    equipbutton.className = "dis";
+                                }
+                        div.appendChild(equipbutton);
+                    }
+                    catch(err)
+                    {
+                        alert(arguments.callee.name + err.name + ": " + err.message);
+                    }
+                    finally
+                    {
+                        return div;
+                    }
+                }
+                
+                    function equipable(itemid, target, shipdata, equipmentlist, equipped, allslots)
+                    //Megadja, hogy felszerelhető-e az adott felszerelés
+                    {
+                        try
+                        {
+                            var itemdata = gamedata.items[itemid];
+                            var equipable = 1;
+                            
+                            if(itemdata.level > allslots[itemdata.slot].max) equipable = 0;
+                            if(equipped[itemdata.slot] >= allslots[itemdata.slot].slot) equipable = 0;
+                            
+                        }
+                        catch(err)
+                        {
+                            alert(arguments.callee.name + err.name + ": " + err.message);
+                        }
+                        finally
+                        {
+                            return equipable;
+                        }
+                    }
+                    
+                        function allslotscreate(shipdata)
+                        {
+                            try
+                            {
+                                if(shipdata.cannonslot) this.cannon = {slot: shipdata.cannonslot, max: shipdata.maxcannonlevel};
+                                else this.cannon = {slot: 0, max: 0};
+                                
+                                if(shipdata.rocketlauncherslot) this.rocketlauncher = {slot: shipdata.rocketlauncherslot, max: shipdata.maxrocketlauncherlevel};
+                                else this.rocketlauncher = {slot: 0, max: 0};
+                                
+                                if(shipdata.rifleslot) this.rifle = {slot: shipdata.rifleslot, max: shipdata.maxriflelevel};
+                                else this.rifle = {slot: 0, max: 0};
+                                
+                                switch(shipdata.type)
+                                {
+                                    case "ship":
+                                        if(shipdata.basicammostorage) this.ammo = {slot: shipdata.basicammostorage, max: 10};
+                                        if(shipdata.shieldslot) this.shield = {slot: shipdata.shieldslot, max: shipdata.maxshieldlevel};
+                                        if(shipdata.hullslot) this.hull = {slot: shipdata.hullslot, max: shipdata.maxhulllevel};
+                                    break;
+                                    case "squadron":
+                                        this.ammo = {slot: 0, max: 0};
+                                        if(shipdata.shieldslot) this.squadronshield = {slot: shipdata.shieldslot, max: shipdata.maxshieldlevel};
+                                        if(shipdata.hullslot) this.squadronullslot = {slot: shipdata.hullslot, max: shipdata.maxhulllevel};
+                                    break;
+                                }
+                                
+                                if(shipdata.generatorslot) this.generator = {slot: shipdata.generatorslot, max: shipdata.maxgeneratorlevel};
+                                else this.generator = {slot: 0, max: 0};
+                                
+                                if(shipdata.batteryslot) this.battery = {slot: shipdata.batteryslot, max: shipdata.maxbatterylevel};
+                                else this.battery = {slot: 0, max: 0};
+                                
+                                if(shipdata.hangarslot) this.hangar = {slot: shipdata.hangarslot, max: shipdata.maxhangarlevel};
+                                else this.hangar = {slot: 0, max: 0};
+                                
+                                if(shipdata.equipmentslot) this.equipment = {slot: shipdata.equipmentslot, max: 10};
+                                else this.equipment = {slot: 0, max: 0};
+                                
+                                if(shipdata.extenderslot) this.extender = {slot: shipdata.extenderslot, max: shipdata.maxextenderlevel};
+                                else this.extender = {slot: 0, max: 0};
+                                
+                                if(shipdata.weaponslot) this.squadronweapon = {slot: shipdata.weaponslot, max: shipdata.maxweaponlevel};
+                                else this.squadronweapon = {slot: 0, max: 0};
+                            }
+                            catch(err)
+                            {
+                                alert(arguments.callee.name + err.name + ": " + err.message);
+                            }
+                        }
+        
+        function itemequip(itemid, amount, target)
+        //Felszereli az adott tárgyat
+        {
+            try
+            {
+                var itemdata = gamedata.items[itemid];
+                var shipdata = shipdataload(target);
+                var allslots = new allslotscreate(shipdata);
+                var equipped = equippedload(target);
+                var equipmentlist = equipmentlistload(target);
+                amount = Number(amount);
+                
+                if(itemdata.slot == "ammo")
+                {
+                    var ammos = chardata.characterdata.ammo;
+                    var x, ammo, hangarammo, targetammo;
+                    for(x in ammos)
+                    {
+                        ammo = ammos[x];
+                        if(ammo.itemid == itemid && ammo.place == "hangar")
+                        {
+                            hangarammo = ammo;
+                        }
+                        if(ammo.itemid == itemid && ammo.place == target)
+                        {
+                            targetammo = ammo;
+                        }
+                    }
+                    
+                    if(targetammo == undefined)
+                    {
+                        targetammo = {itemid: itemid, place: target, amount: 0};
+                        ammos.push(hangarammo);
+                    }
+                    
+                    if(hangarammo.amount < amount) amount = hangarammo.amount;
+                    
+                    if(allslots.ammo.slot - equipped.ammo < amount) amount = allslots.ammo.slot - equipped.ammo;
+                    
+                    hangarammo.amount -= amount;
+                    targetammo.amount += amount;
+                }
+                else
+                {
+                    if(equipped[itemdata.slot] == undefined) equipped[itemdata.slot] = 0;
+                    if(allslots[itemdata.slot].slot - equipped[itemdata.slot] < amount) amount = allslots[itemdata.slot].slot - equipped[itemdata.slot];
+                    
+                    var x, item;
+                    var equipment = chardata.characterdata.equipment;
+                    for(x in equipment)
+                    {
+                        item = equipment[x];
+                        
+                        if(item.itemid == itemid && item.place == "hangar")
+                        {
+                            item.place = target;
+                            amount--;
+                        }
+                        
+                        if(!amount) break;
+                    }
+                }
+                
+                 //save();
+                itemsload();
+                headervalueset();
+                if(target == "ship") shipequipload();
+                else squadronequip();
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        }
+        
+        function itemsell(itemid, amount, place)
+        //Eladja a megadott felszerelést
+        {
+            try
+            {
+                chardata.credit = Number(chardata.credit);
+                amount = Number(amount);
+                if(place != "hangar")
+                {
+                    itemunequip(itemid, amount, place, 1);
+                }
+                
+                var itemdata = gamedata.items[itemid];
+                
+                switch(itemdata.slot)
+                {
+                    case "ammo":
+                        var ammos = chardata.characterdata.ammo;
+                        
+                        var x, ammo;
+                        for(x in ammos)
+                        {
+                            ammo = ammos[x];
+                            if(ammo.itemid == itemid && ammo.place == "hangar")
+                            {
+                                ammo.amount -= amount;
+                                chardata.credit += amount * itemdata.sellprice;
+                            }
+                        }
+                    break;
+                    default:
+                        var equipment = chardata.characterdata.equipment
+                        
+                        var x, item;
+                        for(x in equipment)
+                        {
+                            item = equipment[x];
+                            
+                            if(item.itemid == itemid && item.place == "hangar" && amount)
+                            {
+                                delete equipment[x];
+                                amount--;
+                                chardata.credit += itemdata.sellprice;
+                            }
+                        }
+                    break;
+                }
+                
+                //save();
+                itemsload();
+                headervalueset();
+                if(target == "ship") shipequipload();
+                else squadronequip();
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        }
+        
+        function itemunequip(itemid, amount, place, caller)
+        //leszereli a megadott felszerelést
+        {
+            try
+            {
+                var itemdata = gamedata.items[itemid];
+                amount = Number(amount);
+                switch(itemdata.slot)
+                {
+                    case "ammo":
+                        var ammos = chardata.characterdata.ammo;
+                        var x, ammo, hangarammo, fromammo;
+                        for(x in ammos)
+                        {
+                            ammo = ammos[x];
+                            if(ammo.place == "hangar" && ammo.itemid == itemid)
+                            {
+                                hangarammo = ammo;
+                            }
+                            if(ammo.place == place && ammo.itemid == itemid)
+                            {
+                                fromammo = ammo;
+                            }
+                        }
+                        
+                        if(hangarammo == undefined)
+                        {
+                            hangarammo = {itemid: itemid, place: "hangar", amount: 0};
+                            ammos.push(hangarammo);
+                        }
+                        
+                        if(fromammo.amount < amount) amount = fromammo.amount;
+                        
+                        
+                        fromammo.amount -= amount;
+                        hangarammo.amount += amount;
+                    break;
+                    case "hangar":
+                        unequip(itemid, amount, place);
+                    break;
+                    case "extender":
+                    
+                    break;
+                    default:
+                        unequip(itemid, amount, place);
+                    break;
+                }
+                
+                if(!caller)
+                {
+                    //save();
+                    itemsload();
+                    headervalueset();
+                    if(target == "ship") shipequipload();
+                    else squadronequip();
+                }
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        }
+        
+            function unequip(itemid, amount, place)
+            //egyszerű felszerelések leszerelése
+            {
+                try
+                {
+                    var itemdata = gamedata.items[itemid];
+                    var equipment = chardata.characterdata.equipment;
+                    
+                    var x, item;
+                    for(x in equipment)
+                    {
+                        item = equipment[x];
+                        
+                        if(item.itemid == itemid && item.place == place && amount)
+                        {
+                            item.place = "hangar";
+                            amount--;
+                        }
+                    }
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+            }
+            
+        function unequipall(slot, place)
+        {
+            alert(slot + place);
+        }
+    </SCRIPT>
+    
+</BODY>
+</HTML>

@@ -1,0 +1,598 @@
+﻿<HTML>
+    <HEAD>
+        <TITLE>SkyXplore</TITLE>
+        <BASE href='http://localhost/workdir/skyxplore2/'>
+        <link rel="stylesheet" type="text/css" href="common.css">
+        <STYLE>
+            #maintable
+            {
+                background-color: rgba(0,0,0,0.8);
+                margin: auto;
+                width: 90%;
+                margin-top: 50;
+                height: 90%;
+                border-style: ridge;
+                box-sizing: border-box;
+                
+            }
+            
+                #tabletitle
+                {
+                    font-size: 40;
+                    font-weight: bold;
+                    text-align: center;
+                    vertical-align: middle;
+                    height: 70;
+                }
+                
+                
+                td
+                {
+                    vertical-align: top;
+                    padding-bottom: 5;
+                }
+                
+                #introduction
+                {
+                    padding: 10;
+                    text-align: justify;
+                    font-size: 24;
+                }
+                
+                .tablecontainertitle
+                {
+                    text-align: center;
+                    font-size: 24;
+                    font-weight: bold;
+                }
+                
+                .tabletext
+                {
+                    vertical-align: middle;
+                    font-size: 20;
+                    text-align: right;
+                }
+                
+                .tableinput
+                {
+                    position: relative;
+                }
+                .tableinput input
+                {
+                    font-size: 18;
+                    padding: 2;
+                }
+                
+                .submit
+                {
+                    text-align: center;
+                }
+                
+                    .submit button
+                    {
+                        font-size: 16;
+                    }
+                    
+                .err
+                {
+                    display: none;
+                    position: absolute;
+                    top: 0;
+                    right: -30;
+                    color: red;
+                    border-style: ridge;
+                    border-width: 5;
+                    padding: 3;
+                    font-size: 16;
+                    background-color: black;
+                    z-index: 1;
+                    border-radius: 10px 10px 10px 10px;
+                }
+                
+                    .used
+                    {
+                        display: none;
+                    }
+                    .err:hover .used
+                    {
+                        display: inline;
+                    }
+        </STYLE>
+        
+        <SCRIPT>
+            (function cookiecheck()
+            //süti alapú belépés
+            {
+                try
+                {
+                    var cookies = document.cookie.split("; ");
+
+                    var cookieindex, cookiedata, cookieinfo = {}, cookieproperty, cookievalue;
+                    for(cookieindex in cookies)
+                    {
+                        cookiedata = cookies[cookieindex].split("=");
+                        cookieproperty = cookiedata[0];
+                        cookievalue = cookiedata[1];
+                       
+                        cookieinfo[cookieproperty] = cookievalue;
+                    }
+                    
+                        var keys = Object.keys(cookieinfo);
+                        if(keys.indexOf("username") > -1 && keys.indexOf("password") > -1)
+                        {
+                            var request = new XMLHttpRequest();
+                            request.open("POST", "login.php", 0);
+                            request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                            request.send("username=" + cookieinfo.username + "&password=" + cookieinfo.password);
+                            var answer = request.responseText;
+                            
+                            if(answer == 0)
+                            {
+                                document.cookie = "username=" + cookieinfo.username + "; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+                                document.cookie = "password=" + cookieinfo.password + "; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+                            }
+                            else
+                            {
+                                login(cookieinfo.username, cookieinfo.password)
+                            }
+                        }
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+            })();
+            
+                function login(username, password)
+                {
+                    try
+                    {
+                        if(username == undefined || password == undefined)
+                        {
+                            username = document.getElementById("loginusername").value;
+                            password = document.getElementById("loginpassword").value;
+                            
+                            if(username == "")
+                            {
+                                alert("Adja meg felhasználónevét!");
+                                return;
+                            }
+                            else if(password == "")
+                            {
+                                alert("Adja meg jelszavát!");
+                                return;
+                            }
+                        }
+
+                        var request = new XMLHttpRequest();
+                            request.open("POST", "login.php", 0);
+                            request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                            request.send("username=" + username + "&password=" + password)
+
+                            if(request.responseText == 0)
+                            {
+                                alert("Felhasználónév és jelszó kombinációja ismeretlen");
+                            }
+                            else
+                            {
+                                var user = JSON.parse(request.responseText);
+                                var x;
+                                for(x in user)
+                                {
+                                    sessionStorage[x] = user[x];
+                                }
+                                
+                                document.cookie = "username=" + username + "; path=/";
+                                document.cookie = "password=" + password + "; path=/";
+                                loginprocess();
+                            }
+                    }
+                    catch(err)
+                    {
+                        alert(arguments.callee.name + err.name + ": " + err.message);
+                    }
+                }
+                
+                    function loginprocess(codetext)
+                    //aktiválás és átirányítás
+                    {
+                        if(codetext === undefined)
+                        {
+                            codetext = "Megerősítő kód:";
+                        }
+                        
+                        if(sessionStorage.code != "")
+                        {
+                            var code = prompt(codetext);
+                           
+                            if(code == null)
+                            {
+                                return;
+                            }
+                            else if(code == "")
+                            {
+                                loginprocess("Írja be a megerősítő kódót!");
+                                return;
+                            }
+                            else
+                            {
+                                if(code == sessionStorage.code)
+                                {
+                                    var codeaccept = new XMLHttpRequest();
+                                        codeaccept.open("POST", "codevalidation.php", 1);
+                                        codeaccept.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                                        codeaccept.send("id=" + sessionStorage.id);
+                                        
+                                        sessionStorage.code = "";
+                                        alert("Kód elfogadva!");
+                                        loginprocess();
+                                }
+                                else
+                                {
+                                    loginprocess("Érvénytelen megerősítő kód!");
+                                    return;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            window.location.href = "account.html";
+                        }
+                    }
+        </SCRIPT>
+    </HEAD>
+<BODY>
+    <TABLE id='maintable' border='5'>
+        <TR>
+            <TD id='tabletitle' colspan='3'>SkyXplore</TD>
+        </TR>
+        <TR>
+            <TD style='text-align: center;'>
+                <TABLE>
+                    <TR>
+                        <TD class='tablecontainertitle' colspan='2'>Bejelentkezés</TD>
+                    </TR>
+                    <TR>
+                        <TD class='tabletext'>Felhasználónév:</TD>
+                        <TD class='tableinput'><INPUT type='text' id='loginusername' placeholder='Felhasználónév' autofocus></TD>
+                    </TR>
+                    <TR>
+                        <TD class='tabletext'>Jelszó:</TD>
+                        <TD class='tableinput'><INPUT type='password' id='loginpassword' placeholder='Jelszó'></TD>
+                    </TR>
+                    <TR>
+                        <TD class='submit' colspan='2'><BUTTON onclick='login()'>Bejelentkezés</BUTTON></TD>
+                    </TR>
+                </TABLE>
+                <BUTTON style='font-size: 16; margin-top: 20;' onclick='document.getElementById("forgottentable").style.visibility = "visible";'>Elfelejtett jelszó</BUTTON>
+                <TABLE style='width: 100%; margin-top: 10; visibility: hidden;' id='forgottentable'>
+                    <TR>
+                        <TD class='tabletext'>Felhasználónév<BR>vagy jelszó:</TD>
+                        <TD class='tableinput'><INPUT type='text' id='forgotteninput'></TD>
+                    </TR>
+                    <TR>
+                        <TD colspan='2' class='submit'><BUTTON onclick='forgotten()'>Új jelszó kérése</TD>
+                    </TR>
+                </TABLE>
+            </TD>
+            <TD id='introduction'>2317-et írunk. Hosszas fejlesztések és kísérletezések során mérnökeink kifejlesztettek egy új galaktikus átjárót, melynek segítségével pillanatok alatt bárhová el lehet jutni az univerzumban. Ez lehetőségek sokaságát jelenti a felfedezésre váró kutatók és kalandvadászok számára. Sorra alapulnak az űrkutató társaságok, mik űrpilóták ezreit alkalmazzák, és folyamatosan keresik a vállalkozó kedvű fiatalokat, hogy a csillagok között kutassanak. De a bolygóközi utazások veszélyeket is rejtenek magukban: agresszív idegen létformák és ellenséges társulatok támadhatnak az távoli egeken repülőkre. Elég bátor vagy ahhoz, hogy szembenézz az ismeretlennel? Csatlakozz Te is a rettenthetetlen pilóták csapatához, és légy Te a Világegyetem legjobbja!</P></TD>
+            <TD>
+                <TABLE>
+                    <TR>
+                        <TD class='tablecontainertitle' colspan='2'>Regisztráció</TD>
+                    </TR>
+                    <TR>
+                        <TD class='tabletext'>Felhasználónév:</TD>
+                        <TD class='tableinput'>
+                            <INPUT type='text' id='regusername'>
+                            <DIV class='err' id='usernameerr'>
+                                X
+                                <DIV class='used'>Felhasználónév foglalt.</DIV>
+                            </DIV>
+                        </TD>
+                    </TR>
+                    <TR>
+                        <TD class='tabletext'>E-mail:</TD>
+                        <TD class='tableinput'>
+                            <INPUT type='text' id='regemail'>
+                            <DIV class='err' id='emailerr'>
+                                X
+                                <DIV class='used'><SPAN id='emailerrmessage'></SPAN></DIV>
+                            </DIV>
+                        </TD>
+                    </TR>
+                    <TR>
+                        <TD class='tabletext'>Jelszó:</TD>
+                        <TD class='tableinput'><INPUT type='password' id='regpassword1'></TD>
+                    </TR>
+                    <TR>
+                        <TD class='tabletext'>Jelszó újra:</TD>
+                        <TD class='tableinput'><INPUT type='password' id='regpassword2'></TD>
+                    </TR>
+                    <TR>
+                        <TD class='submit' colspan='2'><BUTTON onclick='registration()'>Regisztráció</BUTTON></TD>
+                    </TR>
+                </TABLE>
+            </TD>
+        </TR>
+    </TABLE>
+    
+    <SCRIPT>
+        (function listeneradd()
+        {
+            try
+            {
+                document.getElementById("loginusername").addEventListener("keypress", function(){if(event.which == 13) login();});
+                document.getElementById("loginpassword").addEventListener("keypress", function(){if(event.which == 13) login();});
+                
+                document.getElementById("regusername").addEventListener("keypress", function(){if(event.which == 13) registration();});
+                document.getElementById("regusername").addEventListener("keyup", usernameexists);
+                document.getElementById("regemail").addEventListener("keypress", function(){if(event.which == 13) registration();});
+                document.getElementById("regemail").addEventListener("keyup", emailcheck);
+                document.getElementById("regpassword1").addEventListener("keypress", function(){if(event.which == 13) registration();});
+                document.getElementById("regpassword2").addEventListener("keypress", function(){if(event.which == 13) registration();});
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        })();
+        
+        function registration()
+        {
+            try
+            {
+                var username = document.getElementById("regusername").value;
+                var email = document.getElementById("regemail").value;
+                var password1 = document.getElementById("regpassword1").value;
+                var password2 = document.getElementById("regpassword2").value;
+                
+                if(username == "")
+                {
+                    alert("Adja meg felhasználónevét!");
+                }
+                else if(regusernameexist(username) == 0)
+                {
+                    alert("Felhasználónév foglalt.");
+                }
+                else if(email == "")
+                {
+                    alert("Adja meg e-mail címét!");
+                }
+                else if(emailvalidcheck(email) == 0)
+                {
+                    alert("Érvénytelen e-mail cím!");
+                }
+                else if(regemailexists(email) == 0)
+                {
+                    alert("E-mail cím már regisztrálva van.");
+                }
+                else if(password1 == "" || password2 == "")
+                {
+                    alert("Adja meg jelszavát!");
+                }
+                else if(password1 != password2)
+                {
+                    alert("A jelszavak nem egyeznek");
+                }
+                else
+                {
+                    var request = new XMLHttpRequest();
+                        request.open("POST", "registration.php", 0);
+                        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                        request.send("username=" + username + "&password=" + password1 + "&email=" + email);
+                        if(request.responseText == 1)
+                        {
+                            alert("Sikeres regisztráció!");
+                            login(username, password1);
+                        }
+                        else
+                        {
+                            alert("Váratlan hiba történt. \n" + request.responseText);
+                        }
+                }
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        }
+            
+            function regemailexists(email)
+            {
+                try
+                {
+                    var request = new XMLHttpRequest();
+                        request.open("POST", "emailexists.php", 0);
+                        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                        request.send("email=" + email);
+                    if(request.responseText == 0) return 1;
+                    else return 0;
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+            }
+            
+            function regusernameexist(username)
+            {
+                try
+                {
+                    var request = new XMLHttpRequest();
+                        request.open("POST", "usernameexists.php", 0);
+                        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                        request.send("username=" + username);
+                    if(request.responseText == 0) return 1;
+                    else return 0;
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+            }
+            
+            function usernameexists()
+            {
+                try
+                {
+                    var errdiv = document.getElementById("usernameerr");
+                    var username = document.getElementById("regusername").value;
+                    
+                    if(username)
+                    {
+                        var request = new XMLHttpRequest();
+                            request.open("POST", "usernameexists.php", 1);
+                            request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                            request.send("username=" + username);
+                            request.onreadystatechange = function()
+                            {
+                                if(request.readyState == 4 && request.status == 200)
+                                {
+                                    if(request.responseText == 0)
+                                    {
+                                        errdiv.style.display = "none";
+                                    }
+                                    else
+                                    {
+                                        errdiv.style.display = "block";
+                                    }
+                                }
+                            }
+                    }
+                    else
+                    {
+                        errdiv.style.display = "none";
+                    }
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+            }
+            
+            function emailcheck()
+            {
+                try
+                {
+                    var errdiv = document.getElementById("emailerr");
+                    var errmessage = document.getElementById("emailerrmessage");
+                    var email = document.getElementById("regemail").value;
+                    
+                    if(email)
+                    {
+                        if(emailvalidcheck(email) == 0)
+                        {
+                            errdiv.style.display = "block";
+                            errmessage.innerHTML = "Érvénytelen e-mail cím";
+                        }
+                        else
+                        {
+                            var request = new XMLHttpRequest()
+                                request.open("POST", "emailexists.php", 1)
+                                request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                                request.send("email=" + email);
+                                request.onreadystatechange = function()
+                                {
+                                    if(request.readyState == 4 && request.status == 200)
+                                    {
+                                        if(request.responseText == 0)
+                                        {
+                                            errdiv.style.display = "none";
+                                        }
+                                        else
+                                        {
+                                            errdiv.style.display = "block";
+                                            errmessage.innerHTML = "Az e-mail cím már regisztrálva van.";
+                                        }
+                                    }
+                                }
+                        }
+                    }
+                    else
+                    {
+                        errdiv.style.display = "none";
+                    }
+                    
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+            }
+            
+                function emailvalidcheck(email)
+                //ellenőrzi az email címet
+                {
+                    try
+                    {
+                        var result;
+                        if(email.indexOf("@") < 1) 
+                        {
+                            result = 0;
+                        }
+                        else if(email.lenght < 4)
+                        {
+                            result = 0;
+                        }
+                        else if(email.indexOf(".") < 0)
+                        {
+                            result = 0;
+                        }
+                        else if(email.lastIndexOf(".") > email.length - 3)
+                        {
+                            result = 0;
+                        }
+                        else
+                        {
+                            result = 1;
+                        }
+                    }
+                    catch(err)
+                    {
+                        alert(arguments.callee.name + err.name + ": " + err.message);
+                    }
+                    finally
+                    {
+                        return result;
+                    }
+                }
+                
+        function forgotten()
+        {
+            try
+            {
+                var input = document.getElementById("forgotteninput").value;
+                if(input == "")
+                {
+                    alert("Adja meg felhasználónevét vagy e-mail címét!");
+                }
+                else
+                {
+                    var request = new XMLHttpRequest();
+                        request.open("POST", "forgotten.php", 0);
+                        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                        request.send("input=" + input);
+                        alert(request.responseText);
+                        if(request.responseText == 0)
+                        {
+                            alert("Account nem található");
+                        }
+                        else if(request.responseText == 1)
+                        {
+                            alert("Új jelszó a regisztrált e-mail címre elküldve.");
+                        }
+                        else
+                        {
+                            alert("Váratlan hiba lépett fel.");
+                        }
+                }
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        }
+    </SCRIPT>
+</BODY>
+</HTML>
