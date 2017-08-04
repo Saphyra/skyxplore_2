@@ -401,8 +401,9 @@
                 else if(password != sessionStorage.password)
                 {
                     alert("Hibás jelszó.");
+                    document.getElementById("characterdeletepassword").value = "";
                 }
-                else if(confirm("Biztosan törölni szeretné karakterét?\nA törölt karakter adatait már nem lehet visszahonzi."));
+                else if(confirm("Biztosan törölni szeretné karakterét?\nA törölt karakter adatait már nem lehet visszahonzi."))
                 {
                     var request = new XMLHttpRequest();
                         request.open("POST", "characterdelete.php", 0);
@@ -413,6 +414,7 @@
                         alert("Karakter törölve.");
                         window.location.href = "account.html";
                 }
+                else document.getElementById("characterdeletepassword").value = "";
             }
             catch(err)
             {

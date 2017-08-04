@@ -1,5 +1,3 @@
-﻿Eladás
-    Hangár, bővítő kivételek
-Felszerelés
+﻿Felszerelés
     raj, hajó kivétel
 raj leszerelés törlés adatbázisból

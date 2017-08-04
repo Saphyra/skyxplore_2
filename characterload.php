@@ -13,6 +13,7 @@
     }
     $chardata["characterdata"] = json_decode($chardata["characterdata"], 1);
     
+    $chardata["squadrons"] = [];
     while($squadrontomb = mysqli_fetch_assoc($squadronleker))
     {
         $squadronid = $squadrontomb["squadronid"];

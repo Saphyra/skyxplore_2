@@ -873,6 +873,9 @@
                                     if(itemdata.level > allslots[itemdata.slot].max) equipable = 0;
                                     if(Object.keys(chardata.squadrons).length >= allslots[itemdata.slot].slot) equipable = 0;
                                 break;
+                                case "ship":
+                                    
+                                break;
                                 default:
                                     if(itemdata.level > allslots[itemdata.slot].max) equipable = 0;
                                     if(equipped[itemdata.slot] >= allslots[itemdata.slot].slot) equipable = 0;
@@ -1044,6 +1047,18 @@
                     hangarammo.amount -= amount;
                     targetammo.amount += amount;
                 }
+                else if(itemdata.slot == "squadron")
+                {
+                    var squadronname = prompt("Adja meg a raj nevét!");
+                    if(squadronname)
+                    {
+                        newsquadronequip(squadronname, itemid);
+                    }
+                }
+                else if(itemdata.slot == "ship")
+                {
+                    newshipequip(itemid);
+                }
                 else
                 {
                     if(equipped[itemdata.slot] == undefined) equipped[itemdata.slot] = 0;
@@ -1083,7 +1098,7 @@
                     }
                 }
                 
-                 //save();
+                 save();
                 itemsload();
                 headervalueset();
                 if(target == "ship") shipequipload();
@@ -1094,6 +1109,99 @@
                 alert(arguments.callee.name + err.name + ": " + err.message);
             }
         }
+            
+            function newshipequip(itemid)
+            {
+                try
+                {
+                    unequipall("all", "ship", 1);
+                    var equipment = chardata.characterdata.equipment;
+                    var x, item, itemdata, amount = 1;
+                    for(x in equipment)
+                    {
+                        item = equipment[x];
+                        itemdata = gamedata.items[item.itemid];
+                        if(itemdata.slot == "ship" && item.place == "ship") item.place = "hangar";
+                        if(item.itemid == itemid && item.place == "hangar" && amount > 0)
+                        {
+                            item.place = "ship";
+                            amount--;
+                        }
+                    }
+                    chardata.characterdata.ship = new charactership(itemid);
+                    chardata.company = chardata.characterdata.ship.company;
+                    chardata.shipid = itemid;
+                    
+                    save();
+                    //characterload();
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+            }
+            
+                function charactership(itemid)
+                {
+                    try
+                    {
+                        var shipdata = gamedata.items[itemid];
+                        
+                        var x;
+                        for(x in shipdata)
+                        {
+                            this[x] = shipdata[x];
+                        }
+                    }
+                    catch(err)
+                    {
+                        alert(arguments.callee.name + err.name + ": " + err.message);
+                    }
+                }
+            
+            function newsquadronequip(squadronname, itemid)
+            {
+                try
+                {
+                    var request = new XMLHttpRequest();
+                        request.open("POST", "squadronequip.php", 0);
+                        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                        request.send("ownerid=" + sessionStorage.charid + "&squadronname=" + squadronname + "&squadrondata=" + JSON.stringify(new charsquadron("", squadronname, gamedata.items[itemid])));
+                        var response = request.responseText;
+                        if(response == 0)
+                        {
+                            alert("Rajnév foglalt.");
+                        }
+                        else
+                        {
+                            characterload();
+                        }
+                        
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+            }
+            
+                function charsquadron(squadronid, squadronname, squadrondata)
+                {
+                    try
+                    {
+                        this.squadronid = squadronid;
+                        this.squadronname = squadronname;
+                        
+                        var x;
+                        for(x in squadrondata)
+                        {
+                            this[x] = squadrondata[x];
+                        }
+                    }
+                    catch(err)
+                    {
+                        alert(arguments.callee.name + err.name + ": " + err.message);
+                    }
+                }
         
         function itemsell(itemid, amount, place)
         //Eladja a megadott felszerelést
@@ -1143,7 +1251,7 @@
                     break;
                 }
                 
-                //save();
+                save();
                 itemsload();
                 headervalueset();
                 if(target == "ship") shipequipload();
@@ -1188,7 +1296,7 @@
                         
                         if(fromammo.amount < amount) amount = fromammo.amount;
                         
-                        
+                        hangarammo.amount = Number(hangarammo.amount);
                         fromammo.amount -= amount;
                         hangarammo.amount += amount;
                     break;
@@ -1211,7 +1319,7 @@
                 
                 if(!caller)
                 {
-                    //save();
+                    save();
                     itemsload();
                     headervalueset();
                     if(target == "ship") shipequipload();
@@ -1337,11 +1445,14 @@
                         unequip(squadrondata.squadrondata.itemid, 1, "ship");
                     delete chardata.squadrons[squadronid];
                     
-                    //Törlés adatbázisból
+                    var request = new XMLHttpRequest();
+                        request.open("POST", "squadrondelete.php", 0);
+                        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                        request.send("squadronid=" + squadronid);
                     
                     if(caller)
                     {
-                        //save();
+                        save();
                         headervalueset();
                         if(target == "ship") shipequipload();
                         else squadronequipload();
@@ -1384,14 +1495,14 @@
                         itemdata = gamedata.items[item.itemid];
                         if(slot == "all" || slot == itemdata.slot)
                         {
-                            if(item.place == place) itemunequip(item.itemid, -1, place, 1);
+                            if(itemdata.slot != "ship") if(item.place == place) itemunequip(item.itemid, -1, place, 1);
                         }
                     }
                 }
                 
                 if(!caller)
                 {
-                    //save();
+                    save();
                     itemsload();
                     headervalueset();
                     if(target == "ship") shipequipload();

@@ -121,6 +121,8 @@
             var shipdata = gamedata.items[shipid];
             var equipment = [];
             
+            equipment.push(new characterequip(gamedata.search({itemid: shipid}), "ship"));
+            
             var x, se, eqid, eq;
             for(x = 0; x < shipdata.cannonslot; x++)
             {
