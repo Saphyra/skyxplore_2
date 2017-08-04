@@ -1,0 +1,86 @@
+﻿<HTML>
+    <HEAD>
+        <TITLE>Csatamező - SkyXplore</TITLE>
+        <BASE href='http://localhost/workdir/skyxplore2/'>
+        <link rel="stylesheet" type="text/css" href="common.css">
+        
+        <SCRIPT src='gamedata.js'></SCRIPT>
+        <SCRIPT src='common.js'></SCRIPT>
+        <SCRIPT src='launch.js'></SCRIPT>
+        <SCRIPT src='charactergenerate.js'></SCRIPT>
+        <SCRIPT>
+            try
+            {
+                characterload();
+                var playerid = sessionStorage.charid;
+                
+                charactertransform(chardata);
+                alert(Object.keys(gameinfo.characters.squadron5918006501.equipment.squadronweapon[0]));
+                //alert(gameinfo.characters[playerid].ability.emfp.itemid);
+                //alert(Object.keys(chardata.characterdata.abilities.emfp));
+            }
+            catch(err)
+            {
+                alert("load: " + err.name + ": " + err.message);
+            }
+            
+        </SCRIPT>
+        
+        <STYLE>
+            #contentcontainer
+            {
+                background-color: red;
+                position: fixed;
+            }
+        </STYLE>
+    </HEAD>
+<BODY>
+    
+    <DIV id='maincontainer' class='maincontainer'>
+        <DIV id='header'>
+            <TABLE style='width: 100%;'>
+                <TR>
+                    <TD>
+                        
+                    </TD>
+                    <TD style='text-align: right;'><INPUT type='image' id='settingsbutton' src='settingsbutton.png' onclick='settingsmenu()'></TD>
+                </TR>
+            </TABLE>
+        </DIV>
+        
+        <DIV id='contentcontainer'>
+            
+        </DIV>
+        
+        <DIV id='footer'>
+            
+        </DIV>
+     </DIV>
+    
+    <DIV class='menucontainer' id='settingscontainer'>
+       <DIV class='menutitle'>Beállítások</DIV>
+       <DIV class='menuexit' id='settingsexit'><BUTTON onclick='document.getElementById("settingscontainer").style.display = "none";'>X</BUTTON></DIV>
+       <DIV class='menubar'><BUTTON onclick='logout()'>Kijelentkezés</BUTTON></DIV>
+       <DIV class='menubar' style='border-bottom-style: ridge; border-bottom-width: 3;'><BUTTON onclick='window.location.href = "account.html"'>Karakterváltás</BUTTON></DIV>
+       <DIV class='menubar'><BUTTON id='back' onclick='window.location.href = "character.html"'>Vissza</BUTTON></DIV>
+    </DIV>
+    
+    <SCRIPT>
+        (function sizeset()
+        //Beállítja az elemek méretét
+        {
+            try
+            {
+                var contentcontainer = document.getElementById("contentcontainer");
+                    contentcontainer.style.width = window.innerWidth - 20;
+                    contentcontainer.style.height = window.innerHeight - 110;
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        })();
+    </SCRIPT>
+    
+</BODY>
+</HTML>

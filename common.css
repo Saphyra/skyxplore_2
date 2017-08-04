@@ -27,7 +27,10 @@ input, button
 {
     color: rgb(130,130,130);
 }
-
+input[type='number']
+{
+    text-align: right;
+}
 
 input:focus, button:hover
 {
