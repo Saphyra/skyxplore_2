@@ -1,3 +1,5 @@
-﻿Felszerelés
-    raj, hajó kivétel
-raj leszerelés törlés adatbázisból
+﻿Equipment
+    Battery missing
+
+Anyahajó passzív: rajerősítés
+Rajerősítés helyett rajpajzs

@@ -13,11 +13,9 @@
             {
                 characterload();
                 var playerid = sessionStorage.charid;
-                
                 charactertransform(chardata);
-                alert(Object.keys(gameinfo.characters.squadron5918006501.equipment.squadronweapon[0]));
-                //alert(gameinfo.characters[playerid].ability.emfp.itemid);
-                //alert(Object.keys(chardata.characterdata.abilities.emfp));
+                
+                charactertransform(charactergenerate(chardata.level));
             }
             catch(err)
             {

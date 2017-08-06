@@ -128,7 +128,7 @@
                 rif07: new rifle("rif07", "RIF07 - Gépágyú Mk.VII", 7, 2500, 2500, 7500, 22500, 1400, 7, 70),
                 rif08: new rifle("rif08", "RIF08 - Gépágyú Mk.VIII", 8, 3000, 3000, 9000, 27000, 1600, 8, 80),
                 rif09: new rifle("rif09", "RIF09 - Gépágyú Mk.IX", 9, 3500, 3500, 10500, 31500, 1800, 9, 90),
-                rif10: new pulse("rif10", "RIF10 - Gépágyú Mk.X", 10, 4500, 4500, 13500, 40500, 2000, 10, 100),
+                rif10: new rifle("rif10", "RIF10 - Gépágyú Mk.X", 10, 4500, 4500, 13500, 40500, 2000, 10, 100),
                 
                 // new rocketlauncher(itemid, name, level, construction, craftprice, sellprice, buyprice, hulldamage, shielddamage, ammousage, energyusage),
                 rla01: new rocketlauncher("rla01", "RLA01 - Rakétakilövő Mk.I", 1, 400, 400, 1200, 3600, 5000, 5000, 1, 20),
@@ -297,8 +297,8 @@
                 ser01: new extra("ser01", "SER01 - Rajzavaró Elektronsugár", 1, 5000, 5000, 15000, 45000, "ser", "csg01", "Töltéstároló Gránáz", 10),
                 mdl01: new extra("mdl01", "MDL01 - Rakétaelhárító Lézer", 1, 5000, 5000, 15000, 45000, "mdl", "lac01", "Lézertöltet", 15),
                 rep01: new extra("rep01", "REP01 - Kis Burkolatjavító Robot", 1, 1000, 1000, 3000, 9000, "rep", "spp01", "Pótalkatrész", 10),
-                rep02: new extra("rep02", "REP02 - Közepes Burkolatjavító Robot", 1, 3000, 3000, 9000, 27000, "rep", "spp01", "Pótalkatrész", 10),
-                rep03: new extra("rep03", "REP03 - Nagy Burkolatjavító Robot", 1, 5000, 5000, 45000, 13500, "rep", "spp01", "Pótalkatrész", 10),
+                rep02: new extra("rep02", "REP02 - Közepes Burkolatjavító Robot", 2, 3000, 3000, 9000, 27000, "rep", "spp01", "Pótalkatrész", 10),
+                rep03: new extra("rep03", "REP03 - Nagy Burkolatjavító Robot", 3, 5000, 5000, 45000, 13500, "rep", "spp01", "Pótalkatrész", 10),
                 
                 //new extender(itemid, name, level, construction, craftprice, sellprice, buyprice, effect, slotextend),
                 
@@ -307,12 +307,12 @@
 				cae03: new extender("cae03", "CAE03 - Nagy Ágyú Bővítő", 3, 15000, 15000, 45000, 135000, "cannonslot", 3),
 				
 				rie01: new extender("rie01", "RIE01 - Kis Gépágyú Bővítő", 1, 2500, 2500, 7500, 22500, "rifleslot", 1),
-				rie02: new extender("rie02", "RIE02 - Közepes Gépágyú Bővítő", 1, 7500, 7500, 22500, 67500, "rifleslot", 2),
-				rie03: new extender("rie03", "RIE03 - Nagy Gépágyú Bővítő", 1, 15000, 15000, 45000, 135000, "rifleslot", 3),
+				rie02: new extender("rie02", "RIE02 - Közepes Gépágyú Bővítő", 2, 7500, 7500, 22500, 67500, "rifleslot", 2),
+				rie03: new extender("rie03", "RIE03 - Nagy Gépágyú Bővítő", 3, 15000, 15000, 45000, 135000, "rifleslot", 3),
 				
 				roe01: new extender("roe01", "ROE01 - Kis Rakétakilövő Bővítő", 1, 2500, 2500, 7500, 22500, "rocketlauncherslot", 1),
-				roe02: new extender("roe02", "ROE02 - Közepes Rakétakilövő Bővítő", 1, 7500, 7500, 22500, 67500, "rocketlauncherslot", 2),
-				roe03: new extender("roe03", "ROE03 - Nagy Rakétakilövő Bővítő", 1, 15000, 15000, 45000, 135000, "rocketlauncherslot", 3),
+				roe02: new extender("roe02", "ROE02 - Közepes Rakétakilövő Bővítő", 2, 7500, 7500, 22500, 67500, "rocketlauncherslot", 2),
+				roe03: new extender("roe03", "ROE03 - Nagy Rakétakilövő Bővítő", 3, 15000, 15000, 45000, 135000, "rocketlauncherslot", 3),
 				
 				hae01: new extender("hae01", "HAE01 - Kis Hangár Bővítő", 1, 2500, 2500, 7500, 22500, "hangarslot", 1),
 				hae02: new extender("hae02", "HAE02 - Közepes Hangár Bővítő", 2, 7500, 7500, 22500, 67500, "hangarslot", 2),

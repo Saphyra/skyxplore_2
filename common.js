@@ -13,6 +13,24 @@
     }
 })();
 
+function rand(min, max)
+//A két megadott érték közti számot dob ki
+{
+    try
+    {
+        if(typeof min != typeof 1 || typeof max != typeof 1) return NaN;
+        var num = Math.floor(Math.random() * (max - min + 1) ) + min;
+    }
+    catch(err)
+    {
+        alert(arguments.callee.name + err.name + ": " + err.message);
+    }
+    finally
+    {
+        return num;
+    }
+}
+
 function logout()
 //kijelentkezés
 {
