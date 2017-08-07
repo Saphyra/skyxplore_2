@@ -1,5 +1,5 @@
-﻿Equipment
-    Battery missing
+﻿Gyorsbillentyűk kiosztása
+
 
 Anyahajó passzív: rajerősítés
 Rajerősítés helyett rajpajzs

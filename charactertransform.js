@@ -1,20 +1,4 @@
-﻿(function gameinfoset()
-//létrehozza a játékhoz szükséges objektumokat
-{
-    try
-    {
-        var gameinfo = {};
-            gameinfo.characters = {};
-            
-        window.gameinfo = gameinfo;
-    }
-    catch(err)
-    {
-        alert(arguments.callee.name + err.name + ": " + err.message);
-    }
-})();
-
-function charactertransform(characterdata)
+﻿function charactertransform(characterdata)
 //Betölti a megadott karakter játékinformációit
 {
     try
@@ -23,8 +7,8 @@ function charactertransform(characterdata)
         gameinfo.characters[characterdata.charid] = new chtcharacter(characterdata, equipped);
         
         var squadrons = characterdata.squadrons;
-        var x, squadron;
-        for(x in squadrons)
+        var squadron;
+        for(var x in squadrons)
         {
             gameinfo.characters[x] = new chtsquadrons(x, characterdata);
         }
@@ -40,6 +24,14 @@ function charactertransform(characterdata)
     {
         try
         {
+            if(characterdata.alliance == undefined) this.alliance = "friend";
+            else this.alliance = characterdata.alliance;
+            
+            if(characterdata.place == undefined) this.place = "space";
+            else this.place = characterdata.place;
+            
+            this.type = "ship";
+            
             this.charid = characterdata.charid;
             this.charname = characterdata.charname;
             this.ship = new chtship(characterdata.characterdata.ship, equipped);
@@ -60,7 +52,7 @@ function charactertransform(characterdata)
         {
             try
             {
-                this.itemid = shipdata.shipid;
+                this.itemid = shipdata.itemid;
                 this.corehull = shipdata.corehull;
                 this.actualcorehull = shipdata.corehull;
                 this.cargo = shipdata.basiccargo;
@@ -81,9 +73,9 @@ function charactertransform(characterdata)
             {
                 var equipmentlist = {};
                 var equipment = characterdata.characterdata.equipment;
-                var x, item, itemdata;
+                var item, itemdata;
                 {
-                    for(x in equipment)
+                    for(var x in equipment)
                     {
                         item = equipment[x];
                         itemdata = gamedata.items[item.itemid];
@@ -159,8 +151,8 @@ function charactertransform(characterdata)
             try
             {
                 var equipped = {};
-                var x, item, itemdata;
-                for(x in characterdata.characterdata.equipment)
+                var item, itemdata;
+                for(var x in characterdata.characterdata.equipment)
                 {
                     item = characterdata.characterdata.equipment[x];
                     itemdata = gamedata.items[item.itemid];
@@ -175,7 +167,7 @@ function charactertransform(characterdata)
                 
                 var equippedextras = {};
                 var e = 0;
-                for(x in extras)
+                for(var x in extras)
                 {
                     if(equipped[extras[x]]) e = 1;
                     equippedextras[extras[x]] = new chtextra(extras[x], e);
@@ -197,7 +189,7 @@ function charactertransform(characterdata)
                 try
                 {
                     var itemdata = gamedata.items[itemid];
-                    this.itemid = itemdata.itemit;
+                    this.itemid = itemdata.itemid;
                     this.equipped = equipped;
                     this.ammotype = itemdata.ammotype;
                     this.reload = itemdata.reload;
@@ -216,8 +208,8 @@ function charactertransform(characterdata)
                 var ammos = characterdata.characterdata.ammo;
                 var equipammos = {};
                 
-                var x, ammo;
-                for(x in ammos)
+                var ammo;
+                for(var x in ammos)
                 {
                     ammo = ammos[x];
                     if(ammo.place == "ship" && ammo.amount)
@@ -260,8 +252,7 @@ function charactertransform(characterdata)
                 var characterabilities = {};
                 var abilities = characterdata.characterdata.abilities;
                 
-                var x;
-                for(x in abilities)
+                for(var x in abilities)
                 {
                     characterabilities[abilities[x].itemid] = new chtability(abilities[x]);
                 }
@@ -317,16 +308,20 @@ function charactertransform(characterdata)
         try
         {
             var squadrondata = characterdata.squadrons[squadronid];
+            
+            if(squadrondata.alliance == undefined) this.alliance = "friend";
+            else this.alliance = squadrondata.alliance;
+            
+            if(squadrondata.place == undefined) this.place = "space";
+            else this.place = squadrondata.place;
+            
+            this.type = "squadron";
             this.charid = squadronid;
             this.charname = squadrondata.squadronname;
             this.ship = new chtsquadron(squadrondata.squadrondata.itemid);
-            this.owner = squadrondata.ownerid;
+            this.owner = characterdata.charid;
             this.equipment = chtequipment(characterdata, squadronid);
             this.control = new chtsquadroncontrol(characterdata);
-            
-            /*
-            this.control = new shipcontrol(characterdata);
-            */
         }
         catch(err)
         {
@@ -380,8 +375,8 @@ function charactertransform(characterdata)
             var equipment = characterdata.characterdata.equipment;
             var ammos = characterdata.characterdata.ammo;
             
-            var x, item, itemdata;
-            for(x in ammos)
+            var item, itemdata;
+            for(var x in ammos)
             {
                 item = ammos[x];
                 if(item.place != "hangar")
@@ -392,7 +387,7 @@ function charactertransform(characterdata)
                 }
             }
             
-            for(x in equipment)
+            for(var x in equipment)
             {
                 item = equipment[x];
                 if(item.place != "hangar")

@@ -6,16 +6,51 @@
         
         <SCRIPT src='gamedata.js'></SCRIPT>
         <SCRIPT src='common.js'></SCRIPT>
-        <SCRIPT src='launch.js'></SCRIPT>
+        <SCRIPT>
+            (function gameinfoset()
+            //létrehozza a játékhoz szükséges objektumokat
+            {
+                try
+                {
+                    var gameinfo = {};
+                        gameinfo.characters = {};
+                        
+                    window.gameinfo = gameinfo;
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+            })();
+        </SCRIPT>
+        <SCRIPT src='charactertransform.js'></SCRIPT>
         <SCRIPT src='charactergenerate.js'></SCRIPT>
+        <SCRIPT src='charactergenerate.js'></SCRIPT>
+        <SCRIPT src='characterdisplayset.js'></SCRIPT>
         <SCRIPT>
             try
             {
-                characterload();
-                var playerid = sessionStorage.charid;
-                charactertransform(chardata);
-                
-                charactertransform(charactergenerate(chardata.level));
+                (function basicload()
+                //betölti a játék kezdőadatait
+                {
+                    characterload();
+                    var playerid = sessionStorage.charid;
+                    charactertransform(chardata);
+                    for(var x = 0; x < 10; x++)
+                    {
+                        switch(rand(0, 1))
+                        {
+                            case 0:
+                                var alliance = "friend";
+                            break;
+                            case 1:
+                                var alliance = "enemy";
+                            break;
+                        }
+                        var character = charactergenerate(chardata.level, alliance);
+                        charactertransform(character);
+                    }
+                })();
             }
             catch(err)
             {
@@ -27,9 +62,151 @@
         <STYLE>
             #contentcontainer
             {
-                background-color: red;
                 position: fixed;
             }
+            
+                #player
+                {
+                    border-style: ridge;
+                    broder-width: 3;
+                    position: absolute;
+                    height: 99.5%;
+                    box-sizing: border-box;
+                    top: 0.5%;
+                    left: 0.2%;
+                    width: 25%;
+                    overflow-y: auto;
+                    text-align: center;
+                }
+                    
+                    .bar
+                    {
+                        text-align: center;
+                        font-size: 11;
+                        border-style: ridge;
+                        border-width: 1;
+                        border-radius: 10px;
+                        background-repeat: no-repeat;
+                        background-position: left top;
+                        display: inline-block;
+                        width: 49%;
+                        box-sizing: border-box;
+                    }
+                    
+                        #player .bar
+                        {
+                            font-size: 14;
+                        }
+                        
+                        .corehullbar
+                        {
+                            background-image: url('pixelred.jpg');
+                        }
+                        
+                        .hullbar
+                        {
+                            background-image: url('pixelgreen.jpg');
+                        }
+                        
+                        .shieldbar
+                        {
+                            background-image: url('pixelblue.jpg');
+                        }
+                        
+                        .energybar
+                        {
+                            background-image: url('pixelyellow.jpg');
+                        }
+                        
+                        .cargobar, .ammobar
+                        {
+                            background-image: url('pixelpurple.jpg');
+                        }
+                
+                #bots
+                {
+                    border-style: ridge;
+                    broder-width: 3;
+                    position: absolute;
+                    height: 99.5%;
+                    box-sizing: border-box;
+                    top: 0.5%;
+                    right: 0.2%;
+                    width: 74.5%;
+                }
+                
+                    .botcontainer
+                    {
+                        box-sizing: border-box;
+                        height: 25%;
+                        position: relative;
+                        padding: 5;
+                        overflow-x: auto;
+                        overflow-y: hidden;
+                        white-space: nowrap;
+                    }
+                        
+                        .botdiv
+                        {
+                            border-style: ridge;
+                            border-width: 5;
+                            position: relative;
+                            width: 200;
+                            height: 85%;
+                            display: inline-block;
+                            margin-right: 5;
+                            text-align: center;
+                            white-space: normal;
+                            overflow-y: auto;
+                        }
+                        .botdiv:hover
+                        {
+                            border-color: orange;
+                        }
+                        
+                            .botname
+                            {
+                                font-size: 12;
+                                border-bottom-style: ridge;
+                                border-bottom-width: 2;
+                                overflow: hidden;
+                            }
+                            
+                                #player .botname
+                                {
+                                    font-size: 26;
+                                    border-bottom-style: ridge;
+                                    border-bottom-width: 3;
+                                    text-align: center;
+                                }
+                                
+                            .target
+                            {
+                                color: red;
+                            }
+                            
+                                #player .target
+                                {
+                                    font-size: 24;
+                                }
+                                
+                            .effects
+                            {
+                                color: #00ff00;
+                                font-size: 11;
+                            }
+                            
+                                #player .effects
+                                {
+                                    font-size: 24;
+                                }
+                        
+                        #friendsquadron
+                        {
+                            border-bottom-style: ridge;
+                            border-bottom-width: 3;
+                        }
+                
         </STYLE>
     </HEAD>
 <BODY>
@@ -47,7 +224,20 @@
         </DIV>
         
         <DIV id='contentcontainer'>
-            
+            <DIV id='player'>
+                <DIV id='playership'></DIV>
+                <DIV id='playersquadron'></DIV>
+            </DIV>
+            <DIV id='bots'>
+                <DIV id='friendship' class='botcontainer'>
+                </DIV>
+                <DIV id='friendsquadron' class='botcontainer'>
+                </DIV>
+                <DIV id='enemysquadron' class='botcontainer'>
+                </DIV>
+                <DIV id='enemyship' class='botcontainer'>
+                </DIV>
+            </DIV>
         </DIV>
         
         <DIV id='footer'>
@@ -72,12 +262,150 @@
                 var contentcontainer = document.getElementById("contentcontainer");
                     contentcontainer.style.width = window.innerWidth - 20;
                     contentcontainer.style.height = window.innerHeight - 110;
+                    
+                var footer = document.getElementById("footer");
+                    footer.style.width = window.innerWidth - 30;
+                    
             }
             catch(err)
             {
                 alert(arguments.callee.name + err.name + ": " + err.message);
             }
         })();
+        
+        (function containerload()
+        //kialakítja a karakterek tárolóját
+        {
+            try
+            {
+                for(var x in gameinfo.characters)
+                {
+                    var character = gameinfo.characters[x];
+                    var className = "botdiv";
+                    
+                    if(character.type == "ship")
+                    {
+                        if(character.charid == sessionStorage.charid)
+                        {
+                            var containerid = "playership";
+                            var className = "playerchar";
+                        }
+                        else if(character.alliance == "friend") var containerid = "friendship";
+                        else if(character.alliance == "enemy") var containerid = "enemyship";
+                        else alert("Ismeretlen szövetség" + character.alliance);
+                    }
+                    else if(character.type == "squadron")
+                    {
+                        if(character.owner == sessionStorage.charid)
+                        {
+                            var containerid = "playersquadron";
+                            var className = "playersquad";
+                        }
+                        else if(character.alliance == "friend") var containerid = "friendsquadron";
+                        else if(character.alliance == "enemy") var containerid = "enemysquadron";
+                        else alert("Ismeretlen szövetség" + character.alliance);
+                    }
+                    else alert("Ismeretlen karaktertípus ") + character.type;
+                    
+                    document.getElementById(containerid).appendChild(containercreate(containerid, character));
+                    
+                    characterdisplayset(character.charid);
+                }
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        })();
+        
+            function containercreate(containerid, character)
+            {
+                try
+                {
+                    var div = document.createElement("DIV");
+                        div.id = character.charid;
+                        
+                        if(containerid == "playership")
+                        {
+                            div.style.borderBottomStyle = "ridge";
+                            div.style.borderBottomWidth = 3;
+                        }
+                        else if(containerid == "playersquadron")
+                        {
+                            div.style.borderStyle = "ridge";
+                            div.style.borderWidth = 3;
+                            div.style.margin = 10;
+                            div.style.marginTop = 20;
+                        }
+                        else
+                        {
+                            div.className = "botdiv";
+                        }
+                        
+                        var name = document.createElement("DIV");
+                            name.className = "botname";
+                            name.innerHTML = character.ship.itemid.toUpperCase() + " - " + character.charname;
+                    div.appendChild(name);
+                    
+                        var corehullbar = document.createElement("DIV");
+                            corehullbar.className = "bar corehullbar";
+                            corehullbar.id = "corehullbar" + character.charid;
+                    div.appendChild(corehullbar);
+                            
+                        var hullbar = document.createElement("DIV");
+                            hullbar.className = "bar hullbar";
+                            hullbar.id = "hullbar" + character.charid;
+                    div.appendChild(hullbar);
+                    
+                    div.appendChild(document.createElement("BR"));
+                    
+                        var shieldbar = document.createElement("DIV");
+                            shieldbar.className = "bar shieldbar";
+                            shieldbar.id = "shieldbar" + character.charid;
+                    div.appendChild(shieldbar);
+                    
+                        var energybar = document.createElement("DIV");
+                            energybar.className = "bar energybar";
+                            energybar.id = "energybar" + character.charid;
+                    div.appendChild(energybar);
+                    
+                    if(containerid == "playership" || containerid == "playersquadron")
+                    {
+                        div.appendChild(document.createElement("BR"));
+                        
+                        var ammobar = document.createElement("DIV");
+                            ammobar.className = "bar ammobar";
+                            ammobar.id = "ammobar" + character.charid;
+                        div.appendChild(ammobar);
+                        
+                        if(containerid == "playership")
+                        {
+                            var cargobar = document.createElement("DIV");
+                                cargobar.className = "bar cargobar";
+                                cargobar.id = "cargobar" + character.charid;
+                            div.appendChild(cargobar);
+                        }
+                    }
+                    
+                        var target = document.createElement("DIV");
+                            target.className = "target";
+                            target.id = "target" + character.charid;
+                            target.innerHTML = "Célpont";
+                    div.appendChild(target);
+                        var effects = document.createElement("DIV");
+                            effects.className = "effects";
+                            effects.id = "effects" + character.charid;
+                    div.appendChild(effects);
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+                finally
+                {
+                    return div;
+                }
+            }
     </SCRIPT>
     
 </BODY>

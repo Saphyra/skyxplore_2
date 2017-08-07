@@ -1,10 +1,13 @@
-﻿function charactergenerate(level)
+﻿function charactergenerate(level, alliance)
 //Botot generál
 {
     try
     {
         var botdata = {};
         
+        botdata.alliance = alliance;
+        botdata.type = "ship";
+        botdata.place = "space";
         botdata.charid = chgidset();
         botdata.charname = botdata.charid // nameset();
         botdata.company = chgcompanyset();
@@ -18,8 +21,8 @@
         botdata.squadrons = {};
         var squadronplace = chgsquadronplaceset(botdata.characterdata.equipment);
             
-            var x, squadronlevel, squadron;
-            for(x = 0; x < squadronplace; x++)
+            var squadronlevel, squadron;
+            for(var x = 0; x < squadronplace; x++)
             {
                 if(squadronlevel = chgequipmentlevelset10(botdata.characterdata.ship.maxsquadronlevel))
                 {
@@ -47,8 +50,7 @@
             var ids = [];
             if(gameinfo.characters != undefined)
             {
-                var x;
-                for(x in gameinfo.characters)
+                for(var x in gameinfo.characters)
                 {
                     ids.push(x);
                 }
@@ -120,8 +122,8 @@
             var abilities = gamedata.abilities;
             charabilities = {};
             
-            var x, ability;
-            for(x in abilities)
+            var ability;
+            for(var x in abilities)
             {
                 ability = abilities[x];
                 charabilities[x] = new chgability(ability, level);
@@ -133,7 +135,7 @@
         }
         finally
         {
-            return company;
+            return charabilities;
         }
     }
     
@@ -418,8 +420,7 @@
             {
                 var shipdata = gamedata.items[shipid];
                 
-                var x;
-                for(x in shipdata)
+                for(var x in shipdata)
                 {
                     this[x] = shipdata[x];
                 }
@@ -443,8 +444,8 @@
                 var effects = chgeffectlist("extender");
                 var equippedeffect = [];
                 
-                var x, extenderlevel, effect, extenderdata, itemid;
-                for(x = 0; x < shipdata.extenderslot; x++)
+                var extenderlevel, effect, extenderdata, itemid;
+                for(var x = 0; x < shipdata.extenderslot; x++)
                 {
                     if(extenderlevel = chgequipmentlevelset3(shipdata.maxextenderlevel))
                     {
@@ -490,11 +491,11 @@
                 }
                 
                 equipmenteffects = chgeffectlist("equipment");
-                var y, slot, item, itemlevel, typerate, itemtype, equippedextraeffect = [], count, overload = 1, search;
-                for(x in slots)
+                var slot, item, itemlevel, typerate, itemtype, equippedextraeffect = [], count, overload = 1, search;
+                for(var x in slots)
                 {
                     slot = slots[x]
-                    for(y = 0; y < slot.slot; y++)
+                    for(var y = 0; y < slot.slot; y++)
                     {
                         switch(x)
                         {
@@ -617,8 +618,8 @@
                     var extenders = gamedata.search({slot: effect});
                     var effects = [];
                     
-                    var x, extenderdata;
-                    for(x in extenders)
+                    var extenderdata;
+                    for(var x in extenders)
                     {
                         extenderdata = gamedata.items[extenders[x]];
                         if(effects.indexOf(extenderdata.effect) == -1) effects.push(extenderdata.effect);
@@ -832,8 +833,8 @@
         {
             var squadronplace = 0;
             
-            var x, item, itemdata;
-            for(x in equipment)
+            var item, itemdata;
+            for(var x in equipment)
             {
                 item = equipment[x];
                 itemdata = gamedata.items[item.itemid];
@@ -859,6 +860,9 @@
         try
         {
             var squadron = {};
+                squadron.type = "squadron";
+                squadron.place = "space";
+                squadron.alliance = botdata.alliance;
                 squadron.ownerid = botdata.charid;
                 squadron.squadronid = chgsquadronidset(botdata.squadrons);
                 squadron.squadronname = squadron.squadronid;
@@ -881,16 +885,15 @@
             try
             {
                 var ids = [];
-                var x;
                 if(gameinfo.characters != undefined)
                 {
-                    for(x in gameinfo.characters)
+                    for(var x in gameinfo.characters)
                     {
                         ids.push(x);
                     }
                 }
                 
-                for(x in squadrons)
+                for(var x in squadrons)
                 {
                     ids.push(x);
                 }
@@ -925,7 +928,7 @@
                 var itemid = gamedata.search({slot: "squadron", level: squadronlevel});
                 var squadrondata = gamedata.items[itemid];
                 
-                for(x in squadrondata)
+                for(var x in squadrondata)
                 {
                     this[x] = squadrondata[x];
                 }
@@ -953,12 +956,12 @@
                     battery: {slot: squadrondata.batteryslot, level: squadrondata.maxbatterylevel},
                 };
                 
-                var x, slot, y, itemlevel, typerate, itemtype, itemid;
-                for(x in slots)
+                var slot, itemlevel, typerate, itemtype, itemid;
+                for(var x in slots)
                 {
                     slot = slots[x];
                     
-                    for(y = 0; y < slot.slot; y++)
+                    for(var y = 0; y < slot.slot; y++)
                     {
                         switch(x)
                         {
@@ -1016,8 +1019,8 @@
             var basicammostorage = botdata.characterdata.ship.basicammostorage;
             
             var ammotypes = {};
-            var x, item, itemdata, ammousage;
-            for(x in equipment)
+            var item, itemdata, ammousage;
+            for(var x in equipment)
             {
                 item = equipment[x];
                 itemdata = gamedata.items[item.itemid];
@@ -1037,18 +1040,18 @@
             }
             
             var allammousage = 0;
-            for(x in ammotypes) allammousage += ammotypes[x];
+            for(var x in ammotypes) allammousage += ammotypes[x];
             
             var maxammonum = {};
-            for(x in ammotypes)
+            for(var x in ammotypes)
             {
                 maxammonum[x] = ammotypes[x] / allammousage * basicammostorage;
             }
             
             var ammolist = [];
             
-            var y, itemid;
-            for(x in maxammonum)
+            var itemid;
+            for(var x in maxammonum)
             {
                 if(gamedata.items[x])
                 {
@@ -1056,7 +1059,7 @@
                 }
                 else
                 {
-                    for(y = 0; y < 10; y++)
+                    for(var y = 0; y < 10; y++)
                     {
                         var ammolevel = chgammolevelset()
                         itemid = gamedata.search({itemtype: x, level: ammolevel});
@@ -1067,13 +1070,13 @@
             }
             
             var ammo, match;
-            for(x in ammolist)
+            for(var x in ammolist)
             {
                 match = 0;
                 ammo = ammolist[x];
                 ammo.amount = Math.ceil(ammo.amount);
                 
-                for(y in ammos)
+                for(var y in ammos)
                 {
                     if(ammos[y].itemid == ammo.itemid)
                     {

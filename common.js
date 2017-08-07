@@ -31,6 +31,52 @@ function rand(min, max)
     }
 }
 
+function getrule(ruleName)
+{
+    ruleName = ruleName.toLowerCase();
+    var styleSheet;
+    var i, ii;
+    var cssRule = false;
+    var cssRules;
+    if(document.styleSheets)
+    {
+        for(i = 0; i < document.styleSheets.length; i++)
+        {
+            styleSheet = document.styleSheets[i];
+            if(!styleSheet.href)
+            {
+                if(styleSheet.cssRules)
+                {
+                    cssRules = styleSheet.cssRules;
+                }
+                else
+                {
+                    cssRules = styleSheet.rules;
+                }
+                if(cssRules)
+                {
+                    for(ii = 0; ii < cssRules.length; ii++)
+                    {
+                        cssRule = cssRules[ii];
+                        if(cssRule)
+                        {
+                            if(cssRule.selectorText)
+                            {
+                                console.log(cssRule.selectorText);
+                                if(cssRule.selectorText.toLowerCase() == ruleName)
+                                {
+                                    return cssRule;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
+
 function logout()
 //kijelentkezés
 {
