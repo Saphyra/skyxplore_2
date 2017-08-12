@@ -27,6 +27,7 @@
         <SCRIPT src='charactergenerate.js'></SCRIPT>
         <SCRIPT src='charactergenerate.js'></SCRIPT>
         <SCRIPT src='characterdisplayset.js'></SCRIPT>
+        <SCRIPT src='quickbarcontrol.js'></SCRIPT>
         <SCRIPT>
             try
             {
@@ -207,21 +208,99 @@
                             border-bottom-width: 3;
                         }
                 
+            #footer
+            {
+                height: 40;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            
+                #footer button
+                {
+                    font-size: 16;
+                }
+            
+                #choosecontainer
+                {
+                    height: 45;
+                    position: relative;
+                }
+                    
+                    .choose
+                    {
+                        display: inline;
+                        margin-left: 10;
+                        cursor: pointer;
+                        position: relative;
+                    }
+                    .choose:hover
+                    {
+                        border-color: red;
+                    }
+                    
+                        .quickbarbutton
+                        {
+                            text-align: left;
+                            width: 100%;
+                            border-radius: 0;
+                            border-width: 3;
+                            padding: 2;
+                        }
+                    
+                        .weapontypes
+                        {
+                            background-color: black;
+                            position: absolute;
+                            left: 0;
+                            bottom: 24;
+                            text-align: center;
+                            display: none;
+                        }
+                        
+                            .weapontype
+                            {
+                                position: relative;
+                                text-align: left;
+                                white-space: nowrap;
+                            }
+                            .weapontype:hover
+                            {
+                                border-color: red;
+                            }
+                            
+                                .ammotypes
+                                {
+                                    position: absolute;
+                                    display: none;
+                                    left: 100%;
+                                    bottom: 0;
+                                }
+                                
+                                    .ammotype
+                                    {
+                                        background-color: black;
+                                        white-space: nowrap;
+                                        font-size: 20;
+                                    }
+                                    .ammotype:hover
+                                    {
+                                        border-color: red;
+                                    }
         </STYLE>
     </HEAD>
-<BODY>
+<BODY onkeyup='quickbarcontrol("key", event)'>
     
     <DIV id='maincontainer' class='maincontainer'>
-        <DIV id='header'>
+        <!--<DIV id='header'>
             <TABLE style='width: 100%;'>
                 <TR>
                     <TD>
                         
                     </TD>
-                    <TD style='text-align: right;'><INPUT type='image' id='settingsbutton' src='settingsbutton.png' onclick='settingsmenu()'></TD>
+                    
                 </TR>
             </TABLE>
-        </DIV>
+        </DIV>-->
         
         <DIV id='contentcontainer'>
             <DIV id='player'>
@@ -241,7 +320,8 @@
         </DIV>
         
         <DIV id='footer'>
-            
+            <DIV id='choosecontainer' style='display: inline;'></DIV>
+            <DIV style='position: absolute; right: 3; top: 3; text-align: right;'><INPUT type='image' id='settingsbutton' src='settingsbutton.png' onclick='settingsmenu()'></DIV>
         </DIV>
      </DIV>
     
@@ -251,6 +331,31 @@
        <DIV class='menubar'><BUTTON onclick='logout()'>Kijelentkezés</BUTTON></DIV>
        <DIV class='menubar' style='border-bottom-style: ridge; border-bottom-width: 3;'><BUTTON onclick='window.location.href = "account.html"'>Karakterváltás</BUTTON></DIV>
        <DIV class='menubar'><BUTTON id='back' onclick='window.location.href = "character.html"'>Vissza</BUTTON></DIV>
+       <DIV class='menubar'><BUTTON onclick='document.getElementById("quickbarsetup").style.display = "block";'>Gyorsmenüsor beállítása</BUTTON></DIV>
+    </DIV>
+    
+    <DIV class='menucontainer' id='quickbarsetup'>
+        <DIV class='menutitle'>Gyorsmenüsor beállítása</DIV>
+        <DIV class='menuexit'><BUTTON onclick='document.getElementById("quickbarsetup").style.display = "none";'>X</BUTTON></DIV>
+        <DIV class='menubar'><BUTTON onclick='gameinfo.activebar = 1; document.getElementById("quickbaractionchoose").style.display = "block";' id='quickbarset1'></BUTTON></DIV>
+        <DIV class='menubar'><BUTTON onclick='gameinfo.activebar = 2; document.getElementById("quickbaractionchoose").style.display = "block";' id='quickbarset2'></BUTTON></DIV>
+        <DIV class='menubar'><BUTTON onclick='gameinfo.activebar = 3; document.getElementById("quickbaractionchoose").style.display = "block";' id='quickbarset3'></BUTTON></DIV>
+        <DIV class='menubar'><BUTTON onclick='gameinfo.activebar = 4; document.getElementById("quickbaractionchoose").style.display = "block";' id='quickbarset4'></BUTTON></DIV>
+        <DIV class='menubar'><BUTTON onclick='gameinfo.activebar = 5; document.getElementById("quickbaractionchoose").style.display = "block";' id='quickbarset5'></BUTTON></DIV>
+    </DIV>
+    
+    <DIV class='menucontainer' id='quickbaractionchoose'>
+        <DIV class='menutitle'>Gyorsmenüsor beállítása</DIV>
+        <DIV class='menuexit'><BUTTON onclick='document.getElementById("quickbaractionchoose").style.display = "none";'>X</BUTTON></DIV>
+        <DIV class='menubar'><BUTTON onclick='quickbarsetupchoose("weapontypes")'>Lőszer</BUTTON></DIV>
+        <DIV class='menubar'><BUTTON onclick='quickbarsetupchoose("abilities")'>Képesség</BUTTON></DIV>
+        <DIV class='menubar'><BUTTON onclick='quickbarsetupchoose("equipments")'>Felszerelés</BUTTON></DIV>
+    </DIV>
+    
+    <DIV class='menucontainer' id='quickbarsetupchoose'>
+        <DIV class='menutitle' id='quickbarsetupmenutitle'></DIV>
+        <DIV class='menuexit' id='quickbarsetupchooseexit'><BUTTON onclick='document.getElementById("quickbarsetupchoose").style.display = "none";'>X</BUTTON></DIV>
+        <DIV id='quickbarsetupchoosecontainer'></DIV>
     </DIV>
     
     <SCRIPT>
@@ -261,11 +366,10 @@
             {
                 var contentcontainer = document.getElementById("contentcontainer");
                     contentcontainer.style.width = window.innerWidth - 20;
-                    contentcontainer.style.height = window.innerHeight - 110;
+                    contentcontainer.style.height = window.innerHeight - 62;
                     
-                var footer = document.getElementById("footer");
-                    footer.style.width = window.innerWidth - 30;
-                    
+                    quickbarsetupset();
+                    quickbarload();
             }
             catch(err)
             {

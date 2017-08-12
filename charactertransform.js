@@ -5,6 +5,10 @@
     {
         var equipped = equippedload(characterdata);
         gameinfo.characters[characterdata.charid] = new chtcharacter(characterdata, equipped);
+        gameinfo.quickbarsession = "idle";
+        gameinfo.openedbar = null;
+        gameinfo.numberassign = {};
+        gameinfo.activebar = null;
         
         var squadrons = characterdata.squadrons;
         var squadron;
@@ -53,6 +57,7 @@
             try
             {
                 this.itemid = shipdata.itemid;
+                this.company = shipdata.company;
                 this.corehull = shipdata.corehull;
                 this.actualcorehull = shipdata.corehull;
                 this.cargo = shipdata.basiccargo;
@@ -166,9 +171,10 @@
                 var extras = gamedata.search({slot: "equipment"});
                 
                 var equippedextras = {};
-                var e = 0;
+                var e;
                 for(var x in extras)
                 {
+                    e = 0;
                     if(equipped[extras[x]]) e = 1;
                     equippedextras[extras[x]] = new chtextra(extras[x], e);
                 }
@@ -272,8 +278,10 @@
             {
                 try
                 {
+                    var abilitydata = gamedata.abilities[ability.itemid];
                     this.itemid = ability.itemid;
                     this.level = ability.level;
+                    this.owner = abilitydata.owner
                 }
                 catch(err)
                 {
