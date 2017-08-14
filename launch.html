@@ -28,6 +28,8 @@
         <SCRIPT src='charactergenerate.js'></SCRIPT>
         <SCRIPT src='characterdisplayset.js'></SCRIPT>
         <SCRIPT src='quickbarcontrol.js'></SCRIPT>
+        <SCRIPT src='newround.js'></SCRIPT>
+        <SCRIPT src='newround_function.js'></SCRIPT>
         <SCRIPT>
             try
             {
@@ -37,19 +39,12 @@
                     characterload();
                     var playerid = sessionStorage.charid;
                     charactertransform(chardata);
-                    for(var x = 0; x < 10; x++)
+                    for(var x = 0; x < 29; x++)
                     {
-                        switch(rand(0, 1))
-                        {
-                            case 0:
-                                var alliance = "friend";
-                            break;
-                            case 1:
-                                var alliance = "enemy";
-                            break;
-                        }
-                        var character = charactergenerate(chardata.level, alliance);
-                        charactertransform(character);
+                        if(x < 14) var alliance = "friend";
+                        else var alliance = "enemy";
+                        
+                        charactertransform(charactergenerate(chardata.level, alliance));
                     }
                 })();
             }
@@ -159,11 +154,26 @@
                             text-align: center;
                             white-space: normal;
                             overflow-y: auto;
+                            cursor: pointer;
                         }
                         .botdiv:hover
                         {
                             border-color: orange;
                         }
+                        
+                        .playerlocked
+                        {
+                            border-color: red;
+                        }
+                        .targeted
+                        {
+                            border-color: #006600;
+                        }
+                        .locked
+                        {
+                            border-color: #00ff00;
+                        }
+                        
                         
                             .botname
                             {
@@ -184,6 +194,8 @@
                             .target
                             {
                                 color: red;
+                                font-weight: bold;
+                                font-size: 16;
                             }
                             
                                 #player .target
@@ -286,22 +298,16 @@
                                     {
                                         border-color: red;
                                     }
+                                    
+                                    .selectedammo
+                                    {
+                                        border-color: blue;
+                                    }
         </STYLE>
     </HEAD>
-<BODY onkeyup='quickbarcontrol("key", event)'>
+<BODY onkeyup='quickbarcontrol("key", event)' style='background-image: url("launchbackground.jpg");'>
     
     <DIV id='maincontainer' class='maincontainer'>
-        <!--<DIV id='header'>
-            <TABLE style='width: 100%;'>
-                <TR>
-                    <TD>
-                        
-                    </TD>
-                    
-                </TR>
-            </TABLE>
-        </DIV>-->
-        
         <DIV id='contentcontainer'>
             <DIV id='player'>
                 <DIV id='playership'></DIV>
@@ -320,6 +326,8 @@
         </DIV>
         
         <DIV id='footer'>
+            <BUTTON id='autoplay' onclick='autoPlay("start")' style='position: absolute; left: 10;'>Indítás</BUTTON>
+            <BUTTON onclick='newround()'>Új kör</BUTTON>
             <DIV id='choosecontainer' style='display: inline;'></DIV>
             <DIV style='position: absolute; right: 3; top: 3; text-align: right;'><INPUT type='image' id='settingsbutton' src='settingsbutton.png' onclick='settingsmenu()'></DIV>
         </DIV>
@@ -385,14 +393,12 @@
                 for(var x in gameinfo.characters)
                 {
                     var character = gameinfo.characters[x];
-                    var className = "botdiv";
                     
                     if(character.type == "ship")
                     {
                         if(character.charid == sessionStorage.charid)
                         {
                             var containerid = "playership";
-                            var className = "playerchar";
                         }
                         else if(character.alliance == "friend") var containerid = "friendship";
                         else if(character.alliance == "enemy") var containerid = "enemyship";
@@ -403,7 +409,6 @@
                         if(character.owner == sessionStorage.charid)
                         {
                             var containerid = "playersquadron";
-                            var className = "playersquad";
                         }
                         else if(character.alliance == "friend") var containerid = "friendsquadron";
                         else if(character.alliance == "enemy") var containerid = "enemysquadron";
@@ -494,7 +499,6 @@
                         var target = document.createElement("DIV");
                             target.className = "target";
                             target.id = "target" + character.charid;
-                            target.innerHTML = "Célpont";
                     div.appendChild(target);
                         var effects = document.createElement("DIV");
                             effects.className = "effects";
@@ -508,6 +512,30 @@
                 finally
                 {
                     return div;
+                }
+            }
+            
+            function autoPlay(type)
+            {
+                try
+                {
+                    switch(type)
+                    {
+                        case "start":
+                            gameinfo.newRoundInterval = setInterval(function(){newround();}, 1000);
+                            document.getElementById("autoplay").innerHTML = "Leállítás";
+                            document.getElementById("autoplay").onclick = function(){autoPlay("stop")};
+                        break;
+                        case "stop":
+                            clearInterval(gameinfo.newRoundInterval);
+                            document.getElementById("autoplay").innerHTML = "Indítás";
+                            document.getElementById("autoplay").onclick = function(){autoPlay("start")};
+                        break;
+                    }
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
                 }
             }
     </SCRIPT>

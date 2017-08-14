@@ -1188,6 +1188,7 @@
             {
                 this.itemid = ammo.itemid;
                 this.amount = ammo.amount;
+                this.place = "ship";
             }
             catch(err)
             {

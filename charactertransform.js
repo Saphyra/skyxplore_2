@@ -9,6 +9,21 @@
         gameinfo.openedbar = null;
         gameinfo.numberassign = {};
         gameinfo.activebar = null;
+        gameinfo.temp = 
+        {
+            energy: {},
+            playerammos:
+            {
+                cannon: null,
+                pulse: null,
+                rocketlauncher: null,
+                sablauncher: null,
+                rifle: null,
+                squadroncannon: null,
+                squadronpulse: null,
+                squadronrifle: null,
+            },
+        };
         
         var squadrons = characterdata.squadrons;
         var squadron;
@@ -111,6 +126,7 @@
                     switch(itemdata.type)
                     {
                         case "weapon":
+                            if(itemdata.itemtype) this.itemtype = itemdata.itemtype;
                             this.ammotype = itemdata.ammotype;
                             this.reload = itemdata.reload;
                             this.accuracy = itemdata.accuracy;
@@ -223,7 +239,6 @@
                         equipammos[ammo.itemid] = new chtammo(ammo);
                     }
                 }
-                
             }
             catch(err)
             {
@@ -243,6 +258,8 @@
                     var itemdata = gamedata.items[ammo.itemid];
                     this.itemid = ammo.itemid;
                     this.amount = ammo.amount;
+                    this.energymultiplicator = itemdata.energymultiplicator;
+                    this.dmgmultiplicator = itemdata.dmgmultiplicator;
                 }
                 catch(err)
                 {
@@ -297,7 +314,7 @@
                 this.target = null;
                 this.targettry = null;
                 this.dmgreceived = 0;
-                this.genenergyleft = 0;
+                this.genenergy = 0;
                 this.lastattack = 0;
                 this.cannonammo = null;
                 this.pulseammo = null;

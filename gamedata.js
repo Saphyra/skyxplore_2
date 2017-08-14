@@ -389,8 +389,8 @@
             {
                 //new ability(itemid, name, itemtype, owner, maxlevel, upgradecost),
                 
-                emfp: new ability("emfp", "EMFP - Koncentrált Támadás", "passive", "emf", 5, 2000),
-                emfa1: new ability("emfa1", "EMFA1 - Rajerősítés", "active1", "emf", 10, 300),
+                emfp: new ability("emfp", "EMFP - Rajerősítés", "passive", "emf", 5, 2000),
+                emfa1: new ability("emfa1", "EMFA1 - Raj Pajzs", "active1", "emf", 10, 300),
                 emfa2: new ability("emfa2", "EMFA2 - Hatótávon Kívül", "active2", "emf", 5, 2000),
                 
                 pdmp: new ability("pdmp", "PDMP - Megnövelt Pajzserő", "passive", "pdm", 5, 2000),

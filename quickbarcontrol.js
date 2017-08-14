@@ -31,7 +31,7 @@
                             {name: "Ágyú", control: "cannonammo"},
                             {name: "Pulzuságyú", control: "pulseammo"},
                             {name: "Rakétakilövő", control: "rocketlauncherammo"},
-                            {name: "SAB Rakétakilövő", control: "sabblauncherammo"},
+                            {name: "SAB Rakétakilövő", control: "sablauncherammo"},
                             {name: "Gépágyú", control: "rifleammo"},
                             {name: "Raj Ágyú", control: "squadroncannonammo"},
                             {name: "Raj Pulzuságyú", control: "squadronpulseammo"},
@@ -513,6 +513,7 @@ function quickbarcontrol(type, target)
                     var div = document.createElement("DIV");
                         div.className = "ammotype";
                         var button = document.createElement("BUTTON");
+                            button.id = weapontype + ammo;
                             button.className = "quickbarbutton";
                             button.innerHTML = num + " - " + ammo.toUpperCase() + " (" + amount + ")";
                             button.onclick = function(){ammochange(ammo, weapontype);};
@@ -533,13 +534,72 @@ function quickbarcontrol(type, target)
                 {
                     try
                     {
-                        alert(ammo + weapontype);
+                        var weaponobj = 
+                        {
+                            cannon: "cannonammo",
+                            pulse: "pulseammo",
+                            rocketlauncher: "rocketlauncherammo",
+                            sablauncher: "sablauncherammo",
+                            rifle: "rifleammo",
+                            squadroncannon: "squadroncannonammo",
+                            squadronpulse: "squadronpulseammo",
+                            squadronrifle: "squadronrifleammo",
+                        }
+                        
+                        switch(weapontype)
+                        {
+                            case "cannon":
+                            case "pulse":
+                            case "rocketlauncher":
+                            case "sablauncher":
+                            case "rifle":
+                                gameinfo.characters[sessionStorage.charid].control[weaponobj[weapontype]] = ammo;
+                                gameinfo.temp.playerammos[weapontype] = ammo;
+                            break;
+                            case "squadroncannon":
+                            case "squadronpulse":
+                            case "squadronrifle":
+                                gameinfo.temp.playerammos[weapontype] = ammo;
+                                for(var x in gameinfo.characters)
+                                {
+                                    if(gameinfo.characters[x].owner == sessionStorage.charid)
+                                    {
+                                        gameinfo.characters[x].control[weaponobj[weapontype]] = ammo;
+                                    }
+                                }
+                            break;
+                        }
+                        quickbarcontrol("toggle", "weapontypes");
+                        ammobarborderset();
                     }
                     catch(err)
                     {
                         alert(arguments.callee.name + err.name + ": " + err.message);
                     }
                 }
+                
+                    function ammobarborderset()
+                    {
+                        try
+                        {
+                            var nodes = document.getElementsByClassName("quickbarbutton");
+                            for(var x in nodes)
+                            {
+                                nodes[x].className = "quickbarbutton";
+                            }
+                            for(var x in gameinfo.temp.playerammos)
+                            {
+                                if(gameinfo.temp.playerammos[x])
+                                {
+                                    document.getElementById(x + gameinfo.temp.playerammos[x]).className = "quickbarbutton selectedammo";
+                                }
+                            }
+                        }
+                        catch(err)
+                        {
+                            alert(arguments.callee.name + err.name + ": " + err.message);
+                        }
+                    }
                 
     function abilitybarcreate()
     {

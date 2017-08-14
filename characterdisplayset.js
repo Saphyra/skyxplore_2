@@ -4,6 +4,14 @@
     try
     {
         var character = gameinfo.characters[charid];
+        if(character.place == "dead")
+        {
+            document.getElementById(charid).style.display = "none";
+            return;
+        }
+        
+        if(character.alliance == "enemy" && character.type == "ship") document.getElementById(charid).addEventListener("click", function(){playerTarget(charid);});
+        
         
         cdscorehullset(character);
         cdshullset(character);
@@ -21,6 +29,16 @@
         
         cdstargetset(character);
         if(character.type == "ship") cdseffectsset(character);
+        
+        
+        if(gameinfo.characters[sessionStorage.charid].control.targettry == charid)
+        {
+            document.getElementById(charid).className = "botdiv targeted";
+        }
+        if(gameinfo.characters[sessionStorage.charid].control.target == charid)
+        {
+            document.getElementById(charid).className = "botdiv locked";
+        }
     }
     catch(err)
     {
@@ -218,6 +236,9 @@
             if(character.control.target)
             {
                 container.innerHTML = gameinfo.characters[character.control.target].charname;
+                
+                if(character.control.target == sessionStorage.charid) document.getElementById(character.charid).className = "botdiv playerlocked";
+                else if(character.charid != sessionStorage.charid) document.getElementById(character.charid).className = "botdiv";
             }
             else container.innerHTML = "";
             
@@ -257,6 +278,37 @@
                     container.innerHTML += ability.itemid.toUpperCase() + " (" + ability.actualactive + ")";
                 }
             }
+        }
+        catch(err)
+        {
+            alert(arguments.callee.name + err.name + ": " + err.message);
+        }
+    }
+    
+    function playerTarget(targetid)
+    {
+        try
+        {
+            var container = document.getElementById("enemyship");
+                var child = container.childNodes;
+                for(var x in child)
+                {
+                    if(child[x].className == "botdiv locked" || child[x].className == "botdiv targeted")
+                    {
+                        if(gameinfo.characters[child[x].id].control.target == sessionStorage.charid)
+                        {
+                            child[x].className = "botdiv playerlocked";
+                        }
+                        else child[x].className = "botdiv";
+                    }
+                }
+            
+            if(gameinfo.characters[sessionStorage.charid].control.target != targetid)
+            {
+                gameinfo.characters[sessionStorage.charid].control.target = null;
+                gameinfo.characters[sessionStorage.charid].control.targettry = targetid;
+            }
+            characterdisplayset(targetid);
         }
         catch(err)
         {

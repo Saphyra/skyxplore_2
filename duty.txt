@@ -1,5 +1,12 @@
-﻿Gyorsbillentyűk kiosztása
+﻿batteryrecharge
 
+squadronround
+energyset
+target
+attack
+shieldrecharge
+callback
+repair
+takeoff
 
-Anyahajó passzív: rajerősítés
-Rajerősítés helyett rajpajzs
+alapértelmezett lőszerválasztás karakternek
