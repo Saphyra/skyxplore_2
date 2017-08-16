@@ -120,6 +120,8 @@ function attack(character)
                 shot(character, character.equipment.rocketlauncher[x]);
             }
         }
+        
+        ammoStorageSet(character);
     }
     catch(err)
     {
@@ -396,6 +398,23 @@ function attack(character)
                     alert(arguments.callee.name + err.name + ": " + err.message);
                 }
             }
+            
+        function ammoStorageSet(character)
+        {
+            try
+            {
+                character.ship.actualammostorage = 0;
+                if(character.ammo)
+                {
+                    for(var x in character.ammo) character.ship.actualammostorage += character.ammo[x].amount;
+                }
+                
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        }
             
 function shieldRecharge(character)
 {

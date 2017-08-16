@@ -1,6 +1,4 @@
-﻿batteryrecharge
-
-squadronround
+﻿squadronround
 energyset
 target
 attack

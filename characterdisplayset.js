@@ -24,6 +24,7 @@
             if(character.charid == sessionStorage.charid)
             {
                 cdscargoset(character);
+                ammobarborderset();
             }
         }
         

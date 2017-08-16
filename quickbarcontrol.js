@@ -515,7 +515,12 @@ function quickbarcontrol(type, target)
                         var button = document.createElement("BUTTON");
                             button.id = weapontype + ammo;
                             button.className = "quickbarbutton";
-                            button.innerHTML = num + " - " + ammo.toUpperCase() + " (" + amount + ")";
+                            button.appendChild(document.createTextNode(num + " - " + ammo.toUpperCase() + " ("));
+                            var span = document.createElement("SPAN")
+                                span.id = weapontype + ammo + "amount";
+                                span.innerHTML = amount;
+                            button.appendChild(span);
+                            button.appendChild(document.createTextNode(")"));
                             button.onclick = function(){ammochange(ammo, weapontype);};
                     div.appendChild(button);
                         
@@ -579,6 +584,7 @@ function quickbarcontrol(type, target)
                 }
                 
                     function ammobarborderset()
+                    //beállítja a használandó lőszer keretszínét, és megadja a lőszer mennyiségét
                     {
                         try
                         {
@@ -592,6 +598,28 @@ function quickbarcontrol(type, target)
                                 if(gameinfo.temp.playerammos[x])
                                 {
                                     document.getElementById(x + gameinfo.temp.playerammos[x]).className = "quickbarbutton selectedammo";
+                                }
+                            }
+                            
+                            var ammos = gameinfo.characters[sessionStorage.charid].ammo;
+                            var weapontypes = 
+                            {
+                                cannon: "cannonball",
+                                pulse: "ioncell",
+                                rocketlauncher: "rocket",
+                                sablauncher: "sabrocket",
+                                rifle: "bullet",
+                                squadroncannon: "cannonball",
+                                squadronpulse: "ioncell",
+                                squadronrifle: "bullet",
+                            }
+                            
+                            for(var x in weapontypes)
+                            {
+                                for(var y in ammos)
+                                {
+                                    var ammodata = gamedata.items[ammos[y].itemid];
+                                    if(ammodata.itemtype == weapontypes[x]) document.getElementById(x + ammos[y].itemid + "amount").innerHTML = ammos[y].amount;
                                 }
                             }
                         }

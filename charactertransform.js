@@ -5,25 +5,6 @@
     {
         var equipped = equippedload(characterdata);
         gameinfo.characters[characterdata.charid] = new chtcharacter(characterdata, equipped);
-        gameinfo.quickbarsession = "idle";
-        gameinfo.openedbar = null;
-        gameinfo.numberassign = {};
-        gameinfo.activebar = null;
-        gameinfo.temp = 
-        {
-            energy: {},
-            playerammos:
-            {
-                cannon: null,
-                pulse: null,
-                rocketlauncher: null,
-                sablauncher: null,
-                rifle: null,
-                squadroncannon: null,
-                squadronpulse: null,
-                squadronrifle: null,
-            },
-        };
         
         var squadrons = characterdata.squadrons;
         var squadron;
@@ -316,17 +297,75 @@
                 this.dmgreceived = 0;
                 this.genenergy = 0;
                 this.lastattack = 0;
-                this.cannonammo = null;
-                this.pulseammo = null;
-                this.rocketlauncherammo = null;
-                this.sablauncherammo = null;
-                this.rifleammo = null;
+                this.cannonammo = chtammoset(characterdata, "cannon");
+                this.pulseammo = chtammoset(characterdata, "pulse");
+                this.rocketlauncherammo = chtammoset(characterdata, "rocketlauncher");
+                this.sablauncherammo = chtammoset(characterdata, "sablauncher");
+                this.rifleammo = chtammoset(characterdata, "rifle");
             }
             catch(err)
             {
                 alert(arguments.callee.name + err.name + ": " + err.message);
             }
         }
+        
+            function chtammoset(characterdata, weapontype)
+            {
+                try
+                {
+                    switch(weapontype)
+                    {
+                        case "cannon":
+                        case "squadroncannon":
+                            var ammotype = "cannonball";
+                        break;
+                        case "pulse":
+                        case "squadronpulse":
+                            var ammotype = "ioncell";
+                        break;
+                        case "rocketlauncher":
+                            var ammotype = "rocket";
+                        break;
+                        case "sablauncher":
+                            var ammotype = "sabrocket";
+                        break;
+                        case "rifle":
+                        case "squadronrifle":
+                            var ammotype = "bullet";
+                        break;
+                    }
+                    
+                    var count = 1;
+                    var ammoid = null;
+                    var ammos = characterdata.characterdata.ammo;
+                    while(count <= 3)
+                    {
+                        var ammo = gamedata.search({type: "ammo", itemtype: ammotype, level: count});
+                        for(var x in ammos)
+                        {
+                            if(ammos[x].itemid == ammo && ammos[x].amount && ammos[x].place == "ship")
+                            {
+                                ammoid = ammo;
+                            }
+                        }
+                        if(ammoid) break;
+                        count++;
+                    }
+                    
+                    if(characterdata.charid == sessionStorage.charid || characterdata.owner == sessionStorage.charid)
+                    {
+                        gameinfo.temp.playerammos[weapontype] = ammoid;
+                    }
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+                finally
+                {
+                    return ammoid;
+                }
+            }
             
     function chtsquadrons(squadronid, characterdata)
     {
@@ -381,9 +420,9 @@
                     this.dmgreceived = 0;
                     this.genenergyleft = 0;
                     this.lastattack = 0;
-                    this.squadroncannonammo = null;
-                    this.squadronpulseammo = null;
-                    this.squadronrifleammo = null;
+                    this.squadroncannonammo = chtammoset(characterdata, "squadroncannon");
+                    this.squadronpulseammo = chtammoset(characterdata, "squadronpulse");
+                    this.squadronrifleammo = chtammoset(characterdata, "squadronrifle");
                 }
                 catch(err)
                 {

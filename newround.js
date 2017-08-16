@@ -18,9 +18,18 @@
             }
         }
         
+        var friend = 0;
+        var enemy = 0;
         for(var x in gameinfo.characters)
         {
+            if(gameinfo.characters[x].place == "space" && gameinfo.characters[x].alliance == "friend") friend += 1;
+            else if(gameinfo.characters[x].place == "space" && gameinfo.characters[x].alliance == "enemy") enemy += 1;
             characterdisplayset(x);
+        }
+        
+        if(!friend || !enemy)
+        {
+            autoPlay("stop");
         }
     }
     catch(err)
