@@ -1,4 +1,4 @@
-﻿function quickbarsetupset()
+function quickbarsetupset()
 {
     try
     {

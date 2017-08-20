@@ -1,5 +1,5 @@
-﻿<?php
-    $conn = mysqli_connect("localhost", "root", "", "skyxplore2");
+<?php
+    include("connection.php");
     
     $id = $_REQUEST["id"];
     
@@ -15,7 +15,7 @@
     
     $data = json_encode($data);
     
-    mysqli_query($conn, "UPDATE users SET data='$data' WHERE id='$id'");
+    mysqli_query($GLOBALS["conn"], "UPDATE users SET data='$data' WHERE id='$id'");
     print $code;
     
 ?>

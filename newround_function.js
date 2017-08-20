@@ -1,4 +1,4 @@
-﻿function genEnergySet(character)
+function genEnergySet(character)
 //Generátorok működése
 {
     try
@@ -1153,7 +1153,7 @@ function takeOff(character)
                 {
                     var hull = character.equipment.squadronhull[x];
                     hull.actualhull += hull.hullenergy * hangar.repair;
-                    if(hull.actualhull > hull.hullenergy) hull.actuallhull = hull.hullenergy;
+                    if(hull.actualhull > hull.hullenergy) hull.actualhull = hull.hullenergy;
                 }
             }
             

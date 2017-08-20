@@ -1,10 +1,10 @@
-﻿<?php
-    $conn = mysqli_connect("localhost", "root", "", "skyxplore2");
+<?php
+    include("connection.php");
     
     $charid = $_REQUEST["charid"];
     
-    $characterleker = mysqli_query($conn, "SELECT * FROM characters WHERE charid='$charid'");
-    $squadronleker = mysqli_query($conn, "SELECT * FROM squadrons WHERE ownerid='$charid'");
+    $characterleker = mysqli_query($GLOBALS["conn"], "SELECT * FROM characters WHERE charid='$charid'");
+    $squadronleker = mysqli_query($GLOBALS["conn"], "SELECT * FROM squadrons WHERE ownerid='$charid'");
     
     $chartomb = mysqli_fetch_assoc($characterleker);
     foreach($chartomb as $name=>$value)

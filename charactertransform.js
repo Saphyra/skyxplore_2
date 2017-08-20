@@ -1,4 +1,4 @@
-﻿function charactertransform(characterdata)
+function charactertransform(characterdata)
 //Betölti a megadott karakter játékinformációit
 {
     try

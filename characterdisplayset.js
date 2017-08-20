@@ -1,4 +1,4 @@
-﻿function characterdisplayset(charid)
+function characterdisplayset(charid)
 //Megjeleníti az adott karakter értékeit
 {
     try

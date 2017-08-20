@@ -1,4 +1,4 @@
-﻿function characterdataset(company)
+function characterdataset(company)
 {
     try
     {

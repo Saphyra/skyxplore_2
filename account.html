@@ -1,4 +1,4 @@
-﻿<HTML>
+<HTML>
     <HEAD>
         <SCRIPT src='gamedata.js'></SCRIPT>
         <TITLE>Account - SkyXplore</TITLE>
@@ -338,7 +338,8 @@
             </TR>
     </DIV>
     
-    <SCRIPT id='accountadatok'>
+    <SCRIPT>
+    
         document.getElementById("headerid").innerHTML = sessionStorage.id;
         document.getElementById("headerusername").innerHTML = sessionStorage.username;
         
@@ -642,7 +643,7 @@
                         request.open("POST", "accountchange.php", 0);
                         request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                         request.send("key=password&value=" + newpassword1 + "&id=" + sessionStorage.id);
-                        var code = request.responseText;
+                        var code = request.Text;
                             var result = 0, input;
                             while(!result)
                             {
@@ -759,7 +760,7 @@
     </SCRIPT>
     
     <SCRIPT id='karakterbetoltes'>
-        (function characterload()
+        (function characterlistload()
         {
             try
             {
@@ -963,7 +964,6 @@
             }
         }
     </SCRIPT>
-    
     <SCRIPT src='characterdataset.js'></SCRIPT>
 </BODY>
 </HTML>

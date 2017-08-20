@@ -1,4 +1,4 @@
-﻿function charactergenerate(level, alliance)
+function charactergenerate(level, alliance)
 //Botot generál
 {
     try

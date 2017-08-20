@@ -1,4 +1,4 @@
-﻿(function loggedincheck()
+(function loggedincheck()
 {
     try
     {

@@ -1,5 +1,5 @@
-﻿<?php
-    $conn = mysqli_connect("localhost", "root", "", "skyxplore2");
+<?php
+    include("connection.php");
     $squadronid = $_REQUEST["squadronid"];
-    mysqli_query($conn, "DELETE FROM squadrons WHERE squadronid='$squadronid'");
+    mysqli_query($GLOBALS["conn"], "DELETE FROM squadrons WHERE squadronid='$squadronid'");
 ?>

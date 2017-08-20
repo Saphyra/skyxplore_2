@@ -1,4 +1,4 @@
-﻿function newround()
+function newround()
 //Új kör
 {
     try
@@ -81,6 +81,9 @@
             
             genEnergySet(character);
             energySet(character);
+            
+            if(character.charid != sessionStorage.charid) activate(character);
+            
             targetCharacter(character);
             if(character.control.target) attack(character);
             shieldRecharge(character);

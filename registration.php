@@ -1,11 +1,11 @@
-﻿<?php
-    $conn = mysqli_connect("localhost", "root", "", "skyxplore2");
+<?php
+    include("connection.php");
     
     $username = $_REQUEST["username"];
     $password = $_REQUEST["password"];
     $email = $_REQUEST["email"];
     
-    $idleker = mysqli_query($conn, "SELECT id FROM users");
+    $idleker = mysqli_query($GLOBALS["conn"], "SELECT id FROM users");
     
     $ids = [];
     while($idt = mysqli_fetch_assoc($idleker))
@@ -30,7 +30,7 @@
     }
     
     
-    mysqli_query($conn, "INSERT INTO users (username, password, email, id, code) VALUES('$username', '$password', '$email', '$id', '$code')");
+    mysqli_query($GLOBALS["conn"], "INSERT INTO users (username, password, email, id, code) VALUES('$username', '$password', '$email', '$id', '$code')");
     print 1;
     
 ?>

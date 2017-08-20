@@ -1,11 +1,11 @@
-﻿<?php
-    $conn = mysqli_connect("localhost", "root", "", "skyxplore2");
+<?php
+    include("connection.php");
     
     $ownerid = $_REQUEST["ownerid"];
     $squadronname = $_REQUEST["squadronname"];
     $squadrondata = json_decode($_REQUEST["squadrondata"], 1);
     
-    $squadronleker = mysqli_query($conn, "SELECT squadronid, squadronname FROM squadrons");
+    $squadronleker = mysqli_query($GLOBALS["conn"], "SELECT squadronid, squadronname FROM squadrons");
     $squadronids = [];
     $squadronnames = [];
     while($squadrontomb = mysqli_fetch_assoc($squadronleker))
@@ -34,7 +34,7 @@
     
     $squadrondata = json_encode($squadrondata);
     
-    mysqli_query($conn, "INSERT INTO squadrons (ownerid, squadronid, squadronname, squadrondata) VALUES('$ownerid', '$squadronid', '$squadronname', '$squadrondata')");
+    mysqli_query($GLOBALS["conn"], "INSERT INTO squadrons (ownerid, squadronid, squadronname, squadrondata) VALUES('$ownerid', '$squadronid', '$squadronname', '$squadrondata')");
     print $squadronid;
     
 ?>

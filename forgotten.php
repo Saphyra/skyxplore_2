@@ -1,9 +1,9 @@
-﻿<?php
-    $conn = mysqli_connect("localhost", "root", "", "skyxplore2");
+<?php
+    include("connection");
     
     $input = $_REQUEST["input"];
     
-    $lekeres = mysqli_query($conn, "SELECT id FROM users WHERE username='$input' OR email='$input'");
+    $lekeres = mysqli_query($GLOBALS["conn"], "SELECT id FROM users WHERE username='$input' OR email='$input'");
     if(mysqli_num_rows($lekeres) != 1)
     {
         print 0;
@@ -18,7 +18,7 @@
             $pw .= rand(0, 9);
         }
         
-        mysqli_query($conn, "UPDATE users SET password='$pw' WHERE id='$id'");
+        mysqli_query($GLOBALS["conn"], "UPDATE users SET password='$pw' WHERE id='$id'");
         print 1;
     }
 ?>
