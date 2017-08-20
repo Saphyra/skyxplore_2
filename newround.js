@@ -1,4 +1,5 @@
 ﻿function newround()
+//Új kör
 {
     try
     {
@@ -39,6 +40,7 @@
 }
 
     function attackSet()
+    //Karakterek támadóértékének megadása
     {
         try
         {
@@ -71,6 +73,7 @@
     }
     
     function shipRound(character)
+    //Hajók köre
     {
         try
         {
@@ -93,10 +96,40 @@
     }
     
     function squadronRound(character)
+    //Rajok köre
     {
         try
         {
+            energySet(character);
+            if(character.place == "space")
+            {
+                reCallSet(character);
+                reCall(character);
+                
+                if(!character.control.callbackcount && character.place == "space")
+                {
+                    squadronTarget(character);
+                    if(character.control.target) squadronAttack(character);
+                }
+            }
+            else
+            {
+                takeOff(character);
+                if(character.place != "space") repair(character);
+            }
             
+            shieldRecharge(character);
+            
+            character.control.dmgreceived += 1;
+            
+            /*
+				
+				if($squadroncontrol->place == "hangar")
+				{
+					if(takeoff($character, $squadron, $squadroncontrol, $energy)) return;
+					repair($character, $squadron, $squadroncontrol);
+				}*/
+				
         }
         catch(err)
         {

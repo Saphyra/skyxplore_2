@@ -597,7 +597,8 @@ function quickbarcontrol(type, target)
                             {
                                 if(gameinfo.temp.playerammos[x])
                                 {
-                                    document.getElementById(x + gameinfo.temp.playerammos[x]).className = "quickbarbutton selectedammo";
+                                    var cont = document.getElementById(x + gameinfo.temp.playerammos[x]);
+                                    if(cont) cont.className = "quickbarbutton selectedammo";
                                 }
                             }
                             
@@ -619,7 +620,14 @@ function quickbarcontrol(type, target)
                                 for(var y in ammos)
                                 {
                                     var ammodata = gamedata.items[ammos[y].itemid];
-                                    if(ammodata.itemtype == weapontypes[x]) document.getElementById(x + ammos[y].itemid + "amount").innerHTML = ammos[y].amount;
+                                    if(ammodata.itemtype == weapontypes[x])
+                                    {
+                                        var cont = document.getElementById(x + ammos[y].itemid + "amount");
+                                        if(cont)
+                                        {
+                                            cont.innerHTML = ammos[y].amount;
+                                        }
+                                    }
                                 }
                             }
                         }

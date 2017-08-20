@@ -179,10 +179,23 @@
                         {
                             border-color: orange;
                         }
+                        #playersquadron .botdiv
+                        {
+                            height: auto;
+                            width: 100%;
+                            margin: 0;
+                            cursor: default;
+                            position: static;
+                            box-sizing: border-box;
+                        }
                         
                         .playerlocked
                         {
                             border-color: red;
+                        }
+                        .squadrontargeted
+                        {
+                            border-color: purple;
                         }
                         .targeted
                         {
@@ -191,6 +204,10 @@
                         .locked
                         {
                             border-color: #00ff00;
+                        }
+                        .inhangar
+                        {
+                            border-color: #000000;
                         }
                         
                         
@@ -225,7 +242,7 @@
                             .effects
                             {
                                 color: #00ff00;
-                                font-size: 11;
+                                font-size: 14;
                             }
                             
                                 #player .effects
@@ -421,7 +438,6 @@
                         }
                         else if(character.alliance == "friend") var containerid = "friendship";
                         else if(character.alliance == "enemy") var containerid = "enemyship";
-                        else alert("Ismeretlen szövetség" + character.alliance);
                     }
                     else if(character.type == "squadron")
                     {
@@ -431,9 +447,7 @@
                         }
                         else if(character.alliance == "friend") var containerid = "friendsquadron";
                         else if(character.alliance == "enemy") var containerid = "enemysquadron";
-                        else alert("Ismeretlen szövetség" + character.alliance);
                     }
-                    else alert("Ismeretlen karaktertípus ") + character.type;
                     
                     document.getElementById(containerid).appendChild(containercreate(containerid, character));
                     
@@ -462,7 +476,6 @@
                         {
                             div.style.borderStyle = "ridge";
                             div.style.borderWidth = 3;
-                            div.style.margin = 10;
                             div.style.marginTop = 20;
                         }
                         else
@@ -519,10 +532,18 @@
                             target.className = "target";
                             target.id = "target" + character.charid;
                     div.appendChild(target);
+                    if(character.type == "squadron")
+                    {
+                        var callBackStatus = document.createElement("DIV");
+                            callBackStatus.className = "effects";
+                            callBackStatus.id = "callback" + character.charid;
+                        div.appendChild(callBackStatus);
+                    }
                         var effects = document.createElement("DIV");
                             effects.className = "effects";
                             effects.id = "effects" + character.charid;
                     div.appendChild(effects);
+                    
                 }
                 catch(err)
                 {

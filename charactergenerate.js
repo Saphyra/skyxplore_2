@@ -966,18 +966,30 @@
                         switch(x)
                         {
                             case "squadronweapon":
-                                
-                                if(itemlevel = chgequipmentlevelset10(slot.level))
+                                switch(rand(0, 1))
                                 {
-                                    if(typerate = rand(0, 2))
-                                    {
-                                        itemtype = "squadroncannon";
-                                    }
-                                    else itemtype = "squadronpulse";
-                                    
-                                    itemid = gamedata.search({slot: x, level: itemlevel, itemtype: itemtype});
-                                    equipment.push(new chgequipadd(itemid, squadronid));
+                                    case 0:
+                                        if(itemlevel = chgequipmentlevelset10(slot.level))
+                                        {
+                                            itemid = gamedata.search({slot: x, level: itemlevel, itemtype: "squadronrifle"});
+                                            equipment.push(new chgequipadd(itemid, squadronid));
+                                        }
+                                    break;
+                                    case 1:
+                                        if(itemlevel = chgequipmentlevelset10(slot.level))
+                                        {
+                                            if(typerate = rand(0, 2))
+                                            {
+                                                itemtype = "squadroncannon";
+                                            }
+                                            else itemtype = "squadronpulse";
+                                            
+                                            itemid = gamedata.search({slot: x, level: itemlevel, itemtype: itemtype});
+                                            equipment.push(new chgequipadd(itemid, squadronid));
+                                        }
+                                    break;
                                 }
+                               
                             break;
                             case "squadronshield":
                                 if(itemlevel = chgequipmentlevelset10(slot.level))

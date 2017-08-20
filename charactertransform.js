@@ -113,6 +113,7 @@
                             this.accuracy = itemdata.accuracy;
                             this.hulldamage = itemdata.hulldamage;
                             this.shielddamage = itemdata.shielddamage;
+                            this.squadrondamage = itemdata.squadrondamage;
                             this.energyusage = itemdata.energyusage;
                             this.ammousage = itemdata.ammousage;
                         break;
@@ -418,8 +419,9 @@
                     this.target = null;
                     this.targettry = null;
                     this.dmgreceived = 0;
-                    this.genenergyleft = 0;
                     this.lastattack = 0;
+                    this.callbackcount = 0;
+                    this.genenergy = 0;
                     this.squadroncannonammo = chtammoset(characterdata, "squadroncannon");
                     this.squadronpulseammo = chtammoset(characterdata, "squadronpulse");
                     this.squadronrifleammo = chtammoset(characterdata, "squadronrifle");

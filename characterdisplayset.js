@@ -18,6 +18,8 @@
         cdsshieldset(character);
         chdenergyset(character);
         
+        if(character.type == "ship") ammoStorageSet(character);
+        
         if(character.charid == sessionStorage.charid || character.owner == sessionStorage.charid)
         {
             cdsammoset(character);
@@ -31,6 +33,26 @@
         cdstargetset(character);
         if(character.type == "ship") cdseffectsset(character);
         
+        var playerSquadrons = [], squadronTargeted = 0;
+        for(var x in gameinfo.characters) if(gameinfo.characters[x].type == "squadron" && gameinfo.characters[x].owner == sessionStorage.charid) playerSquadrons.push(x);
+        for(var x in playerSquadrons) if(gameinfo.characters[playerSquadrons[x]].control.target == charid) squadronTargeted = 1;
+        
+        if(squadronTargeted) document.getElementById(charid).className = "botdiv squadrontargeted";
+        
+        if(character.type == "squadron" && character.place != "space" && character.place != "dead") document.getElementById(charid).className = "botdiv inhangar";
+        
+        if(character.type == "squadron" && character.control.callbackcount)
+        {
+            document.getElementById("callback" + character.charid).innerHTML = "Visszatér: " + (3 - character.control.callbackcount);
+        }
+        else if(character.type == "squadron" && character.place != "space" && character.place != "dead")
+        {
+            document.getElementById("callback" + character.charid).innerHTML = "Hangárban";
+        }
+        else if(character.type == "squadron")
+        {
+            document.getElementById("callback" + character.charid).innerHTML = "";
+        }
         
         if(gameinfo.characters[sessionStorage.charid].control.targettry == charid)
         {
@@ -93,7 +115,7 @@
                     actualhull += hull.actualhull;
                 }
             }
-            
+
             if(hullenergy) var hullrate = Math.round(actualhull / hullenergy * 100);
             else var hullrate = 0;
             
@@ -237,11 +259,11 @@
             if(character.control.target)
             {
                 container.innerHTML = gameinfo.characters[character.control.target].charname;
-                
-                if(character.control.target == sessionStorage.charid) document.getElementById(character.charid).className = "botdiv playerlocked";
-                else if(character.charid != sessionStorage.charid) document.getElementById(character.charid).className = "botdiv";
             }
             else container.innerHTML = "";
+            
+            if(character.control.target == sessionStorage.charid) document.getElementById(character.charid).className = "botdiv playerlocked";
+            else if(character.charid != sessionStorage.charid) document.getElementById(character.charid).className = "botdiv";
             
         }
         catch(err)
@@ -310,6 +332,24 @@
                 gameinfo.characters[sessionStorage.charid].control.targettry = targetid;
             }
             characterdisplayset(targetid);
+        }
+        catch(err)
+        {
+            alert(arguments.callee.name + err.name + ": " + err.message);
+        }
+    }
+    
+    function ammoStorageSet(character)
+    //Frissíti a hajó lőszerraktár értékét
+    {
+        try
+        {
+            character.ship.actualammostorage = 0;
+            if(character.ammo)
+            {
+                for(var x in character.ammo) character.ship.actualammostorage += character.ammo[x].amount;
+            }
+            
         }
         catch(err)
         {
