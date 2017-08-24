@@ -30,6 +30,7 @@ function characterdisplayset(charid)
             }
         }
         
+        cdsammouseset(character);
         cdstargetset(character);
         if(character.type == "ship") cdseffectsset(character);
         
@@ -243,6 +244,83 @@ function characterdisplayset(charid)
             container.innerHTML = actualcargo + " / " + cargo;
             
             container.style.backgroundSize = cargorate + "% 100%";
+        }
+        catch(err)
+        {
+            alert(arguments.callee.name + err.name + ": " + err.message);
+        }
+    }
+    
+    function cdsammouseset(character)
+    {
+        try
+        {
+            var container = document.getElementById("ammos" + character.charid);
+                container.innerHTML = "";
+            var control = character.control;
+            
+            switch(character.type)
+            {
+                case "ship":
+                    var cannonequipped, pulseequipped, rocketlauncherequipped, sablauncherequipped;
+                
+                    for(var x in character.equipment.cannon)
+                    {
+                        switch(character.equipment.cannon[x].itemtype)
+                        {
+                            case "cannon":
+                                cannonequipped = 1;
+                            break;
+                            case "pulse":
+                                pulseequipped = 1;
+                            break;
+                        }
+                    }
+                    
+                    for(var x in character.equipment.rocketlauncher)
+                    {
+                        switch(character.equipment.rocketlauncher[x].itemtype)
+                        {
+                            case "rocketlauncher":
+                                rocketlauncherequipped = 1;
+                            break;
+                            case "sablauncher":
+                                sablauncherequipped = 1;
+                            break;
+                        }
+                    }
+                    
+                    if(control.cannonammo && cannonequipped) container.appendChild(document.createTextNode(control.cannonammo.toUpperCase() + " "));
+                    if(control.pulseammo && pulseequipped) container.appendChild(document.createTextNode(control.pulseammo.toUpperCase() + " "));
+                    if(control.rocketlauncherammo && rocketlauncherequipped) container.appendChild(document.createTextNode(control.rocketlauncherammo.toUpperCase() + " "));
+                    if(control.sablauncherammo && sablauncherequipped) container.appendChild(document.createTextNode(control.sablauncherammo.toUpperCase() + " "));
+                    if(control.rifleammo && character.equipment.rifle) container.appendChild(document.createTextNode(control.rifleammo.toUpperCase()));
+                break;
+                case "squadron":
+                    var squadroncannonequipped, squadronrifleequipped, squadronpulseequipped;
+                    
+                    for(var x in character.equipment.squadronweapon)
+                    {
+                        switch(character.equipment.squadronweapon[x].itemtype)
+                        {
+                            case "squadroncannon":
+                                squadroncannonequipped = 1;
+                            break;
+                            case "squadronpulse":
+                                squadronpulseequipped = 1;
+                            break;
+                            case "squadronrifle":
+                                squadronrifleequipped = 1;
+                            break;
+                        }
+                    }
+                    
+                    
+                    if(control.squadroncannonammo && squadroncannonequipped) container.appendChild(document.createTextNode(control.squadroncannonammo.toUpperCase() + " "));
+                    if(control.squadronpulseammo && squadronpulseequipped) container.appendChild(document.createTextNode(control.squadronpulseammo.toUpperCase() + " "));
+                    if(control.squadronrifleammo && squadronrifleequipped) container.appendChild(document.createTextNode(control.squadronrifleammo.toUpperCase() + " "));
+                break;
+            }
         }
         catch(err)
         {

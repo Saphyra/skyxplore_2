@@ -1144,7 +1144,7 @@ function takeOff(character)
             character.ship.actualcorehull += character.ship.corehull * hangar.repair;
             if(character.ship.actualcorehull > character.ship.corehull) character.ship.actualcorehull = character.ship.corehull;
             
-            character.ship.actualammostorage *= character.ship.ammostorage * hangar.repair;
+            character.ship.actualammostorage += character.ship.ammostorage * hangar.repair;
             if(character.ship.actualammostorage > character.ship.ammostorage) character.ship.actualammostorage = character.ship.ammostorage;
             
             if(character.equipment.squadronhull)

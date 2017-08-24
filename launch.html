@@ -188,6 +188,7 @@
                             cursor: default;
                             position: static;
                             box-sizing: border-box;
+                            padding-bottom: 10;
                         }
                         
                         .playerlocked
@@ -226,6 +227,16 @@
                                     border-bottom-style: ridge;
                                     border-bottom-width: 3;
                                     text-align: center;
+                                }
+                                
+                            .ammos
+                            {
+                                font-size: 12;
+                            }
+                            
+                                #player .ammos
+                                {
+                                    margin-top: 10;
                                 }
                                 
                             .target
@@ -373,6 +384,7 @@
     <DIV class='menucontainer' id='settingscontainer'>
        <DIV class='menutitle'>Beállítások</DIV>
        <DIV class='menuexit' id='settingsexit'><BUTTON onclick='document.getElementById("settingscontainer").style.display = "none";'>X</BUTTON></DIV>
+       <DIV class='menubar' ><BUTTON onclick='window.open("help/index.php?load=launch")'>Súgó</BUTTON></DIV>
        <DIV class='menubar'><BUTTON onclick='logout()'>Kijelentkezés</BUTTON></DIV>
        <DIV class='menubar' style='border-bottom-style: ridge; border-bottom-width: 3;'><BUTTON onclick='window.location.href = "account.html"'>Karakterváltás</BUTTON></DIV>
        <DIV class='menubar'><BUTTON id='back' onclick='window.location.href = "character.html"'>Vissza</BUTTON></DIV>
@@ -529,6 +541,10 @@
                         }
                     }
                     
+                        var ammos = document.createElement("DIV");
+                            ammos.className = "ammos";
+                            ammos.id = "ammos" + character.charid;
+                    div.appendChild(ammos);
                         var target = document.createElement("DIV");
                             target.className = "target";
                             target.id = "target" + character.charid;

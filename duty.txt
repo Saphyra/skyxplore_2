@@ -1,1 +1,13 @@
-﻿Használt lőszerek kiírása
+﻿<!--
+        character
+        bolt
+        Tárgykészítés
+        képességek
+        felszerelés
+        felszállás
+        egyéb
+            karaktertípusok
+            extrák
+            képességek leírása
+            tárgyak
+    -->  

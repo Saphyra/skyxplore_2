@@ -1,5 +1,5 @@
 <?php
-    include("connection");
+    include("connection.php");
     
     $input = $_REQUEST["input"];
     

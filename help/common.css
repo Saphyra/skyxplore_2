@@ -1,0 +1,132 @@
+body
+{
+    margin: 0;
+    background-image: url("../background.jpg");
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: right top;
+	background-size: cover;
+	color: white;
+}
+
+input, button
+{
+    border-width: 2px;
+	border-style: ridge;
+	border-radius: 10px 10px 10px 10px;
+	outline: none;
+    background-color: transparent;
+    color: white;
+}
+input:focus, button:hover
+{
+    border-color: red;
+}
+
+select
+{
+    color: white;
+    background-color: black;
+    border-width: 3px;
+    border-style: solid;
+    border-radius: 10px 10px 10px 10px;
+    outline: none;
+    text-align: center;
+}
+
+a:visited, a:link
+{
+    color: white;
+}
+a:hover
+{
+    color: red;
+}
+
+ul
+{
+    padding-left: 10;
+    list-style-position: inside;
+}
+
+    #maincontainer
+    {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        border-style: ridge;
+        border-width: 5;
+        border-left: none;
+        background-color: rgba(0,0,0,0.8);
+        overflow: auto;
+    }
+    
+        #maintitle
+        {
+            font-size: 36;
+            text-align: center;
+            border-bottom-style: ridge;
+            border-bottom-width: 5;
+            padding: 5;
+        }
+        
+        .nexttable
+        {
+            width: 70%;
+            margin: auto;
+            padding-top: 20;
+            padding-bottom: 20;
+        }
+        
+            .nexttable button
+            {
+                font-size: 24;
+            }
+        
+        #contents
+        {
+            border-style: ridge;
+            border-width: 5;
+            border-radius: 10px 10px 10px 10px;
+            width: 40%;
+            margin-left: 30%;
+            margin-top: 20;
+        }
+        
+            #contentstitle
+            {
+                font-size: 30;
+                text-align: center;
+                border-bottom-style: ridge;
+                border-bottom-width: 5;
+            }
+                
+        .content
+        {
+            width: 80%;
+            margin-left: 10%;
+            margin-top: 20;
+        }
+        
+            .contenttitle
+            {
+                font-size: 40;
+                text-align: center;
+                margin-bottom: 10;
+            }
+            
+            .contenttext
+            {
+                font-size: 24;
+                text-align: justify;
+                margin-bottom: 20;
+            }
+            
+            .contentimg
+            {
+                width: 80%;
+                display: block;
+                margin: auto;
+                margin-top: 10;
+            }

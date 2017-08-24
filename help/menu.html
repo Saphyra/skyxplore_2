@@ -1,0 +1,69 @@
+<HTML>
+    <HEAD>
+        <TITLE>Súgó - SkyXplore</TITLE>
+        
+        <META charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="common.css">
+        
+        <STYLE>
+            body
+            {
+               /* background-image: none;
+                background-color: rgb(30,30,30);*/
+                background-size: 1000% 100%;
+                background-position: top left;
+            }
+            
+            .maincontainer
+            {
+                border-right: none;
+                border-left-style: ridge;
+            }
+                
+                #maintitle
+                {
+                    font-size: 36;
+                    text-align: center;
+                    border-bottom-style: ridge;
+                    border-bottom-width: 5;
+                    padding: 5;
+                }
+                
+                ul
+                {
+                    padding-left: 10;
+                    list-style-position: inside;
+                    font-size: 24;
+                }
+                
+                    li
+                    {
+                        margin-top: 3;
+                    }
+                
+                    .ul2
+                    {
+                        padding-left: 20;
+                        font-size: 16;
+                    }
+        </STYLE>
+    </HEAD>
+<BODY>
+    <DIV id='maincontainer'>
+        <DIV id='maintitle'>Súgó</DIV>
+        <DIV id='chapters'>
+            <UL>
+                <LI><A href='index.php' target='_top'>Kezdőlap</A></LI>
+                <LI><A href='index.php?load=account' target='_top'>Account</LI>
+                    <UL class='ul2'>
+                        <LI><A href='index.php?load=account&page=basics' target='_top'>Kezdetek</A></LI>
+                        <LI><A href='index.php?load=account&page=newchar' target='_top'>Új karakter létrehozása</A></LI>
+                        <LI><A href='index.php?load=account&page=changeaccountdata' target='_top'>Account adatok megváltoztatása</A></LI>
+                    </UL>
+                 <LI><A href='index.php?load=character' target='_top'>Karakter</LI>
+            </UL>
+        </DIV>
+    </DIV>
+    
+</BODY>
+</HTML>

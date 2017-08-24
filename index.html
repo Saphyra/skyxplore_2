@@ -572,7 +572,7 @@
                         request.open("POST", "forgotten.php", 0);
                         request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                         request.send("input=" + input);
-                        alert(request.responseText);
+
                         if(request.responseText == 0)
                         {
                             alert("Account nem található");
