@@ -245,3 +245,19 @@ select
                 font-size: 22;
             }
         
+.descdiv
+{
+    text-align: center;
+}
+
+    .descname
+    {
+        font-size: 22px;
+        font-weight: bold;
+    }
+    
+    .descslot
+    {
+        border-bottom-style: ridge;
+        border-bottom-width: 1px;
+    }

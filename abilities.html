@@ -109,7 +109,7 @@
                     </TD>
                     <TD id='descriptioncell'>
                         <DIV id='descriptiontitle'>Leírás:</DIV>
-                        <DIV id='description'>DESC</DIV>
+                        <DIV id='description'></DIV>
                     </TD>
                 </TR>
             </TABLE>
@@ -199,7 +199,7 @@
                 {
                     var div = document.createElement("DIV");
                         div.className = "item";
-                        div.addEventListener("mouseenter", function(){document.getElementById("description").innerHTML = abilitydata.itemid;})
+                        div.addEventListener("mouseenter", function(){document.getElementById("description").appendChild(gamedata.description(gamedata.abilities[abilitydata.itemid]));})
                         div.addEventListener("mouseleave", function(){document.getElementById("description").innerHTML = "";})
                         
                         var ability = chardata.characterdata.abilities[abilitydata.itemid];

@@ -361,7 +361,7 @@
                 
                 bul01: new ammo("bul01", "bullet", "BUL01 - 9MM Töltény", 1, 1, 2, 1, 1),
                 bul02: new ammo("bul02", "bullet", "BUL02 - 12MM Töltény", 2, 5, 10, 2, 2),
-                bul03: new ammo("bul03", "bullet", "BUL03 - 18MM Töltény", 3, 15, 300, 3, 4),
+                bul03: new ammo("bul03", "bullet", "BUL03 - 18MM Töltény", 3, 15, 30, 3, 4),
                 
                 roc01: new ammo("roc01", "rocket", "ROC01 - Rakéta Mk.I", 1, 10, 20, 1, 1),
                 roc02: new ammo("roc02", "rocket", "ROC02 - Rakéta Mk.II", 2, 50, 100, 2, 2),
@@ -372,17 +372,17 @@
                 sro03: new ammo("sro03", "sabrocket", "SRO03 - SAB Rakéta Mk.III", 3, 150, 300, 3, 4),
 				
                 //new specialammo(itemid, name, sellprice, buyprice),
-                efc01: new specialammo("efc01", "EFC01 - Energiatöltet", 500, 500),
-                pdr01: new specialammo("pdr01", "PDR01 - Plazma Zavarórakéta", 500, 500),
-                edd01: new specialammo("edd01", "EDD01 - EDI Drón", 500, 500),
-                spp01: new specialammo("spp01", "SPP01 - Pótalkatrész", 500, 500),
-                src01: new specialammo("src01", "SRC01 - Pajzstöltő Cella", 500, 500),
-                clc01: new specialammo("clc01", "CLC01 - Álcázó Chip", 500, 500),
-                rba01: new specialammo("rba01", "RBA01 - Tartalék Akkumulátor", 500, 500),
-                mad01: new specialammo("mad01", "MAD01 - Mágneses Zavarkeltő Drón", 500, 500),
-                csg01: new specialammo("csg01", "CSG01 - Töltéstároló Gránát", 500, 500),
-                lac01: new specialammo("lac01", "LAC01 - Rakétaelhárító Lézer", 500, 500),
-                vsw01: new specialammo("vsw01", "VSW01 - Vírusírtó Szoftver", 500, 500)
+                efc01: new specialammo("efc01", "EFC01 - Energiatöltet", 500, 500, "EFI01 - Energiamező"),
+                pdr01: new specialammo("pdr01", "PDR01 - Plazma Zavarórakéta", 500, 500, "PDU01 - Plazma Zavaró Egység"),
+                edd01: new specialammo("edd01", "EDD01 - EDI Drón", 500, 500, "EDI01 - Elektromikus Zavaróimpulzus"),
+                spp01: new specialammo("spp01", "SPP01 - Pótalkatrész", 500, 500, "Burkolatjavító Robot"),
+                src01: new specialammo("src01", "SRC01 - Pajzstöltő Cella", 500, 500, "SRE01 - Pajzsregeneráció Növelés"),
+                clc01: new specialammo("clc01", "CLC01 - Álcázó Chip", 500, 500, "CLO01 - Álcázó Berendezés"),
+                rba01: new specialammo("rba01", "RBA01 - Tartalék Akkumulátor", 500, 500, "BOL01 - Akkumulátor Túltöltés"),
+                mad01: new specialammo("mad01", "MAD01 - Mágneses Zavarkeltő Drón", 500, 500, "MAC01 - Mágneses Köd"),
+                csg01: new specialammo("csg01", "CSG01 - Töltéstároló Gránát", 500, 500, "SER01 - Rajzavaró Elektronsugár"),
+                lac01: new specialammo("lac01", "LAC01 - Rakétaelhárító Lézer", 500, 500, "MDL01 - Rakétaelhárító Lézer"),
+                vsw01: new specialammo("vsw01", "VSW01 - Vírusírtó Szoftver", 500, 500, "ABS1 - Rendszertisztítás"),
             },
             
             abilities:
@@ -415,7 +415,8 @@
             },
             
             property: property,
-            search: search
+            search: search,
+            description: description,
         };
        
         window.gamedata = gamedata;
@@ -445,6 +446,7 @@
             try
             {
                 item.call(this, itemid, "company", name);
+                this.slotname = "Megbízó";
             }
             catch(err)
             {
@@ -500,6 +502,8 @@
                     this.maxextenderlevel = maxextenderlevel;
                     this.basiccargo = basiccargo;
                     this.basicammostorage = basicammostorage;
+                    this.slotname = "Hajó";
+                    this.equipable = "ship";
                 }
                 catch(err)
                 {
@@ -524,6 +528,7 @@
                     this.batteryslot = batteryslot;
                     this.maxbatterylevel = maxbatterylevel;
                     this.basicammostorage = basicammostorage;
+                    this.slotname = "Raj";
                 }
                 catch(err)
                 {
@@ -547,6 +552,8 @@
                     this.shielddamage = shielddamage;
                     this.ammousage = ammousage;
                     this.energyusage = energyusage;
+                    this.slotname = "Ágyú";
+                    this.itemtypename = "Ágyú";
                 }
                 catch(err)
                 {
@@ -570,6 +577,8 @@
                     this.shielddamage = shielddamage;
                     this.ammousage = ammousage;
                     this.energyusage = energyusage;
+                    this.slotname = "Ágyú";
+                    this.itemtypename = "Pulzuságyú";
                 }
                 catch(err)
                 {
@@ -593,6 +602,7 @@
                     this.shielddamage = 0;
                     this.ammousage = ammousage;
                     this.energyusage = energyusage;
+                    this.slotname = "Gépágyú";
                 }
                 catch(err)
                 {
@@ -616,6 +626,8 @@
                     this.shielddamage = shielddamage;
                     this.ammousage = ammousage;
                     this.energyusage = energyusage;
+                    this.slotname = "Rakétakilövő";
+                    this.itemtypename = "Rakétakilövő";
                 }
                 catch(err)
                 {
@@ -639,6 +651,8 @@
                     this.shielddamage = shielddamage;
                     this.ammousage = ammousage;
                     this.energyusage = energyusage;
+                    this.slotname = "Rakétakilövő";
+                    this.itemtypename = "SAB Rakétakilövő";
                 }
                 catch(err)
                 {
@@ -662,6 +676,8 @@
                     this.shielddamage = 0;
                     this.ammousage = ammousage;
                     this.energyusage = energyusage;
+                    this.slotname = "Raj fegyver";
+                    this.itemtypename = "Raj Gépágyú";
                 }
                 catch(err)
                 {
@@ -685,6 +701,8 @@
                     this.shielddamage = shielddamage;
                     this.ammousage = ammousage;
                     this.energyusage = energyusage;
+                    this.slotname = "Raj fegyver";
+                    this.itemtypename = "Raj Ágyú";
                 }
                 catch(err)
                 {
@@ -708,6 +726,8 @@
                     this.shielddamage = shielddamage;
                     this.ammousage = ammousage;
                     this.energyusage = energyusage;
+                    this.slotname = "Raj fegyver";
+                    this.itemtypename = "Raj Pulzuságyú";
                 }
                 catch(err)
                 {
@@ -725,6 +745,8 @@
                     this.shieldenergy = shieldenergy;
                     this.recharge = recharge;
                     this.energyusage = energyusage;
+                    this.slotname = "Pajzs";
+                    this.itemtypename = "Nagy Kapacitású Pajzs";
                 }
                 catch(err)
                 {
@@ -742,6 +764,8 @@
                     this.shieldenergy = shieldenergy;
                     this.recharge = recharge;
                     this.energyusage = energyusage;
+                    this.slotname = "pajzs";
+                    this.itemtypename = "Gyorstöltő Pajzs";
                 }
                 catch(err)
                 {
@@ -759,6 +783,8 @@
                     this.shieldenergy = shieldenergy;
                     this.recharge = recharge;
                     this.energyusage = energyusage;
+                    this.slotname = "Raj pajzs";
+                    this.itemtypename = "Raj Nagy Kapacitású Pajzs";
                 }
                 catch(err)
                 {
@@ -776,6 +802,8 @@
                     this.shieldenergy = shieldenergy;
                     this.recharge = recharge;
                     this.energyusage = energyusage;
+                    this.slotname = "Raj pajzs";
+                    this.itemtypename = "Raj Gyorstöltő Pajzs";
                 }
                 catch(err)
                 {
@@ -791,6 +819,7 @@
                     this.itemtype = "battleshiphull";
                     this.equipable = "ship";
                     this.hullenergy = hullenergy;
+                    this.slotname = "Burkolat";
                 }
                 catch(err)
                 {
@@ -806,6 +835,7 @@
                     this.itemtype = "squadronhull";
                     this.equipable = "squadron";
                     this.hullenergy = hullenergy;
+                    this.slotname = "Raj burkolat";
                 }
                 catch(err)
                 {
@@ -823,6 +853,7 @@
                     this.equipable = "ship";
                     this.squadronplace = squadronplace;
                     this.repair = repair;
+                    this.slotname = "Hangár";
                     
                 }
                 catch(err)
@@ -841,6 +872,7 @@
                     this.ammotype = ammotype;
                     this.ammoname = ammoname;
                     this.reload = reload;
+                    this.slotname = "Felszerelés";
                 }
                 catch(err)
                 {
@@ -855,6 +887,7 @@
                     equipment.call(this, itemid, "generator", name, "generator", level, construction, craftprice, sellprice, buyprice);
                     this.equipable = "ship";
                     this.energyregen = energyregen;
+                    this.slotname = "Generátor";
                 }
                 catch(err)
                 {
@@ -870,6 +903,7 @@
                     this.equipable = "both";
                     this.capacity = capacity;
 					this.maxrecharge = maxrecharge;
+                    this.slotname = "Akkumulátor";
                 }
                 catch(err)
                 {
@@ -885,6 +919,7 @@
                     this.equipable = "ship";
 					this.effect = effect;
 					this.slotextend = slotextend;
+                    this.slotname = "Bővítő";
                 }
                 catch(err)
                 {
@@ -901,6 +936,8 @@
                     this.itemtype = itemtype;
                     this.dmgmultiplicator = dmgmultiplicator;
                     this.energymultiplicator = energymultiplicator;
+                    this.slotname = "Lőszer";
+                    this.itemtypename = "Normál Lőszer";
                 }
                 catch(err)
                 {
@@ -908,13 +945,16 @@
                 }
             }
             
-            function specialammo(itemid, name, sellprice, buyprice)
+            function specialammo(itemid, name, sellprice, buyprice, user)
             {
                 try
                 {
                     equipment.call(this, itemid, "ammo", name, "ammo", 1, undefined, undefined, sellprice, buyprice);
                     this.equipable = "ship";
                     this.itemtype = "specialammo";
+                    this.slotname = "Lőszer";
+                    this.itemtypename = "Felszerelés Lőszer";
+                    this.user = user;
                 }
                 catch(err)
                 {
@@ -925,11 +965,12 @@
         function ability(itemid, name, itemtype, owner, maxlevel, upgradecost)
         {
             item.call(this, itemid, "ability", name);
-            this.slot = "skill";
+            this.slot = "ability";
             this.itemtype = itemtype;
             this.owner = owner;
             this.maxlevel = maxlevel;
             this.upgradecost = upgradecost;
+            this.slotname = "Képesség";
         }
             
     function property(itemid, property, targetobj)
@@ -994,5 +1035,249 @@
             {
                 return result;
             }
+        }
+    }
+    
+    function description(itemdata)
+    //Tárgyak leírása
+    {
+        try
+        {
+            
+            var div = document.createElement("DIV");
+                div.className = "descdiv";
+                
+                var namediv = document.createElement("DIV");
+                    namediv.className = "descname";
+                    namediv.appendChild(document.createTextNode(itemdata.name));
+            div.appendChild(namediv);
+            
+                var slotdiv = document.createElement("DIV");
+                    slotdiv.className = "descslot";
+                    slotdiv.appendChild(document.createTextNode("Slot: " + itemdata.slotname));
+                    if(itemdata.itemtypename)
+                    {
+                        slotdiv.appendChild(document.createTextNode(" - Típus: " + itemdata.itemtypename));
+                    }
+            div.appendChild(slotdiv);
+            
+                var leveldiv = document.createElement("DIV");
+                    if(itemdata.level)
+                    {
+                        leveldiv.appendChild(document.createTextNode("Szint: " + itemdata.level));
+                        var level = 1;
+                    }
+                    if(itemdata.equipable)
+                    {
+                        if(level) leveldiv.appendChild(document.createTextNode(" - "));
+                        
+                        switch(itemdata.equipable)
+                        {
+                            case "ship":
+                                var text = "Hajó";
+                            break;
+                            case "squadron":
+                                var text = "Raj";
+                            break;
+                            case "both":
+                                var text = "Hajó / Raj";
+                            break;
+                        }
+                        
+                        leveldiv.appendChild(document.createTextNode("Felszerelhető: " + text));
+                    }
+                    
+            div.appendChild(leveldiv);
+            
+            switch(itemdata.slot)
+            {
+                case "ship":
+                    div.appendChild(document.createTextNode("Megbízó: " + gamedata.companies[itemdata.company].name));
+                    div.appendChild(document.createElement("BR"));
+                    
+                        var c = document.createElement("DIV");
+                            c.style.fontWeight = "bold";
+                            c.style.marginTop = "1em";
+                            c.style.marginBottom = "1em";
+                            
+                            c.appendChild(document.createTextNode("A zárójeles értékek a tárgy maximális szintjét jelzik."));
+                            c.appendChild(document.createElement("BR"));
+                    div.appendChild(c);
+                    
+                    div.appendChild(document.createTextNode("Alap életerő: " + itemdata.corehull));
+                    div.appendChild(document.createElement("BR"));
+                    
+                    div.appendChild(document.createTextNode("Burkolat: " + itemdata.hullslot + " (" + itemdata.maxhulllevel + ") -  Pajzs: " + itemdata.shieldslot + " (" + itemdata.maxshieldlevel + ")"));
+                    div.appendChild(document.createElement("BR"));
+                    
+                    div.appendChild(document.createTextNode("Ágyú: " + itemdata.cannonslot + " (" + itemdata.maxcannonlevel + ") - Rakétakilövő: " + itemdata.rocketlauncherslot + " (" + itemdata.maxrocketlauncherlevel + ") - Gépágyú: " + itemdata.rifleslot + " (" + itemdata.maxriflelevel + ")"));
+                    div.appendChild(document.createElement("BR"));
+                    
+                    div.appendChild(document.createTextNode("Generátor: " + itemdata.maxgeneratorlevel + " (" + itemdata.maxgeneratorlevel + ") - Akkumulátor: " + itemdata.batteryslot + " (" + itemdata.maxbatterylevel + ")"));
+                    div.appendChild(document.createElement("BR"));
+                    
+                    div.appendChild(document.createTextNode("Hangár: " + itemdata.hangarslot + " (" + itemdata.maxhangarlevel + ") - Max. raj szint: " + itemdata.maxsquadronlevel));
+                    div.appendChild(document.createElement("BR"));
+                    
+                    div.appendChild(document.createTextNode("Felszerelés: " + itemdata.equipmentslot + " - Bővítő: " + itemdata.extenderslot + " (" + itemdata.maxextenderlevel + ")"));
+                    div.appendChild(document.createElement("BR"));
+                    
+                    div.appendChild(document.createTextNode("Lőszerraktár: " + itemdata.basicammostorage + " - Raktér: " + itemdata.basiccargo));
+                    div.appendChild(document.createElement("BR"));
+                break;
+                case "squadron":
+                    var c = document.createElement("DIV");
+                            c.style.fontWeight = "bold";
+                            c.style.marginTop = "1em";
+                            c.style.marginBottom = "1em";
+                            
+                            c.appendChild(document.createTextNode("A zárójeles értékek a tárgy maximális szintjét jelzik."));
+                            c.appendChild(document.createElement("BR"));
+                    div.appendChild(c);
+                    
+                    div.appendChild(document.createTextNode("Alap életerő: " + itemdata.corehull));
+                    div.appendChild(document.createElement("BR"));
+                    
+                    div.appendChild(document.createTextNode("Burkolat: " + itemdata.hullslot + " (" + itemdata.maxhulllevel + ") - Pajzs: " + itemdata.shieldslot + " (" + itemdata.maxshieldlevel + ")"));
+                    div.appendChild(document.createElement("BR"));
+                    
+                    div.appendChild(document.createTextNode("Fegyver: " + itemdata.weaponslot + " (" + itemdata.maxweaponlevel + ") - Akkumulátor: " + itemdata.batteryslot + " (" + itemdata.maxbatterylevel + ")"));
+                    div.appendChild(document.createElement("BR"));
+                    
+                    div.appendChild(document.createTextNode("Lőszerraktár: " + itemdata.basicammostorage));
+                    div.appendChild(document.createElement("BR"));
+                break;
+                case "cannon":
+                case "rocketlauncher":
+                case "rifle":
+                case "squadronweapon":
+                    div.appendChild(document.createTextNode("Sebzés: " + itemdata.hulldamage + " (burkolat) / " + itemdata.shielddamage + " (pajzs) / " + itemdata.squadrondamage + " (raj)"));
+                    div.appendChild(document.createElement("BR"));
+                    
+                    div.appendChild(document.createTextNode("Lőszerhasználat: " + itemdata.ammousage + " - Lőszer: " + itemdata.ammoname));
+                    div.appendChild(document.createElement("BR"));
+                    
+                    div.appendChild(document.createTextNode("Energiahasználat: " + itemdata.energyusage));
+                    div.appendChild(document.createElement("BR"));
+                    
+                    div.appendChild(document.createTextNode("Pontosság: " + itemdata.accuracy + " - Újratöltés: " + itemdata.reload + " kör"));
+                    div.appendChild(document.createElement("BR"));
+                break;
+                case "shield":
+                case "squadronshield":
+                    div.appendChild(document.createTextNode("Kapacitás: " + itemdata.shieldenergy));
+                    div.appendChild(document.createElement("BR"));
+                    
+                    div.appendChild(document.createTextNode("Regeneráció: " + itemdata.recharge + "/kör - Energiahasználat: " + itemdata.energyusage));
+                    div.appendChild(document.createElement("BR"));
+                break;
+                case "hull":
+                case "squadronhull":
+                    div.appendChild(document.createTextNode("Burkolat: " + itemdata.hullenergy));
+                    div.appendChild(document.createElement("BR"));
+                break;
+                case "generator":
+                    div.appendChild(document.createTextNode("Energiatermelés: " + itemdata.energyregen));
+                    div.appendChild(document.createElement("BR"));
+                break;
+                case "battery":
+                    div.appendChild(document.createTextNode("Kapacitás: " + itemdata.capacity + " - Tölthetőség: " + itemdata.maxrecharge));
+                    div.appendChild(document.createElement("BR"));
+                break;
+                case "hangar":
+                    div.appendChild(document.createTextNode("Raj hely: " + itemdata.squadronplace + " - Raj javítás: " + itemdata.repair * 100 + "% / kör"));
+                    div.appendChild(document.createElement("BR"));
+                break;
+                case "equipment":
+                    div.appendChild(document.createTextNode("Lőszer: " + itemdata.ammoname));
+                    div.appendChild(document.createElement("BR"));
+                    
+                    div.appendChild(document.createTextNode("Újratöltési idő: " + itemdata.reload));
+                    div.appendChild(document.createElement("BR"));
+                    
+                        var c = document.createElement("DIV");
+                            c.style.marginTop = "1em";
+                            c.style.marginBottom = "1em";
+                            var t = document.createElement("DIV");
+                                t.style.fontWeight = "bold";
+                                t.style.textDecoration = "underline";
+                                t.appendChild(document.createTextNode("Hatás:"));
+                        c.appendChild(t);
+                        c.appendChild(document.createTextNode(/*itemdata.description*/"HATÁS"));
+                    div.appendChild(c);
+                break;
+                case "extender":
+                    div.appendChild(document.createTextNode("Extra hely: " + itemdata.slotextend));
+                    div.appendChild(document.createElement("BR"));
+                break;
+                case "ammo":
+                    switch(itemdata.itemtype)
+                    {
+                        case "specialammo":
+                            div.appendChild(document.createTextNode("Felhasználja: " + itemdata.user));
+                            div.appendChild(document.createElement("BR"));
+                        break;
+                        default:
+                            div.appendChild(document.createTextNode("Sebzés: x" + itemdata.dmgmultiplicator + " - Energiahasználat: x" + itemdata.energymultiplicator));
+                            div.appendChild(document.createElement("BR"));
+                        break;
+                    }
+                break;
+                case "ability":
+                    switch(itemdata.itemtype)
+                    {
+                        case "passive":
+                            var type = "Passzív";
+                        break;
+                        case "active1":
+                            var type = "Aktív 1";
+                        break;
+                        case "active2":
+                            var type = "Aktív 2";
+                        break;
+                    }
+                    
+                    slotdiv.appendChild(document.createTextNode(" - Típus: " + type));
+                    
+                    div.appendChild(document.createTextNode("Max. szint: " + itemdata.maxlevel));
+                    div.appendChild(document.createElement("BR"));
+                    
+                    if(itemdata.active)
+                    {
+                        div.appendChild(document.createTextNode("Aktív: " + itemdata.active + " kör (+ " + itemdata.activeinc + " / szint)"));
+                        div.appendChild(document.createElement("BR"));
+                    }
+                    if(itemdata.reload)
+                    {
+                        div.appendChild(document.createTextNode("Újratöltés: " + itemdata.reload + " kör (- " + itemdata.reloadinc + " / szint)"));
+                        div.appendChild(document.createElement("BR"));
+                    }
+                    
+                     var c = document.createElement("DIV");
+                            c.style.marginTop = "1em";
+                            c.style.marginBottom = "1em";
+                            var t = document.createElement("DIV");
+                                t.style.fontWeight = "bold";
+                                t.style.textDecoration = "underline";
+                                t.appendChild(document.createTextNode("Hatás:"));
+                        c.appendChild(t);
+                        c.appendChild(document.createTextNode(/*itemdata.description*/"HATÁS"));
+                    div.appendChild(c);
+                break;
+            }
+            
+            if(itemdata.sellprice)
+            {
+                div.appendChild(document.createTextNode("Vételár: " + itemdata.buyprice + " - Eladási ár: " + itemdata.sellprice));
+                div.appendChild(document.createElement("BR"));
+            }
+        }
+        catch(err)
+        {
+            alert(arguments.callee.name + err.name + ": " + err.message);
+        }
+        finally
+        {
+            return div;
         }
     }

@@ -207,7 +207,7 @@
                     </TD>
                     <TD id='descriptioncell'>
                         <DIV id='maintitle'>Leírás:</DIV>
-                        <DIV id='description'>DESC</DIV>
+                        <DIV id='description'></DIV>
                     </TD>
                 </TR>
             </TABLE>
@@ -510,6 +510,8 @@
                             itemdata = gamedata.items[item.itemid];
                             
                             var itemdiv = document.createElement("DIV");
+                                itemdiv.addEventListener("mouseenter", function(){document.getElementById("description").appendChild(gamedata.description(gamedata.items[item.itemid]));});
+                                itemdiv.addEventListener("mouseleave", function(){document.getElementById("description").innerHTML = ""});
                                 itemdiv.className = "equipitem";
                                 var name = document.createElement("DIV");
                                     name.className = "equipitemname";
@@ -820,6 +822,8 @@
                         
                         var div = document.createElement("DIV");
                             div.className = "item";
+                            div.addEventListener("mouseenter", function(){document.getElementById("description").appendChild(gamedata.description(gamedata.items[item.itemid]))});
+                            div.addEventListener("mouseleave", function(){document.getElementById("description").innerHTML = ""});
                             
                             var namediv = document.createElement("DIV");
                                 namediv.className = "itemname";
@@ -876,7 +880,7 @@
                                     if(Object.keys(chardata.squadrons).length >= allslots[itemdata.slot].slot) equipable = 0;
                                 break;
                                 case "ship":
-                                    
+                                    if(target != "ship") equipable = 0;
                                 break;
                                 default:
                                     if(itemdata.level > allslots[itemdata.slot].max) equipable = 0;

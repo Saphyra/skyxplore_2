@@ -168,6 +168,9 @@ function save()
                     }
                 }
             }
+            
+        var c = document.getElementById("description");
+        if(c) c.innerHTML = "";
     }
     catch(err)
     {
