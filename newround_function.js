@@ -103,7 +103,7 @@ function attack(character)
         if(!attackCheck(character)) return;
         if(!Object.keys(character.ammo).length) return;
 
-        if(character.charid != sessionStorage.charid) ammosSet(character);
+        ammosSet(character);
         
         if(character.equipment.cannon)
         {
@@ -232,6 +232,8 @@ function attack(character)
                 if(energyPercent < 50) var level = 1;
                 else if(energyPercent < 75) var level = 2;
                 else var level = 3;
+                
+                if(character.charid == sessionStorage.charid) level = gameinfo.temp.playerammolevel;
                 
                 for(var x in ammoTypes)
                 {
@@ -775,7 +777,7 @@ function squadronAttack(character)
     {
         var owner = gameinfo.characters[character.owner];
         if(!Object.keys(owner.ammo)) return;
-        if(character.owner != sessionStorage.charid) squadronAmmosSet(character);
+        squadronAmmosSet(character);
         
         
         var weapons = {cannon: [], rifle: []};
@@ -821,6 +823,8 @@ function squadronAttack(character)
             else if(energyPercent < 75) var level = 2;
             else var level = 3;
             
+            if(character.owner == sessionStorage.charid) level = gameinfo.temp.playerammolevel;
+            
             for(var x in ammoTypes)
             {
                 var ammoType = ammoTypes[x];
@@ -840,6 +844,14 @@ function squadronAttack(character)
         try
         {
             var attacked = 0;
+            
+            if(gameinfo.characters[character.control.target].place != "space")
+            {
+                character.control.target = null;
+                character.control.targettry = null;
+                return;
+            }
+            
             switch(gameinfo.characters[character.control.target].type)
             {
                 case "ship":

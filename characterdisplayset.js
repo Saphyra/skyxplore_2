@@ -26,7 +26,6 @@ function characterdisplayset(charid)
             if(character.charid == sessionStorage.charid)
             {
                 cdscargoset(character);
-                ammobarborderset();
             }
         }
         
@@ -434,3 +433,170 @@ function characterdisplayset(charid)
             alert(arguments.callee.name + err.name + ": " + err.message);
         }
     }
+    
+
+function specialBarCreate()
+{
+    try
+    //Elkészíti a játékos által elérhető képességek és felszerelések gombját
+    {
+        var equipments = gameinfo.characters[sessionStorage.charid].extras;
+        var abilities = gameinfo.characters[sessionStorage.charid].ability;
+        var container = document.getElementById("usablestatus");
+        
+        
+        for(var x in abilities)
+        {
+            if(abilities[x].level && abilities[x].owner == gameinfo.characters[sessionStorage.charid].ship.company && abilities[x].itemtype != "passive")
+            {
+                container.appendChild(specialBar(abilities[x]));
+            }
+        }
+        
+        for(var x in equipments)
+        {
+            if(equipments[x].equipped) container.appendChild(specialBar(equipments[x]));
+        }
+        
+        specialBarDisplay();
+    }
+    catch(err)
+    {
+        alert(arguments.callee.name + err.name + ": " + err.message);
+    }
+}
+
+    function specialBar(special)
+    //Létrehozza a gombot
+    {
+        try
+        {
+            var div = document.createElement("DIV");
+                div.className = "footerbutton";
+                div.id = "special" + special.itemid;
+                div.appendChild(document.createTextNode(special.itemid.toUpperCase()));
+                var span = document.createElement("SPAN");
+                    span.id = "specialspan" + special.itemid;
+                    span.style.color = "red";
+            div.appendChild(span);
+        }
+        catch(err)
+        {
+            alert(arguments.callee.name + err.name + ": " + err.message);
+        }
+        finally
+        {
+            return div;
+        }
+    }
+    
+    function specialBarDisplay()
+    //Kijelzi a játékos által elérhető képességeket és felszereléseket
+    {
+        try
+        {
+            var container = document.getElementById("usablestatus");
+            var nodes = container.childNodes;
+            
+            var ids = [];
+            for(var x = 0; x < nodes.length; x++) ids.push(nodes[x].id);
+            
+            var specialData = [];
+            for(var x in ids)
+            {
+                specialData.push(isUsable(ids[x]));
+            }
+            
+            specialData.sort(function(a, b){return a.status - b.status});
+            
+            for(var x in specialData)
+            {
+                var data = specialData[x];
+                var node = document.getElementById("special" + data.id);
+                container.removeChild(node);
+                container.insertBefore(node, container.childNodes[x]);
+                
+                nodeDisplaySet(node, data);
+            }
+        }
+        catch(err)
+        {
+            alert(arguments.callee.name + err.name + ": " + err.message);
+        }
+    }
+    
+        function isUsable(id)
+        {
+            try
+            {
+                var itemid = id.slice(7);
+                var character = gameinfo.characters[sessionStorage.charid];
+                var itemdata = character.extras[itemid];
+                
+                var usable = 0;
+                if(itemdata)
+                {
+                    if(itemdata.actualreload) usable = 1;
+                    if(batteryIndexChoose(character, itemdata.energyusage) == -1) usable = 2;
+                    if(!character.ammo[itemdata.ammotype] || character.ammo[itemdata.ammotype].amount < itemdata.ammousage) usable = 3;
+                    if(itemdata.actualactive) usable = -1;
+                }
+                else
+                {
+                    var itemdata = character.ability[itemid];
+                    if(itemdata.actualreload) usable = 1;
+                    if(batteryIndexChoose(character, itemdata.energyusage) == -1) usable = 2;
+                    if(itemdata.actualactive) usable = -1;
+                }
+                
+                var status = {id: itemid, status: usable, itemdata: itemdata};
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+            finally
+            {
+                return status;
+            }
+        }
+        
+        function nodeDisplaySet(node, data)
+        {
+            try
+            {
+                var span = document.getElementById("specialspan" + data.id);
+                switch(data.status)
+                {
+                    case -1:
+                        span.innerHTML = itemdata.actualactive;
+                        node.style.borderColor = "purple";
+                    break;
+                    case 0:
+                        node.style.borderColor = "#00ff00";
+                        node.onclick = function(){itemUse(data.id);};
+                    break;
+                    case 1:
+                        span.innerHTML = " Tölt: " + itemdata.reload;
+                        node.style.borderColor = "black";
+                    break;
+                    case 2:
+                        span.innerHTML = " Nincs elég energia.";
+                        node.style.borderColor = "black";
+                    break;
+                    case 3:
+                        span.innerHTML = " Nincs elég lőszer";
+                        node.style.borderColor = "black";
+                    break;
+                }
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        }
+        
+            function itemUse(itemid)
+            {
+                alert(itemid);
+            }

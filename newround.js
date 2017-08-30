@@ -32,6 +32,8 @@ function newround()
         {
             autoPlay("stop");
         }
+        
+        specialBarDisplay();
     }
     catch(err)
     {
@@ -124,16 +126,7 @@ function newround()
             shieldRecharge(character);
             
             character.control.dmgreceived += 1;
-            
-            /*
-				
-				if($squadroncontrol->place == "hangar")
-				{
-					if(takeoff($character, $squadron, $squadroncontrol, $energy)) return;
-					repair($character, $squadron, $squadroncontrol);
-				}*/
-				
-        }
+		}
         catch(err)
         {
             alert(arguments.callee.name + err.name + ": " + err.message);

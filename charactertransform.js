@@ -197,6 +197,7 @@ function charactertransform(characterdata)
                     this.equipped = equipped;
                     this.ammotype = itemdata.ammotype;
                     this.reload = itemdata.reload;
+                    this.name = itemdata.name;
                 }
                 catch(err)
                 {
@@ -242,6 +243,7 @@ function charactertransform(characterdata)
                     this.amount = ammo.amount;
                     this.energymultiplicator = itemdata.energymultiplicator;
                     this.dmgmultiplicator = itemdata.dmgmultiplicator;
+                    this.itemtype = itemdata.itemtype;
                 }
                 catch(err)
                 {
@@ -281,6 +283,8 @@ function charactertransform(characterdata)
                     this.itemid = ability.itemid;
                     this.level = ability.level;
                     this.owner = abilitydata.owner
+                    this.itemtype = abilitydata.itemtype;
+                    this.name = abilitydata.name;
                 }
                 catch(err)
                 {
@@ -351,11 +355,6 @@ function charactertransform(characterdata)
                         }
                         if(ammoid) break;
                         count++;
-                    }
-                    
-                    if(characterdata.charid == sessionStorage.charid || characterdata.owner == sessionStorage.charid)
-                    {
-                        gameinfo.temp.playerammos[weapontype] = ammoid;
                     }
                 }
                 catch(err)

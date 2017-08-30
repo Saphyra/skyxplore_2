@@ -72,7 +72,7 @@
                 mfa09: new ship("mfa09", "mfa", "MFA09 - Wywern", 9, 29000, 29000, 87000, 261000, 1300000, 27, 9, 27, 9, 45, 9, 27, 9, 36, 9, 36, 9, 18, 9, 4, 3, 9, 5, 5, 3, 600, 55000),
                 mfa10: new ship("mfa10", "mfa", "MFA10 - Seraphim", 10, 35000, 35000, 105000, 315000, 1900000, 30, 10, 30, 10, 50, 10, 30, 10, 40, 10, 40, 10, 20, 10, 5, 3, 10, 6, 6, 3, 1125, 70000),
                 
-                cri01: new ship("cri01", "cri", "CRI01 - Andromeda", 1, 1000, 1000, 3000, 9000, 40000, 4, 1, 2, 1, 3, 1, 4, 1, 3, 1, 6, 1, 3, 1, 1, 1, 1, 1, 1, 1, 10, 3000),
+                cri01: new ship("cri01", "cri", "CRI01 - Andromeda", 1, 1000, 1000, 3000, 9000, 40000, 4, 1, 2, 1, 3, 1, 4, 1, 3, 1, 6, 1, 3, 1, 1, 1, 1, 2, 1, 1, 10, 3000),
                 cri02: new ship("cri02", "cri", "CRI02 - Draco", 2, 2000, 2000, 6000, 18000, 60000, 8, 2, 4, 2, 6, 2, 8, 2, 6, 2, 12, 2, 6, 2, 2, 1, 2, 3, 1, 1, 15, 4500),
                 cri03: new ship("cri03", "cri", "CRI03 - Gemini", 3, 4000, 4000, 12000, 36000, 90000, 12, 3, 6, 3, 9, 3, 12, 3, 9, 3, 18, 3, 9, 3, 2, 2, 3, 4, 2, 1, 25, 7000),
                 cri04: new ship("cri04", "cri", "CRI04 - Hydra", 4, 7000, 7000, 21000, 63000, 130000, 16, 4, 8, 4, 12, 4, 16, 4, 12, 4, 24, 4, 12, 4, 2, 2, 4, 5, 2, 1, 40, 10000),
@@ -286,19 +286,19 @@
                 han03: new hangar("han03", "HAN03 - Nagy Hangár", 3, 7000, 7000, 21000, 63000, 3, 0.3),
                 
                 //new extra(itemid, name, level, construction, craftprice, sellprice, buyprice, effect, ammotype, ammoname, reload),
-                efi01: new extra("efi01", "EFI01 - Energiamező", 1, 5000, 5000, 15000, 45000, "efi", "efc01", "Energiatöltet", 10),
-                pdu01: new extra("pdu01", "PDU01 - Plazma Zavaró Egység", 1, 5000, 5000, 15000, 45000, "pdu", "pdr01", "Plazma Zavarórakéta", 15),
-                edi01: new extra("edi01", "EDI01 - Elektromikus Zavaróimpulzus", 1, 5000, 5000, 15000, 45000, "edi", "edd01", "EDI Drón", 20),
-                abs01: new extra("abs01", "ABS01 - Rendszertisztítás", 1, 5000, 5000, 15000, 45000, "abs", "vsw01", "Vírusírtó szoftver", 15),
-                sre01: new extra("sre01", "SRE01 - Pajzsregeneráció Növelés", 1, 5000, 5000, 15000, 45000, "sre", "src01", "Pajzstöltő cella", 15),
-                clo01: new extra("clo01", "CLO01 - Álcázó Berendezés", 1, 5000, 5000, 15000, 45000, "clo", "clc01", "Álcázó Chip", 5),
-                bol01: new extra("bol01", "BOL01 - Akkumulátor Túltöltés", 1, 5000, 5000, 15000, 45000, "bol", "rba01", "Tartalék Akkumulátor", 20),
-                mac01: new extra("mac01", "MAC01 - Mágneses köd", 1, 5000, 5000, 15000, 45000, "mac", "mad01", "Mágneses Zavarkeltő Drón", 15),
-                ser01: new extra("ser01", "SER01 - Rajzavaró Elektronsugár", 1, 5000, 5000, 15000, 45000, "ser", "csg01", "Töltéstároló Gránáz", 10),
-                mdl01: new extra("mdl01", "MDL01 - Rakétaelhárító Lézer", 1, 5000, 5000, 15000, 45000, "mdl", "lac01", "Lézertöltet", 15),
-                rep01: new extra("rep01", "REP01 - Kis Burkolatjavító Robot", 1, 1000, 1000, 3000, 9000, "rep", "spp01", "Pótalkatrész", 10),
-                rep02: new extra("rep02", "REP02 - Közepes Burkolatjavító Robot", 2, 3000, 3000, 9000, 27000, "rep", "spp01", "Pótalkatrész", 10),
-                rep03: new extra("rep03", "REP03 - Nagy Burkolatjavító Robot", 3, 5000, 5000, 45000, 13500, "rep", "spp01", "Pótalkatrész", 10),
+                efi01: new extra("efi01", "EFI01 - Energiamező", 1, 5000, 5000, 15000, 45000, "efi", "efc01", "Energiatöltet", 10, "A hajó 3 másodpercre sebezhetetlenné válik."),
+                pdu01: new extra("pdu01", "PDU01 - Plazma Zavaró Egység", 1, 5000, 5000, 15000, 45000, "pdu", "pdr01", "Plazma Zavarórakéta", 15, "Csökkenti a megcélzott ellenséges hajó fegyvereinek találati pontossgát."),
+                edi01: new extra("edi01", "EDI01 - Elektromikus Zavaróimpulzus", 1, 5000, 5000, 15000, 45000, "edi", "edd01", "EDI Drón", 20, "A hajót célzó ellenséges egységek elvesztik a célt, és a hajót 1 másodpercig nem lehet jelölni."),
+                abs01: new extra("abs01", "ABS01 - Rendszertisztítás", 1, 5000, 5000, 15000, 45000, "abs", "vsw01", "Vírusírtó szoftver", 15, "Eltávolítja a hajót ért negatív hatásokat."),
+                sre01: new extra("sre01", "SRE01 - Pajzsregeneráció Növelés", 1, 5000, 5000, 15000, 45000, "sre", "src01", "Pajzstöltő cella", 15, "5 másodpercig növeli a hajó pajzsregenerációját."),
+                clo01: new extra("clo01", "CLO01 - Álcázó Berendezés", 1, 5000, 5000, 15000, 45000, "clo", "clc01", "Álcázó Chip", 5, "Csökkenti az ellenséges hajók célzási esélyét, növeli a hajó támadási értékét, és radarjának célzási esélyét."),
+                bol01: new extra("bol01", "BOL01 - Akkumulátor Túltöltés", 1, 5000, 5000, 15000, 45000, "bol", "rba01", "Tartalék Akkumulátor", 20, "5 másodpercig az akkumulátorok töltöttségével megegyező energiát biztosít."),
+                mac01: new extra("mac01", "MAC01 - Mágneses köd", 1, 5000, 5000, 15000, 45000, "mac", "mad01", "Mágneses Zavarkeltő Drón", 15, "5 másodpercig 25%-al növeli a hajó kitérési esélyét."),
+                ser01: new extra("ser01", "SER01 - Rajzavaró Elektronsugár", 1, 5000, 5000, 15000, 45000, "ser", "csg01", "Töltéstároló Gránáz", 10, "A hajót 5 másodpercen keresztül nem támadhatják ellenséges rajok."),
+                mdl01: new extra("mdl01", "MDL01 - Rakétaelhárító Lézer", 1, 5000, 5000, 15000, 45000, "mdl", "lac01", "Lézertöltet", 15, "Csökkenti a megcélzott ellenséges hajó rakétáinak találati esélyét."),
+                rep01: new extra("rep01", "REP01 - Kis Burkolatjavító Robot", 1, 1000, 1000, 3000, 9000, "rep", "spp01", "Pótalkatrész", 10, "Visszatölti a burkolat 10%-át."),
+                rep02: new extra("rep02", "REP02 - Közepes Burkolatjavító Robot", 2, 3000, 3000, 9000, 27000, "rep", "spp01", "Pótalkatrész", 10, "Visszatölti a burkolat 20%-át."),
+                rep03: new extra("rep03", "REP03 - Nagy Burkolatjavító Robot", 3, 5000, 5000, 45000, 13500, "rep", "spp01", "Pótalkatrész", 10, "Visszatölti a burkolat 30%-át."),
                 
                 //new extender(itemid, name, level, construction, craftprice, sellprice, buyprice, effect, slotextend),
                 
@@ -389,29 +389,29 @@
             {
                 //new ability(itemid, name, itemtype, owner, maxlevel, upgradecost),
                 
-                emfp: new ability("emfp", "EMFP - Rajerősítés", "passive", "emf", 5, 2000),
-                emfa1: new ability("emfa1", "EMFA1 - Raj Pajzs", "active1", "emf", 10, 300),
-                emfa2: new ability("emfa2", "EMFA2 - Hatótávon Kívül", "active2", "emf", 5, 2000),
+                emfp: new ability("emfp", "EMFP - Rajerősítés", "passive", "emf", 5, 2000, "Növeli a rajok sebzését és védelmét."),
+                emfa1: new ability("emfa1", "EMFA1 - Raj Pajzs", "active1", "emf", 10, 300, "Az érkező sebzés egy részét szétosztja a rajok között."),
+                emfa2: new ability("emfa2", "EMFA2 - Hatótávon Kívül", "active2", "emf", 5, 2000, "A hajót nem lehet támadni, de ő sem indíthat támadást."),
                 
-                pdmp: new ability("pdmp", "PDMP - Megnövelt Pajzserő", "passive", "pdm", 5, 2000),
-                pdma1: new ability("pdma1", "PDMA1 - Pajzsregeneráció", "active1", "pdm", 10, 300),
-                pdma2: new ability("pdma2", "PDMA2 - Életmentő Manőver", "active2", "pdm", 5, 2000),
+                pdmp: new ability("pdmp", "PDMP - Megnövelt Pajzserő", "passive", "pdm", 5, 2000, "Növeli a hajó pajzserejét."),
+                pdma1: new ability("pdma1", "PDMA1 - Pajzsregeneráció", "active1", "pdm", 10, 300, "Növeli a csapat pajzsregenerációját."),
+                pdma2: new ability("pdma2", "PDMA2 - Életmentő Manőver", "active2", "pdm", 5, 2000, "A legjobban sérült szövetségest érő támadások egy része a saját hajót sebzik."),
                 
-                idfp: new ability("idfp", "IDFP - Nyomkövetés", "passive", "idf", 5, 2000),
-                idfa1: new ability("idfa1", "IDFA1 - Kinetikus Pajzs", "active1", "idf", 10, 300),
-                idfa2: new ability("idfa2", "IDFA2 - Gyorstüzellés", "active2", "idf", 5, 2000),
+                idfp: new ability("idfp", "IDFP - Nyomkövetés", "passive", "idf", 5, 2000, "Növeli a rakéták találati pontossgát."),
+                idfa1: new ability("idfa1", "IDFA1 - Kinetikus Pajzs", "active1", "idf", 10, 300, "Csökkenti a kapott sebzést."),
+                idfa2: new ability("idfa2", "IDFA2 - Gyorstüzellés", "active2", "idf", 5, 2000, "Növeli a rakétk újratöltési idejét."),
                 
-                gaap: new ability("gaap", "GAAP - Fejlett Radar", "passive", "gaa", 5, 2000),
-                gaaa1: new ability("gaaa1", "GAAA1 - Pajzslopás", "active1", "gaa", 10, 300),
-                gaaa2: new ability("gaaa2", "GAAA2 - Ionágyú", "active2", "gaa", 5, 2000),
+                gaap: new ability("gaap", "GAAP - Fejlett Radar", "passive", "gaa", 5, 2000, "Növeli a hajó jelölési esélyét."),
+                gaaa1: new ability("gaaa1", "GAAA1 - Pajzslopás", "active1", "gaa", 10, 300, "Az okozott sebzés egy része pajzserővé alakul."),
+                gaaa2: new ability("gaaa2", "GAAA2 - Ionágyú", "active2", "gaa", 5, 2000, "A célzott ellenséges hajó nem használhat képességeket."),
                 
-                mfap: new ability("mfap", "MFAP - Fejlett Roncsmentés", "passive", "mfa", 5, 2000),
-                mfaa1: new ability("mfaa1", "MFAA1 - Rajbénítás", "active1", "mfa", 10, 300),
-                mfaa2: new ability("mfaa2", "MFAA2 - Precíziós célzás", "active2", "mfa", 5, 2000),
+                mfap: new ability("mfap", "MFAP - Fejlett Roncsmentés", "passive", "mfa", 5, 2000, "Növeli a kapott jutalmakat."),
+                mfaa1: new ability("mfaa1", "MFAA1 - Rajbénítás", "active1", "mfa", 10, 300, "Az ellenséges rajok nem támadhatnak."),
+                mfaa2: new ability("mfaa2", "MFAA2 - Precíziós célzás", "active2", "mfa", 5, 2000, "A hajó az összes ellenséges rajt sebzi."),
                 
-                crip: new ability("crip", "CRIP - Gyors Újratöltés", "passive", "cri", 5, 2000),
-                cria1: new ability("cria1", "CRIA1 - Csökkentett Energiahasználat", "active1", "cri", 10, 300),
-                cria2: new ability("cria2", "CRIA2 - Kibervírus", "active2", "cri", 5, 2000)
+                crip: new ability("crip", "CRIP - Gyors Újratöltés", "passive", "cri", 5, 2000, "Csökkenti a felszerelések és képességek újratöltési idejét."),
+                cria1: new ability("cria1", "CRIA1 - Csökkentett Energiahasználat", "active1", "cri", 10, 300, "Csökkenti a hajó energiafelhasználását."),
+                cria2: new ability("cria2", "CRIA2 - Kibervírus", "active2", "cri", 5, 2000, "Leállítja a megcélzott ellenséges hajó generátorait.")
             },
             
             property: property,
@@ -862,7 +862,7 @@
                 }
             }
             
-            function extra(itemid, name, level, construction, craftprice, sellprice, buyprice, effect, ammotype, ammoname, reload)
+            function extra(itemid, name, level, construction, craftprice, sellprice, buyprice, effect, ammotype, ammoname, reload, description)
             {
                 try
                 {
@@ -873,6 +873,7 @@
                     this.ammoname = ammoname;
                     this.reload = reload;
                     this.slotname = "Felszerelés";
+                    this.description = description;
                 }
                 catch(err)
                 {
@@ -962,7 +963,7 @@
                 }
             }
             
-        function ability(itemid, name, itemtype, owner, maxlevel, upgradecost)
+        function ability(itemid, name, itemtype, owner, maxlevel, upgradecost, description)
         {
             item.call(this, itemid, "ability", name);
             this.slot = "ability";
@@ -971,6 +972,7 @@
             this.maxlevel = maxlevel;
             this.upgradecost = upgradecost;
             this.slotname = "Képesség";
+            this.description = description;
         }
             
     function property(itemid, property, targetobj)
@@ -1203,7 +1205,7 @@
                                 t.style.textDecoration = "underline";
                                 t.appendChild(document.createTextNode("Hatás:"));
                         c.appendChild(t);
-                        c.appendChild(document.createTextNode(/*itemdata.description*/"HATÁS"));
+                        c.appendChild(document.createTextNode(itemdata.description));
                     div.appendChild(c);
                 break;
                 case "extender":
@@ -1261,7 +1263,7 @@
                                 t.style.textDecoration = "underline";
                                 t.appendChild(document.createTextNode("Hatás:"));
                         c.appendChild(t);
-                        c.appendChild(document.createTextNode(/*itemdata.description*/"HATÁS"));
+                        c.appendChild(document.createTextNode(itemdata.description));
                     div.appendChild(c);
                 break;
             }

@@ -8,7 +8,6 @@ function characterdataset(company)
             construction: new characterconstruction(),
             abilities: new characterabilities(),
             equipment: characterequipment(gamedata.search({company: company, level: 1, type: "ship"})),
-            quickbar: chgquickbarset(),
         };
         data.ammo = characterammo(data.ship.basicammostorage, data.equipment);
         
@@ -363,40 +362,6 @@ function characterdataset(company)
                 this.place = "ship";
                 this.itemid = itemid;
                 this.amount = amount;
-            }
-            catch(err)
-            {
-                alert(arguments.callee.name + err.name + ": " + err.message);
-            }
-        }
-        
-    function chgquickbarset()
-    {
-        try
-        {
-            var quickbarset = [];
-            for(var x = 1; x <= 5; x++)
-            {
-                quickbarset[x] = new chgquickbar(x);
-            }
-        }
-        catch(err)
-        {
-            alert(arguments.callee.name + err.name + ": " + err.message);
-        }
-        finally
-        {
-            return quickbarset;
-        }
-    }
-    
-        function chgquickbar(num)
-        {
-            try
-            {
-                this.numberassign = num;
-                this.name = "";
-                this.func = null;
             }
             catch(err)
             {

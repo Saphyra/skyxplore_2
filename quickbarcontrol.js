@@ -1,337 +1,46 @@
-function quickbarsetupset()
+function quickBarControl(type, data)
+//Adott eseményre megfelelő utasítást hajt végre
 {
     try
     {
-        for(var num = 1; num <= 5; num++)
-        {
-            var name = chardata.characterdata.quickbar[num].name;
-            if(name == "") name = "Nincs beállítva";
-            
-            document.getElementById("quickbarset" + num).innerHTML = num + " - " + name;
-        }
-    }
-    catch(err)
-    {
-        alert(arguments.callee.name + err.name + ": " + err.message);
-    }
-}
-
-    function quickbarsetupchoose(type)
-    {
-        try
-        {
-            var container = document.getElementById("quickbarsetupchoosecontainer");
-                container.innerHTML = "";
-                switch(type)
-                {
-                    case "weapontypes":
-                        document.getElementById("quickbarsetupmenutitle").innerHTML = "Fegyverek";
-                        var weaponarr =
-                        [
-                            {name: "Ágyú", control: "cannonammo"},
-                            {name: "Pulzuságyú", control: "pulseammo"},
-                            {name: "Rakétakilövő", control: "rocketlauncherammo"},
-                            {name: "SAB Rakétakilövő", control: "sablauncherammo"},
-                            {name: "Gépágyú", control: "rifleammo"},
-                            {name: "Raj Ágyú", control: "squadroncannonammo"},
-                            {name: "Raj Pulzuságyú", control: "squadronpulseammo"},
-                            {name: "Raj Gépágyú", control: "squadronrifleammo"},
-                        ]
-                        
-                        for(var x in weaponarr)
-                        {
-                            container.appendChild(quickbarsetupweapon(weaponarr[x]));
-                        }
-                    break;
-                    default:
-                        alert("Ismeretlen");
-                    break;                   
-                }
-            document.getElementById("quickbarsetupchoose").style.display = "block";
-            document.getElementById("quickbarsetupchooseexit").onclick = function(){document.getElementById("quickbarsetupchoose").style.display = "none";};
-        }
-        catch(err)
-        {
-            alert(arguments.callee.name + err.name + ": " + err.message);
-        }
-    }
-        
-        function quickbarsetupweapon(weapon)
-        {
-            try
-            {
-                var div = document.createElement("DIV");
-                    div.className = "menubar";
-                    var button = document.createElement("BUTTON");
-                        button.innerHTML = weapon.name;
-                        button.onclick = function(){quickbarsetupammos(weapon.control)};
-                div.appendChild(button);
-            }
-            catch(err)
-            {
-                alert(arguments.callee.name + err.name + ": " + err.message);
-            }
-            finally
-            {
-                return div;
-            }
-        }
-        
-            function quickbarsetupammos(control)
-            {
-                try
-                {
-                    var container = document.getElementById("quickbarsetupchoosecontainer");
-                        container.innerHTML = "";
-                        document.getElementById("quickbarsetupmenutitle").innerHTML = "Lőszerek";
-                        
-                        switch(control)
-                        {
-                            case "cannonammo":
-                            case "squadroncannonammo":
-                                var ammotype = "cannonball";
-                            break;
-                            case "pulseammo":
-                            case "squadronpulseammo":
-                                var ammotype = "ioncell";
-                            break;
-                            case "rocketlauncherammo":
-                                var ammotype = "rocket";
-                            break;
-                            case "sabblauncherammo":
-                                var ammotype = "sabrocket";
-                            break;
-                            case "rifleammo":
-                            case "squadronrifleammo":
-                                var ammotype = "bullet";
-                            break;
-                        }
-                        
-                        var ammos = gamedata.search({type: "ammo", itemtype: ammotype});
-                        
-                        for(var x in ammos)
-                        {
-                            container.appendChild(quickbarsetupammo(ammos[x], control));
-                        }
-                        
-                    document.getElementById("quickbarsetupchoose").style.display = "block";
-                    document.getElementById("quickbarsetupchooseexit").onclick = function(){quickbarsetupchoose("weapontypes");};
-                }
-                catch(err)
-                {
-                    alert(arguments.callee.name + err.name + ": " + err.message);
-                }
-            }
-                
-                function quickbarsetupammo(ammoid, control)
-                {
-                    try
-                    {
-                        var div = document.createElement("DIV");
-                            div.className = "menubar";
-                            var button = document.createElement("BUTTON");
-                                button.innerHTML = gamedata.items[ammoid].name  
-                                button.onclick = function(){quickbarassign(ammoid, control)};
-                        div.appendChild(button);
-                    }
-                    catch(err)
-                    {
-                        alert(arguments.callee.name + err.name + ": " + err.message);
-                    }
-                    finally
-                    {
-                        return div;
-                    }
-                }
-                
-                    function quickbarassign(ammoid, control)
-                    {
-                        try
-                        {
-                            alert(control + " setted to " + ammoid + "at quickbar " + gameinfo.activebar);
-                        }
-                        catch(err)
-                        {
-                            alert(arguments.callee.name + err.name + ": " + err.message);
-                        }
-                    }
-                
-function quickbarload()
-{
-    try
-    {
-        var quickbarcontainer = document.getElementById("choosecontainer");
-            quickbarcontainer.appendChild(ammosbarcreate());
-            
-            var abilitybar, equipmentbar;
-            if(abilitybar = abilitybarcreate()) quickbarcontainer.appendChild(abilitybar);
-            if(equipmentbar = equipmentbarcreate()) quickbarcontainer.appendChild(equipmentbar);
-            
-            for(var x = 1; x <= 5; x++)
-            {
-                quickbarcontainer.appendChild(quickbarcreate(x));
-            }
-        
-    }
-    catch(err)
-    {
-        alert(arguments.callee.name + err.name + ": " + err.message);
-    }
-}
-
-function quickbarcontrol(type, target)
-{
-    try
-    {
-        if(type == "key")
-        {
-            switch(target.which)
-            {
-                case 48:
-                    switch(gameinfo.quickbarsession)
-                    {
-                        case "idle":
-                        case "weapontypes":
-                            type = "toggle";
-                            target = "weapontypes";
-                        break;
-                        case "ammochoose":
-                            type = "toggle";
-                            target = gameinfo.openedbar;
-                        break;
-                    }
-                break;
-                case 81:
-                    switch(gameinfo.quickbarsession)
-                    {
-                        case "idle":
-                        case "abilitytypes":
-                            type = "toggle";
-                            target = "abilitytypes";
-                        break;
-                    }
-                break;
-                case 87:
-                    switch(gameinfo.quickbarsession)
-                    {
-                        case "idle":
-                        case "equipmenttypes":
-                            type = "toggle";
-                            target = "equipmenttypes";
-                        break;
-                    }
-                break;
-                case 27:
-                    var container = document.getElementById("settingscontainer");
-                    if(container.style.display == "block")
-                    {
-                        container.style.display = "none";
-                        document.getElementById("quickbarsetup").style.display = "none";
-                        document.getElementById("quickbaractionchoose").style.display = "none";
-                        document.getElementById("quickbarsetupchoose").style.display = "none";
-                    }
-                    else
-                    {
-                        container.style.display = "block";
-                    }
-                break;
-                default:
-                    if(target.which >= 49 && target.which <= 53)
-                    {
-                        quickbaruse(target.which - 48);
-                    }
-                break;
-            }
-        }
-        
         switch(type)
         {
-            case "toggle":
-                if(target == "weapontypes")
+            case "key":
+                switch(data)
                 {
-                    if(gameinfo.quickbarsession == "idle" || gameinfo.quickbarsession == "weapontypes" || gameinfo.quickbarsession == "ammochoose")
-                    {
-                        var weapontypes = document.getElementById("weapontypes");
-                        if(weapontypes.style.display == "block")
-                        {
-                            if(gameinfo.openedbar) quickbarcontrol("toggle", gameinfo.openedbar);
-                            weapontypes.style.display = "none";
-                            gameinfo.quickbarsession = "idle";
-                            document.getElementById("ammochoosebutton").style.borderColor = "white";
-                        }
-                        else if(weapontypes.style.display == "none")
-                        {
-                            weapontypes.style.display = "block";
-                            gameinfo.quickbarsession = "weapontypes";
-                            document.getElementById("ammochoosebutton").style.borderColor = "red";
-                        }
-                    }
-                }
-                else if(target == "abilitytypes")
-                {
-                    if(gameinfo.quickbarsession == "idle" || gameinfo.quickbarsession == "abilitytypes")
-                    {
-                        var abilitytypes = document.getElementById("abilitytypes");
-                        if(!abilitytypes) return;
-                        if(abilitytypes.style.display == "block")
-                        {
-                            abilitytypes.style.display = "none";
-                            gameinfo.quickbarsession = "idle";
-                            document.getElementById("abilitytypesbutton").style.borderColor = "white";
-                        }
-                        else if(abilitytypes.style.display == "none")
-                        {
-                            abilitytypes.style.display = "block";
-                            gameinfo.quickbarsession = "abilitytypes";
-                            document.getElementById("abilitytypesbutton").style.borderColor = "red";
-                        }
-                    }
-                    
-                }
-                else if(target == "equipmenttypes")
-                {
-                    if(gameinfo.quickbarsession == "idle" || gameinfo.quickbarsession == "equipmenttypes")
-                    {
-                        var equipmenttypes = document.getElementById("equipmenttypes");
-                        if(!equipmenttypes) return;
-                        if(equipmenttypes.style.display == "block")
-                        {
-                            equipmenttypes.style.display = "none";
-                            gameinfo.quickbarsession = "idle";
-                            document.getElementById("equipmenttypesbutton").style.borderColor = "white";
-                        }
-                        else if(equipmenttypes.style.display == "none")
-                        {
-                            equipmenttypes.style.display = "block";
-                            gameinfo.quickbarsession = "equipmenttypes";
-                            document.getElementById("equipmenttypesbutton").style.borderColor = "red";
-                        }
-                    }
-                    
-                }
-                else
-                {
-                    var ammotypes = document.getElementById("ammotypes" + target);
-                    if(ammotypes.style.display == "block")
-                    {
-                        ammotypes.style.display = "none";
-                        gameinfo.quickbarsession = "weapontypes";
-                        document.getElementById(target + "button").style.borderColor = "white";
-                        gameinfo.openedbar = null;
-                        
-                    }
-                    else if(ammotypes.style.display == "none")
-                    {
-                        if(gameinfo.openedbar) quickbarcontrol("toggle", gameinfo.openedbar);
-                        ammotypes.style.display = "block";
-                        gameinfo.quickbarsession = "ammochoose";
-                        document.getElementById(target + "button").style.borderColor = "red";
-                        gameinfo.openedbar = target;
-                    }
+                    case 27:
+                    //Főmenü nyitása / zárása
+                        toggleMenu();
+                    break;
+                    case 48:
+                    case 96:
+                    //Autoplay indítás / leállítás
+                        (gameinfo.autoPlay) ? autoPlay("stop") : autoPlay("start");
+                    break;
+                    case 49:
+                    case 97:
+                    //Lőszerlista megnyitása
+                        (gameinfo.temp.activebar == "ammo") ? closeBar() : ammoBarLoad();
+                    break;
+                    case 50:
+                    case 98:
+                    //Képesség lista megnyitása
+                        (gameinfo.temp.activebar == "ability") ? closeBar() : abilityBarLoad();
+                    break;
+                    case 51:
+                    case 99:
+                    //felszereléslista megnyitása
+                        (gameinfo.temp.activebar == "equipment")? closeBar() : equipmentBarLoad();
+                    break;
+                    default:
+                        //alert(data);
+                    break;
                 }
             break;
+            default:
+                alert(type);
+            break;
         }
-        
     }
     catch(err)
     {
@@ -339,161 +48,65 @@ function quickbarcontrol(type, target)
     }
 }
 
-    function ammosbarcreate()
+    function toggleMenu()
+    //zárja/nyitja a főmenüt
     {
         try
         {
-            var div = document.createElement("DIV");
-                div.id = "ammochoose";
-                div.className = "choose";
-                var button = document.createElement("BUTTON");
-                    button.style.width = "auto";
-                    button.innerHTML = "0 - Lőszer";
-                    button.className = "quickbarbutton";
-                    button.id = "ammochoosebutton";
-                    button.onclick = function(){quickbarcontrol("toggle", "weapontypes");};
-            div.appendChild(button);
-                    
-                
-                    var weapontypesdiv = document.createElement("DIV");
-                        weapontypesdiv.className = "weapontypes";
-                        weapontypesdiv.id = "weapontypes";
-                        weapontypesdiv.style.display = "none";
-                    
-                        var weapontypes = weapontypeset();
-                        var num = 1;
-                        for(var weapontype in weapontypes)
-                        {
-                            weapontypesdiv.appendChild(weaponbarcreate(weapontype, num));
-                            num++;
-                        }
-                        
-                        var closediv = document.createElement("DIV");
-                            closediv.className = "weapontype";
-                            var closebutton = document.createElement("BUTTON");
-                                closebutton.className = "quickbarbutton";
-                                closebutton.innerHTML = "0 - Bezár";
-                                closebutton.onclick = function(){quickbarcontrol("toggle", "weapontypes");};
-                        closediv.appendChild(closebutton);
-                    weapontypesdiv.appendChild(closediv);
-            div.appendChild(weapontypesdiv);
+            var container = document.getElementById("settingscontainer");
+            if(container.style.display == "block")
+            {
+                document.getElementById("settingscontainer").style.display = "none";
+            }
+            else
+            {
+                document.getElementById("settingscontainer").style.display = "block";
+                autoPlay("stop");
+            }
         }
         catch(err)
         {
             alert(arguments.callee.name + err.name + ": " + err.message);
         }
-        finally
+    }
+    
+    function ammoBarLoad()
+    //Lőszerlista betöltése
+    {
+        try
         {
-            return div;
+            gameinfo.temp.activebar = "ammo";
+            var container = document.getElementById("barload");
+                container.innerHTML = "";
+                
+                for(var x = 1; x < 4; x++)
+                {
+                    container.appendChild(ammoBarCreate(x));
+                }
+                
+                var closebutton = document.createElement("DIV");
+                    closebutton.className = "footerbutton";
+                    closebutton.innerHTML = "X";
+                    closebutton.addEventListener("click", function(){container.innerHTML = ""});
+            container.appendChild(closebutton);
+        }
+        catch(err)
+        {
+            alert(arguments.callee.name + err.name + ": " + err.message);
         }
     }
     
-        function weapontypeset()
+        function ammoBarCreate(level)
+        //Lőszerlista készítése
         {
             try
             {
-                var charid = sessionStorage.charid;
-                var charequip = gameinfo.characters[charid].equipment;
-                var weapontypes = {};
-                
-                if(charequip.cannon)
-                {
-                    for(var x in charequip.cannon)
-                    {
-                        weapontypes[gamedata.items[charequip.cannon[x].itemid].itemtype] = 1;
-                    }
-                }
-                
-                if(charequip.rocketlauncher)
-                {
-                    for(var x in charequip.rocketlauncher)
-                    {
-                        weapontypes[gamedata.items[charequip.rocketlauncher[x].itemid].itemtype] = 1;
-                    }
-                }
-                
-                if(charequip.rifle) weapontypes.rifle = 1;
-                
-                
-                
-                var characters = [];
-                for(var x in chardata.squadrons)
-                {
-                    characters.push(x);
-                }
-                
-                
-                for(var x in characters)
-                {
-                    var charid = characters[x];
-                    
-                    var charequip = gameinfo.characters[charid].equipment;
-                    if(charequip.squadronweapon)
-                    {
-                        for(var x in charequip.squadronweapon)
-                        {
-                            weapontypes[gamedata.items[charequip.squadronweapon[x].itemid].itemtype] = 1;
-                        }
-                    }
-                }
-            }
-            catch(err)
-            {
-                alert(arguments.callee.name + err.name + ": " + err.message);
-            }
-            finally
-            {
-                return weapontypes;
-            }
-        }
-        
-        function weaponbarcreate(weapontype, num)
-        {
-            try
-            {
-                var weaponobj = 
-                {
-                    cannon: {name: "Ágyú", ammos: ["cab01", "cab02", "cab03"]},
-                    pulse: {name: "Pulzuságyú", ammos: ["ioc01", "ioc02", "ioc03"]},
-                    rocketlauncher: {name: "Rakétakilövő", ammos: ["roc01", "roc02", "roc03"]},
-                    sablauncher: {name: "SAB Rakétakilövő", ammos: ["sro01", "sro02", "sro03"]},
-                    rifle: {name: "Gépágyú", ammos: ["bul01", "bul02", "bul03"]},
-                    squadroncannon: {name: "Raj Ágyú", ammos: ["cab01", "cab02", "cab03"]},
-                    squadronpulse: {name: "Raj Pulzuságyú", ammos: ["ioc01", "ioc02", "ioc03"]},
-                    squadronrifle: {name: "Raj Gépágyú", ammos: ["bul01", "bul02", "bul03"]},
-                };
-                
-                var weapondata = weaponobj[weapontype];
-                
                 var div = document.createElement("DIV");
-                    div.id = "weapontype" + weapontype;
-                    div.className = "weapontype";
-                    var button = document.createElement("BUTTON");
-                        button.className = "quickbarbutton";
-                        button.innerHTML = num + " - " + weapondata.name;
-                        button.id = weapontype + "button";
-                        button.onclick = function(){quickbarcontrol("toggle", weapontype);};
-                div.appendChild(button);
-                    
-                        var ammotypes = document.createElement("DIV");
-                            ammotypes.className = "ammotypes";
-                            ammotypes.id = "ammotypes" + weapontype;
-                            ammotypes.style.display = "none";
-                            
-                            var num = 1;
-                            for(var x = 0; x < weapondata.ammos.length; x++)
-                            {
-                                var ammo = weapondata.ammos[x];
-                                if(gameinfo.characters[sessionStorage.charid].ammo[ammo])
-                                {
-                                    if(gameinfo.characters[sessionStorage.charid].ammo[ammo].amount)
-                                    {
-                                        ammotypes.appendChild(ammobarcreate(ammo, num, weapontype));
-                                        num++;
-                                    }
-                                }
-                            }
-                    div.appendChild(ammotypes);
+                    div.className = "footerbutton";
+                    div.innerHTML = "Szint: " + level;
+                    div.addEventListener("click", function(){gameinfo.temp.playerammolevel = level; closeBar();});
+                    if(gameinfo.temp.playerammolevel == level) div.style.borderColor = "purple";
+                 
             }
             catch(err)
             {
@@ -505,291 +118,55 @@ function quickbarcontrol(type, target)
             }
         }
         
-            function ammobarcreate(ammo, num, weapontype)
-            {
-                try
-                {
-                    var amount = gameinfo.characters[sessionStorage.charid].ammo[ammo].amount;
-                    var div = document.createElement("DIV");
-                        div.className = "ammotype";
-                        var button = document.createElement("BUTTON");
-                            button.id = weapontype + ammo;
-                            button.className = "quickbarbutton";
-                            button.appendChild(document.createTextNode(num + " - " + ammo.toUpperCase() + " ("));
-                            var span = document.createElement("SPAN")
-                                span.id = weapontype + ammo + "amount";
-                                span.innerHTML = amount;
-                            button.appendChild(span);
-                            button.appendChild(document.createTextNode(")"));
-                            button.onclick = function(){ammochange(ammo, weapontype);};
-                    div.appendChild(button);
-                        
-                }
-                catch(err)
-                {
-                    alert(arguments.callee.name + err.name + ": " + err.message);
-                }
-                finally
-                {
-                    return div;
-                }
-            }
-            
-                function ammochange(ammo, weapontype)
-                {
-                    try
-                    {
-                        var weaponobj = 
-                        {
-                            cannon: "cannonammo",
-                            pulse: "pulseammo",
-                            rocketlauncher: "rocketlauncherammo",
-                            sablauncher: "sablauncherammo",
-                            rifle: "rifleammo",
-                            squadroncannon: "squadroncannonammo",
-                            squadronpulse: "squadronpulseammo",
-                            squadronrifle: "squadronrifleammo",
-                        }
-                        
-                        switch(weapontype)
-                        {
-                            case "cannon":
-                            case "pulse":
-                            case "rocketlauncher":
-                            case "sablauncher":
-                            case "rifle":
-                                gameinfo.characters[sessionStorage.charid].control[weaponobj[weapontype]] = ammo;
-                                gameinfo.temp.playerammos[weapontype] = ammo;
-                            break;
-                            case "squadroncannon":
-                            case "squadronpulse":
-                            case "squadronrifle":
-                                gameinfo.temp.playerammos[weapontype] = ammo;
-                                for(var x in gameinfo.characters)
-                                {
-                                    if(gameinfo.characters[x].owner == sessionStorage.charid)
-                                    {
-                                        gameinfo.characters[x].control[weaponobj[weapontype]] = ammo;
-                                    }
-                                }
-                            break;
-                        }
-                        quickbarcontrol("toggle", "weapontypes");
-                        ammobarborderset();
-                    }
-                    catch(err)
-                    {
-                        alert(arguments.callee.name + err.name + ": " + err.message);
-                    }
-                }
-                
-                    function ammobarborderset()
-                    //beállítja a használandó lőszer keretszínét, és megadja a lőszer mennyiségét
-                    {
-                        try
-                        {
-                            var nodes = document.getElementsByClassName("quickbarbutton");
-                            for(var x in nodes)
-                            {
-                                nodes[x].className = "quickbarbutton";
-                            }
-                            for(var x in gameinfo.temp.playerammos)
-                            {
-                                if(gameinfo.temp.playerammos[x])
-                                {
-                                    var cont = document.getElementById(x + gameinfo.temp.playerammos[x]);
-                                    if(cont) cont.className = "quickbarbutton selectedammo";
-                                }
-                            }
-                            
-                            var ammos = gameinfo.characters[sessionStorage.charid].ammo;
-                            var weapontypes = 
-                            {
-                                cannon: "cannonball",
-                                pulse: "ioncell",
-                                rocketlauncher: "rocket",
-                                sablauncher: "sabrocket",
-                                rifle: "bullet",
-                                squadroncannon: "cannonball",
-                                squadronpulse: "ioncell",
-                                squadronrifle: "bullet",
-                            }
-                            
-                            for(var x in weapontypes)
-                            {
-                                for(var y in ammos)
-                                {
-                                    var ammodata = gamedata.items[ammos[y].itemid];
-                                    if(ammodata.itemtype == weapontypes[x])
-                                    {
-                                        var cont = document.getElementById(x + ammos[y].itemid + "amount");
-                                        if(cont)
-                                        {
-                                            cont.innerHTML = ammos[y].amount;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        catch(err)
-                        {
-                            alert(arguments.callee.name + err.name + ": " + err.message);
-                        }
-                    }
-                
-    function abilitybarcreate()
+    function abilityBarLoad()
     {
         try
         {
+            gameinfo.temp.activebar = "ability";
+            var container = document.getElementById("barload");
+                container.innerHTML = "";
             var abilities = gameinfo.characters[sessionStorage.charid].ability;
-            var company = gameinfo.characters[sessionStorage.charid].ship.company;
             
-            var dispabilities = []
+            var count = 0;
             for(var x in abilities)
             {
-                if(abilities[x].owner == company && abilities[x].level) dispabilities.push(abilities[x]);
-            }
-            
-            if(!dispabilities.length) return null;
-            
-            var div = document.createElement("DIV");
-                div.id = "abilitychoose";
-                div.className = "choose";
-                var button = document.createElement("BUTTON");
-                    button.style.width = "auto";
-                    button.innerHTML = "Q - Képesség";
-                    button.className = "quickbarbutton";
-                    button.onclick = function(){quickbarcontrol("toggle", "abilitytypes");};
-                    button.id = "abilitytypesbutton";
-            div.appendChild(button);
-                var abilitytypesdiv = document.createElement("DIV");
-                    abilitytypesdiv.className = "weapontypes";
-                    abilitytypesdiv.id = "abilitytypes";
-                    abilitytypesdiv.style.display = "none";
-                       
-            var num = 1;
-            for(var x in dispabilities)
-            {
-                abilitytypesdiv.appendChild(abilitytypescreate(dispabilities[x], num));
-                num++;
-            }
-            
-            div.appendChild(abilitytypesdiv)
-            
-                    var closediv = document.createElement("DIV");
-                        closediv.className = "weapontype";
-                        var closebutton = document.createElement("BUTTON");
-                            closebutton.className = "quickbarbutton";
-                            closebutton.innerHTML = "Q - Bezár";
-                            closebutton.onclick = function(){quickbarcontrol("toggle", "abilitytypes");};
-                    closediv.appendChild(closebutton);
-                abilitytypesdiv.appendChild(closediv);
-            div.appendChild(abilitytypesdiv);
-        }
-        catch(err)
-        {
-            alert(arguments.callee.name + err.name + ": " + err.message);
-        }
-        finally
-        {
-            return div;
-        }
-    }
-    
-        function abilitytypescreate(ability, num)
-        {
-            try
-            {
-                var div = document.createElement("DIV");
-                    div.className = "weapontype";
-                    var button = document.createElement("BUTTON");
-                        button.className = "quickbarbutton";
-                        button.innerHTML = num + " - " + gamedata.abilities[ability.itemid].name;
-                        button.onclick = function(){};
-                div.appendChild(button);
-            }
-            catch(err)
-            {
-                alert(arguments.callee.name + err.name + ": " + err.message);
-            }
-            finally
-            {
-                return div;
-            }
-        }
-        
-    function equipmentbarcreate()
-    {
-        try
-        {
-            var equipments = gameinfo.characters[sessionStorage.charid].extras;
-            
-            var dispequipments = []
-            for(var x in equipments)
-            {
-                if(equipments[x].equipped == 1)
+                if(abilities[x].level && abilities[x].owner == gameinfo.characters[sessionStorage.charid].ship.company && abilities[x].itemtype != "passive")
                 {
-                    dispequipments.push(equipments[x]);
+                    container.appendChild(abilityBarCreate(abilities[x]));
+                    count++;
                 }
             }
             
-            if(!dispequipments.length) return null;
-            
-            var div = document.createElement("DIV");
-                div.id = "equipmentchoose";
-                div.className = "choose";
-                var button = document.createElement("BUTTON");
-                    button.style.width = "auto";
-                    button.innerHTML = "W - Felszerelés";
-                    button.className = "quickbarbutton";
-                    button.onclick = function(){quickbarcontrol("toggle", "equipmenttypes");};
-                    button.id = "equipmenttypesbutton";
-            div.appendChild(button);
-                var equipmenttypesdiv = document.createElement("DIV");
-                    equipmenttypesdiv.className = "weapontypes";
-                    equipmenttypesdiv.id = "equipmenttypes";
-                    equipmenttypesdiv.style.display = "none";
-                       
-            var num = 1;
-            for(var x in dispequipments)
+            if(!count)
             {
-                equipmenttypesdiv.appendChild(equipmenttypescreate(dispequipments[x], num));
-                num++;
+                var noability = document.createElement("DIV");
+                    noability.className = "footerbutton";
+                    noability.innerHTML = "Nincs elérhető képesség";
+                container.appendChild(noability);
+                
+                setTimeout(function(){if(gameinfo.temp.activebar == "ability") closeBar();}, 2000);
             }
             
-            div.appendChild(equipmenttypesdiv)
-            
-                    var closediv = document.createElement("DIV");
-                        closediv.className = "weapontype";
-                        var closebutton = document.createElement("BUTTON");
-                            closebutton.className = "quickbarbutton";
-                            closebutton.innerHTML = "W - Bezár";
-                            closebutton.onclick = function(){quickbarcontrol("toggle", "equipmenttypes");};
-                    closediv.appendChild(closebutton);
-                equipmenttypesdiv.appendChild(closediv);
-            div.appendChild(equipmenttypesdiv);
+            var closebutton = document.createElement("DIV");
+                    closebutton.className = "footerbutton";
+                    closebutton.innerHTML = "X";
+                    closebutton.addEventListener("click", function(){container.innerHTML = ""});
+            container.appendChild(closebutton);
         }
         catch(err)
         {
             alert(arguments.callee.name + err.name + ": " + err.message);
         }
-        finally
-        {
-            return div;
-        }
     }
     
-        function equipmenttypescreate(equipment, num)
+        function abilityBarCreate(ability)
         {
             try
             {
                 var div = document.createElement("DIV");
-                    div.className = "weapontype";
-                    var button = document.createElement("BUTTON");
-                        button.className = "quickbarbutton";
-                        button.innerHTML = num + " - " + gamedata.items[equipment.itemid].name;
-                        button.onclick = function(){};
-                div.appendChild(button);
+                    div.className = "footerbutton";
+                    div.innerHTML = ability.name;
+                    /*Ha használható, zöld keret, ha nem, akkor fekete, és kiírni a használhatatlanság okát*/
             }
             catch(err)
             {
@@ -801,34 +178,71 @@ function quickbarcontrol(type, target)
             }
         }
         
-    function quickbarcreate(num)
+    function equipmentBarLoad()
     {
         try
         {
-            var div = document.createElement("DIV");
-                div.className = "choose";
-                var button = document.createElement("BUTTON");
-                    button.style.width = "auto";
-                    button.innerHTML = num + " - QUICKBAR";
-                    button.className = "quickbarbutton";
-                    button.onclick = function(){quickbaruse(num)};
-            div.appendChild(button);
+            gameinfo.temp.activebar = "equipment";
+            var container = document.getElementById("barload");
+                container.innerHTML = "";
+            var equipments = gameinfo.characters[sessionStorage.charid].extras;
+            var count = 0;
+            for(var x in equipments)
+            {
+                if(equipments[x].equipped)
+                {
+                    count++;
+                    container.appendChild(equipmentBarCreate(equipments[x]));
+                }
+            }
+            
+            if(!count)
+            {
+                var noability = document.createElement("DIV");
+                    noability.className = "footerbutton";
+                    noability.innerHTML = "Nincs elérhető felszerelés";
+                container.appendChild(noability);
+                
+                setTimeout(function(){if(gameinfo.temp.activebar == "equipment") closeBar();}, 2000);
+            }
+            
+            var closebutton = document.createElement("DIV");
+                    closebutton.className = "footerbutton";
+                    closebutton.innerHTML = "X";
+                    closebutton.addEventListener("click", function(){container.innerHTML = ""});
+            container.appendChild(closebutton);
         }
         catch(err)
         {
             alert(arguments.callee.name + err.name + ": " + err.message);
         }
-        finally
-        {
-            return div;
-        }
     }
-    
-    function quickbaruse(barid)
+        
+        function equipmentBarCreate(equipment)
+        {
+            try
+            {
+                var div = document.createElement("DIV");
+                    div.className = "footerbutton";
+                    div.innerHTML = equipment.name;
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+            finally
+            {
+                return div;
+            }
+        }
+        
+    function closeBar()
+    //Bezárja a megnyitott mezőt
     {
         try
         {
-            alert(barid);
+            gameinfo.temp.activebar = null; 
+            document.getElementById("barload").innerHTML = "";
         }
         catch(err)
         {

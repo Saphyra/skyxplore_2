@@ -14,24 +14,14 @@
                 {
                     var gameinfo = {};
                         gameinfo.characters = {};
-                        gameinfo.quickbarsession = "idle";
                         gameinfo.openedbar = null;
                         gameinfo.numberassign = {};
                         gameinfo.activebar = null;
                         gameinfo.temp = 
                         {
                             energy: {},
-                            playerammos:
-                            {
-                                cannon: null,
-                                pulse: null,
-                                rocketlauncher: null,
-                                sablauncher: null,
-                                rifle: null,
-                                squadroncannon: null,
-                                squadronpulse: null,
-                                squadronrifle: null,
-                            },
+                            playerammolevel: 1,
+                            activebar: null,
                         };
                         
                     window.gameinfo = gameinfo;
@@ -66,6 +56,11 @@
                         
                         charactertransform(charactergenerate(chardata.level, alliance));
                     }
+                    
+                    for(var x in gameinfo.characters)
+                    {
+                        energySet(gameinfo.characters[x]);
+                    }
                 })();
             }
             catch(err)
@@ -93,6 +88,7 @@
                     width: 25%;
                     overflow-y: auto;
                     text-align: center;
+                    cursor: default;
                 }
                     
                     .bar
@@ -137,6 +133,7 @@
                         .cargobar, .ammobar
                         {
                             background-image: url('pixelpurple.jpg');
+                            cursor: pointer;
                         }
                 
                 #bots
@@ -273,87 +270,54 @@
                 height: 40;
                 width: 100%;
                 box-sizing: border-box;
+                text-align: left;
+                padding: 0;
             }
-            
-                #footer button
+                #footer div
                 {
-                    font-size: 16;
+                    display: inline-block;
                 }
-            
-                #choosecontainer
-                {
-                    height: 45;
-                    position: relative;
-                }
-                    
-                    .choose
+                
+                    .footerbutton
                     {
-                        display: inline;
-                        margin-left: 10;
+                        font-size: 20;
+                        border: 3px ridge;
+                        padding: 1;
                         cursor: pointer;
-                        position: relative;
+                        margin-right: 5px;
+                        text-align: center;
+                        box-sizing: border-box;
                     }
-                    .choose:hover
+                    .footerbutton:hover
                     {
                         border-color: red;
                     }
                     
-                        .quickbarbutton
-                        {
-                            text-align: left;
-                            width: 100%;
-                            border-radius: 0;
-                            border-width: 3;
-                            padding: 2;
-                        }
+                    .footerbar
+                    {
+                        position: absolute;
+                        bottom: 1;
+                        background-color: black;
+                        width: 100%;
+                    }
                     
-                        .weapontypes
+                        #barload div
                         {
-                            background-color: black;
-                            position: absolute;
-                            left: 0;
-                            bottom: 24;
-                            text-align: center;
-                            display: none;
+                            display: block;
                         }
-                        
-                            .weapontype
-                            {
-                                position: relative;
-                                text-align: left;
-                                white-space: nowrap;
-                            }
-                            .weapontype:hover
-                            {
-                                border-color: red;
-                            }
-                            
-                                .ammotypes
-                                {
-                                    position: absolute;
-                                    display: none;
-                                    left: 100%;
-                                    bottom: 0;
-                                }
-                                
-                                    .ammotype
-                                    {
-                                        background-color: black;
-                                        white-space: nowrap;
-                                        font-size: 20;
-                                    }
-                                    .ammotype:hover
-                                    {
-                                        border-color: red;
-                                    }
-                                    
-                                    .selectedammo
-                                    {
-                                        border-color: blue;
-                                    }
+                
+                #footer button
+                {
+                    font-size: 20;
+                }
+            
+            
+
+                    
+                    
         </STYLE>
     </HEAD>
-<BODY onkeyup='quickbarcontrol("key", event)' style='background-image: url("launchbackground.jpg");'>
+<BODY onkeyup='quickBarControl("key", event.which)' style='background-image: url("launchbackground.jpg");'>
     
     <DIV id='maincontainer' class='maincontainer'>
         <DIV id='contentcontainer'>
@@ -374,45 +338,36 @@
         </DIV>
         
         <DIV id='footer'>
-            <BUTTON id='autoplay' onclick='autoPlay("start")' style='position: absolute; left: 10;'>Indítás</BUTTON>
-            <BUTTON onclick='newround()'>Új kör</BUTTON>
-            <DIV id='choosecontainer' style='display: inline;'></DIV>
-            <DIV style='position: absolute; right: 3; top: 3; text-align: right;'><INPUT type='image' id='settingsbutton' src='settingsbutton.png' onclick='settingsmenu()'></DIV>
+            <TABLE style='width: 100%'>
+                <TR>
+                    <TD style='border-right-style: ridge; border-right-width: 3; width: 34em;'>
+                        <DIV class='footerbutton' id='autoplay' onclick='autoPlay("start")' style='width: 6em'> 0 - Indítás</DIV>
+                        <DIV class='footerbutton' onclick='newround()'>Új kör</DIV>
+                        <DIV class='footerbutton' onclick='quickBarControl("key", 49)'>1 - Lőszer</DIV>
+                        <DIV class='footerbutton' onclick='quickBarControl("key", 50)'>2 - Képesség</DIV>
+                        <DIV class='footerbutton' onclick='quickBarControl("key", 51)'>3 - Felszerelés</DIV>
+                    </TD>
+                    <TD style='position: relative;'>
+                        <DIV id='usablestatus' class='footerbar' style='white-space: nowrap; overflow: hidden;'></DIV>
+                        <DIV id='barload' class='footerbar' style='z-index: 10;'></DIV>
+                    </TD>
+                    <TD style='text-align: right; border-left-style: ridge; border-left-width: 3px; width: 2em;'>
+                        <INPUT type='image' id='settingsbutton' src='settingsbutton.png' onclick='quickBarControl("key", 27)'>
+                    </TD>
+                </TR>
+            </TABLE>
+                
+            
         </DIV>
      </DIV>
     
     <DIV class='menucontainer' id='settingscontainer'>
        <DIV class='menutitle'>Beállítások</DIV>
-       <DIV class='menuexit' id='settingsexit'><BUTTON onclick='document.getElementById("settingscontainer").style.display = "none";'>X</BUTTON></DIV>
+       <DIV class='menuexit' id='settingsexit'><BUTTON onclick='quickBarControl("key", 27)'>X</BUTTON></DIV>
        <DIV class='menubar' ><BUTTON onclick='window.open("help/index.php?load=launch")'>Súgó</BUTTON></DIV>
        <DIV class='menubar'><BUTTON onclick='logout()'>Kijelentkezés</BUTTON></DIV>
        <DIV class='menubar' style='border-bottom-style: ridge; border-bottom-width: 3;'><BUTTON onclick='window.location.href = "account.html"'>Karakterváltás</BUTTON></DIV>
        <DIV class='menubar'><BUTTON id='back' onclick='window.location.href = "character.html"'>Vissza</BUTTON></DIV>
-       <DIV class='menubar'><BUTTON onclick='document.getElementById("quickbarsetup").style.display = "block";'>Gyorsmenüsor beállítása</BUTTON></DIV>
-    </DIV>
-    
-    <DIV class='menucontainer' id='quickbarsetup'>
-        <DIV class='menutitle'>Gyorsmenüsor beállítása</DIV>
-        <DIV class='menuexit'><BUTTON onclick='document.getElementById("quickbarsetup").style.display = "none";'>X</BUTTON></DIV>
-        <DIV class='menubar'><BUTTON onclick='gameinfo.activebar = 1; document.getElementById("quickbaractionchoose").style.display = "block";' id='quickbarset1'></BUTTON></DIV>
-        <DIV class='menubar'><BUTTON onclick='gameinfo.activebar = 2; document.getElementById("quickbaractionchoose").style.display = "block";' id='quickbarset2'></BUTTON></DIV>
-        <DIV class='menubar'><BUTTON onclick='gameinfo.activebar = 3; document.getElementById("quickbaractionchoose").style.display = "block";' id='quickbarset3'></BUTTON></DIV>
-        <DIV class='menubar'><BUTTON onclick='gameinfo.activebar = 4; document.getElementById("quickbaractionchoose").style.display = "block";' id='quickbarset4'></BUTTON></DIV>
-        <DIV class='menubar'><BUTTON onclick='gameinfo.activebar = 5; document.getElementById("quickbaractionchoose").style.display = "block";' id='quickbarset5'></BUTTON></DIV>
-    </DIV>
-    
-    <DIV class='menucontainer' id='quickbaractionchoose'>
-        <DIV class='menutitle'>Gyorsmenüsor beállítása</DIV>
-        <DIV class='menuexit'><BUTTON onclick='document.getElementById("quickbaractionchoose").style.display = "none";'>X</BUTTON></DIV>
-        <DIV class='menubar'><BUTTON onclick='quickbarsetupchoose("weapontypes")'>Lőszer</BUTTON></DIV>
-        <DIV class='menubar'><BUTTON onclick='quickbarsetupchoose("abilities")'>Képesség</BUTTON></DIV>
-        <DIV class='menubar'><BUTTON onclick='quickbarsetupchoose("equipments")'>Felszerelés</BUTTON></DIV>
-    </DIV>
-    
-    <DIV class='menucontainer' id='quickbarsetupchoose'>
-        <DIV class='menutitle' id='quickbarsetupmenutitle'></DIV>
-        <DIV class='menuexit' id='quickbarsetupchooseexit'><BUTTON onclick='document.getElementById("quickbarsetupchoose").style.display = "none";'>X</BUTTON></DIV>
-        <DIV id='quickbarsetupchoosecontainer'></DIV>
     </DIV>
     
     <SCRIPT>
@@ -425,8 +380,7 @@
                     contentcontainer.style.width = window.innerWidth - 20;
                     contentcontainer.style.height = window.innerHeight - 62;
                     
-                    quickbarsetupset();
-                    quickbarload();
+                    specialBarCreate();
             }
             catch(err)
             {
@@ -579,14 +533,17 @@
                     switch(type)
                     {
                         case "start":
+                            clearInterval(gameinfo.newRoundInterval);
                             gameinfo.newRoundInterval = setInterval(function(){newround();}, 1000);
-                            document.getElementById("autoplay").innerHTML = "Leállítás";
+                            document.getElementById("autoplay").innerHTML = "0 - Leállítás";
                             document.getElementById("autoplay").onclick = function(){autoPlay("stop")};
+                            gameinfo.autoPlay = 1;
                         break;
                         case "stop":
                             clearInterval(gameinfo.newRoundInterval);
-                            document.getElementById("autoplay").innerHTML = "Indítás";
+                            document.getElementById("autoplay").innerHTML = "0 - Indítás";
                             document.getElementById("autoplay").onclick = function(){autoPlay("start")};
+                            gameinfo.autoPlay = 0;
                         break;
                     }
                 }
