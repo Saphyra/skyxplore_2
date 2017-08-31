@@ -504,7 +504,7 @@ function specialBarCreate()
             var specialData = [];
             for(var x in ids)
             {
-                specialData.push(isUsable(ids[x]));
+                specialData.push(isUsable(ids[x].slice(7)));
             }
             
             specialData.sort(function(a, b){return a.status - b.status});
@@ -513,7 +513,7 @@ function specialBarCreate()
             {
                 var data = specialData[x];
                 var node = document.getElementById("special" + data.id);
-                container.removeChild(node);
+                //container.removeChild(node);
                 container.insertBefore(node, container.childNodes[x]);
                 
                 nodeDisplaySet(node, data);
@@ -525,19 +525,17 @@ function specialBarCreate()
         }
     }
     
-        function isUsable(id)
+        function isUsable(itemid)
         {
             try
             {
-                var itemid = id.slice(7);
                 var character = gameinfo.characters[sessionStorage.charid];
                 var itemdata = character.extras[itemid];
-                
                 var usable = 0;
                 if(itemdata)
                 {
                     if(itemdata.actualreload) usable = 1;
-                    if(batteryIndexChoose(character, itemdata.energyusage) == -1) usable = 2;
+                    if(batteryIndexChoose(character, itemdata.energyusage) == null) usable = 2;
                     if(!character.ammo[itemdata.ammotype] || character.ammo[itemdata.ammotype].amount < itemdata.ammousage) usable = 3;
                     if(itemdata.actualactive) usable = -1;
                 }
@@ -545,7 +543,7 @@ function specialBarCreate()
                 {
                     var itemdata = character.ability[itemid];
                     if(itemdata.actualreload) usable = 1;
-                    if(batteryIndexChoose(character, itemdata.energyusage) == -1) usable = 2;
+                    if(batteryIndexChoose(character, itemdata.energyusage) == null) usable = 2;
                     if(itemdata.actualactive) usable = -1;
                 }
                 
@@ -569,7 +567,7 @@ function specialBarCreate()
                 switch(data.status)
                 {
                     case -1:
-                        span.innerHTML = itemdata.actualactive;
+                        span.innerHTML = " Aktív: " + itemdata.actualactive;
                         node.style.borderColor = "purple";
                     break;
                     case 0:
@@ -598,5 +596,36 @@ function specialBarCreate()
         
             function itemUse(itemid)
             {
-                alert(itemid);
+                try
+                {
+                    gameinfo.temp.activeExtra[sessionStorage.charid].push(itemid);
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
             }
+            
+function enemyOrderSet()
+//Előre teszi azokat az ellenségeket, akik a hajót célozzák
+{
+    try
+    {
+        for(var x in gameinfo.characters)
+        {
+            var character = gameinfo.characters[x];
+            
+            if(character.alliance == "enemy" && character.control.target == sessionStorage.charid)
+            {
+                var container = (character.type == "ship") ? document.getElementById("enemyship") : document.getElementById("enemysquadron");
+                var node = document.getElementById(character.charid);
+                
+                container.insertBefore(node, container.childNodes[0]);
+            }
+        }
+    }
+    catch(err)
+    {
+        alert(arguments.callee.name + err.name + ": " + err.message);
+    }
+}

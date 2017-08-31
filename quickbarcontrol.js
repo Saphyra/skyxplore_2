@@ -101,9 +101,20 @@ function quickBarControl(type, data)
         {
             try
             {
+                var amount = 0;
+                var ammos = gameinfo.characters[sessionStorage.charid].ammo;
+                for(var x in ammos)
+                {
+                    if(ammos[x].itemtype != "specialammo" && ammos[x].level == level) amount += ammos[x].amount
+                }
+                
+                
                 var div = document.createElement("DIV");
                     div.className = "footerbutton";
                     div.innerHTML = "Szint: " + level;
+                    var span = document.createElement("SPAN");
+                        span.innerHTML = " - (" + amount + ")";
+                div.appendChild(span);
                     div.addEventListener("click", function(){gameinfo.temp.playerammolevel = level; closeBar();});
                     if(gameinfo.temp.playerammolevel == level) div.style.borderColor = "purple";
                  
@@ -166,7 +177,34 @@ function quickBarControl(type, data)
                 var div = document.createElement("DIV");
                     div.className = "footerbutton";
                     div.innerHTML = ability.name;
-                    /*Ha használható, zöld keret, ha nem, akkor fekete, és kiírni a használhatatlanság okát*/
+                    var span = document.createElement("SPAN");
+                        span.style.color = "red";
+                        var status = isUsable(ability.itemid).status;
+                        switch(status)
+                        {
+                            case -1:
+                                span.innerHTML = " Aktív: " + ability.actualactive;
+                                div.style.borderColor = "purple";
+                            break;
+                            case 0:
+                                div.style.borderColor = "#00ff00";
+                                div.addEventListener("click", function(){itemUse(ability.itemid); closeBar()});
+                                span.innerHTML = " (Energiahasználat: " + ability.energyusage + ")";
+                            break;
+                            case 1:
+                                span.innerHTML = " Tölt: " + ability.reload;
+                                div.style.borderColor = "black";
+                            break;
+                            case 2:
+                                span.innerHTML = " Nincs elég energia.";
+                                div.style.borderColor = "black";
+                            break;
+                            case 3:
+                                span.innerHTML = " Nincs elég lőszer";
+                                div.style.borderColor = "black";
+                            break;
+                        }
+                div.appendChild(span);
             }
             catch(err)
             {
@@ -225,6 +263,34 @@ function quickBarControl(type, data)
                 var div = document.createElement("DIV");
                     div.className = "footerbutton";
                     div.innerHTML = equipment.name;
+                    var span = document.createElement("SPAN");
+                        span.style.color = "red";
+                        var status = isUsable(equipment.itemid).status;
+                        switch(status)
+                        {
+                            case -1:
+                                span.innerHTML = " Aktív: " + equipment.actualactive;
+                                div.style.borderColor = "purple";
+                            break;
+                            case 0:
+                                div.style.borderColor = "#00ff00";
+                                div.addEventListener("click", function(){itemUse(equipment.itemid); closeBar()});
+                                span.innerHTML = " (Energiahasználat: " + equipment.energyusage + " - Használható: " + Math.floor(gameinfo.characters[sessionStorage.charid].ammo[equipment.ammotype].amount / equipment.ammousage) + ")";
+                            break;
+                            case 1:
+                                span.innerHTML = " Tölt: " + equipment.reload;
+                                div.style.borderColor = "black";
+                            break;
+                            case 2:
+                                span.innerHTML = " Nincs elég energia.";
+                                div.style.borderColor = "black";
+                            break;
+                            case 3:
+                                span.innerHTML = " Nincs elég lőszer";
+                                div.style.borderColor = "black";
+                            break;
+                        }
+                div.appendChild(span);
             }
             catch(err)
             {

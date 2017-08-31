@@ -17,6 +17,8 @@ function newround()
                     squadronRound(character);
                 break;
             }
+            
+            gameinfo.temp.activeExtra[character.charid] = [];
         }
         
         var friend = 0;
@@ -34,6 +36,7 @@ function newround()
         }
         
         specialBarDisplay();
+        enemyOrderSet();
     }
     catch(err)
     {
@@ -84,7 +87,9 @@ function newround()
             genEnergySet(character);
             energySet(character);
             
-            if(character.charid != sessionStorage.charid) activate(character);
+            specialActive(character);
+            if(character.charid != sessionStorage.charid) activateSet(character);
+            activateSpecial(character);
             
             targetCharacter(character);
             if(character.control.target) attack(character);
@@ -93,6 +98,7 @@ function newround()
             
             character.control.lastattack += 1;
             character.control.dmgreceived += 1;
+            specialCoolDown(character);
         }
         catch(err)
         {

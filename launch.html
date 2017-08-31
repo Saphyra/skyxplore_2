@@ -20,6 +20,20 @@
                         gameinfo.temp = 
                         {
                             energy: {},
+                            activeExtra: {},
+                            globalAbilities:
+                            {
+                                enemy:
+                                {
+                                    pdma1: {actualactive: 0, value: null},
+                                    mfaa1: {actualactive: 0, value: null},
+                                },
+                                friend:
+                                {
+                                    pdma1: {actualactive: 0, value: null},
+                                    mfaa1: {actualactive: 0, value: null},
+                                },
+                            },
                             playerammolevel: 1,
                             activebar: null,
                         };
@@ -60,6 +74,7 @@
                     for(var x in gameinfo.characters)
                     {
                         energySet(gameinfo.characters[x]);
+                        gameinfo.temp.activeExtra[x] = [];
                     }
                 })();
             }

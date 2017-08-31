@@ -222,7 +222,13 @@
                             finishdiv.className = "finishdiv";
                             var finishbutton = document.createElement("BUTTON");
                                 finishbutton.appendChild(document.createTextNode("Fejlesztés (" + upgradecost + " gyémánt)"))
-                                if(upgradecost > chardata.diamond)
+                                if(chardata.characterdata.abilities[abilitydata.itemid].level >= abilitydata.maxlevel)
+                                {
+                                    finishbutton.disabled = "disabled";
+                                    finishbutton.className = "dis";
+                                    finishbutton.innerHTML = "Maximális szint elérve!";
+                                }
+                                else if(upgradecost > chardata.diamond)
                                 {
                                     finishbutton.disabled = "disabled";
                                     finishbutton.className = "dis";

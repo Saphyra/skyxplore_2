@@ -6,11 +6,92 @@ function charactertransform(characterdata)
         var equipped = equippedload(characterdata);
         gameinfo.characters[characterdata.charid] = new chtcharacter(characterdata, equipped);
         
+        if(characterdata.company == "pdm" && characterdata.characterdata.abilities.pdmp.level)
+        //PDMP erősítés alkalmazása
+        {
+            var character =  gameinfo.characters[characterdata.charid];
+            var bonus = 1 + character.ability.pdmp.value / 100;
+            
+            if(character.equipment.shield)
+            {
+                for(var y in character.equipment.shield)
+                {
+                    character.equipment.shield[y].shieldenergy *= bonus;
+                    character.equipment.shield[y].actualshield *= bonus;
+                }
+            }
+        }
+        else if(characterdata.company == "idf" && characterdata.characterdata.abilities.idfp.level)
+        //IDFP alkalmazása
+        {
+            var character =  gameinfo.characters[characterdata.charid];
+            var bonus = character.ability.idfp.value;
+            
+            if(character.equipment.rocketlauncher)
+            {
+                for(var y in character.equipment.rocketlauncher) character.equipment.rocketlauncher[y].accuracy += bonus;
+            }
+        }
+        else if(characterdata.company == "cri" && characterdata.characterdata.abilities.crip.level)
+        //CRIP alkalmazása
+        {
+            var character =  gameinfo.characters[characterdata.charid];
+            var bonus = character.ability.crip.value;
+            
+            for(var y in character.extras)
+            {
+                character.extras[y].reload -= bonus;
+            }
+            for(var y in character.ability)
+            {
+                if(character.ability[y].reload) character.ability[y].reload -= bonus;
+            }
+        }
+        
         var squadrons = characterdata.squadrons;
-        var squadron;
+
         for(var x in squadrons)
         {
             gameinfo.characters[x] = new chtsquadrons(x, characterdata);
+            
+            if(characterdata.company == "emf" && characterdata.characterdata.abilities.emfp.level)
+            //EMFP erősítés alkalmazása
+            {
+                var bonus = 1 + gameinfo.characters[characterdata.charid].ability.emfp.value / 100;
+                var squadron = gameinfo.characters[x].equipment;
+                
+                gameinfo.characters[x].ship.corehull *= bonus;
+                gameinfo.characters[x].ship.actualcorehull *= bonus;
+                
+                if(squadron.squadronweapon)
+                {
+                    for(var y in squadron.squadronweapon)
+                    {
+                        var weapon = squadron.squadronweapon[y];
+                        weapon.hulldamage *= bonus;
+                        weapon.shielddamage *= bonus;
+                        weapon.squadrondamage *= bonus;
+                    }
+                }
+                
+                if(squadron.squadronhull)
+                {
+                    for(var y in squadron.squadronhull)
+                    {
+                        squadron.squadronhull[y].hullenergy *= bonus;
+                        squadron.squadronhull[y].actualhull *= bonus;
+                    }
+                }
+                
+                if(squadron.squadronshield)
+                {
+                    for(var y in squadron.squadronshield)
+                    {
+                        squadron.squadronshield[y].shieldenergy *= bonus;
+                        squadron.squadronshield[y].actualshield *= bonus;
+                    }
+                }
+            }
         }
     }
     catch(err)
@@ -83,7 +164,7 @@ function charactertransform(characterdata)
                         if(item.place == place && itemdata.slot != "ship" && itemdata.slot != "squadron" && itemdata.slot != "equipment" && itemdata.slot != "extender")
                         {
                             if(equipmentlist[itemdata.slot] == undefined) equipmentlist[itemdata.slot] = [];
-                            equipmentlist[itemdata.slot].push(new chtitem(itemdata));
+                            equipmentlist[itemdata.slot].push(new chtitem(itemdata, characterdata));
                         }
                     }
                 }
@@ -174,7 +255,7 @@ function charactertransform(characterdata)
                 {
                     e = 0;
                     if(equipped[extras[x]]) e = 1;
-                    equippedextras[extras[x]] = new chtextra(extras[x], e);
+                    equippedextras[extras[x]] = new chtextra(extras[x], e, characterdata.level);
                 }
             }
             catch(err)
@@ -187,7 +268,7 @@ function charactertransform(characterdata)
             }
         }
         
-            function chtextra(itemid, equipped)
+            function chtextra(itemid, equipped, level)
             //Extra betöltése
             {
                 try
@@ -198,6 +279,12 @@ function charactertransform(characterdata)
                     this.ammotype = itemdata.ammotype;
                     this.reload = itemdata.reload;
                     this.name = itemdata.name;
+                    this.energyusage = itemdata.energyusage * Number(level);
+                    this.ammousage = level;
+                    this.reload = itemdata.reload;
+                    this.actualreload = 0;
+                    this.active = itemdata.active;
+                    this.actualactive = 0;
                 }
                 catch(err)
                 {
@@ -244,6 +331,7 @@ function charactertransform(characterdata)
                     this.energymultiplicator = itemdata.energymultiplicator;
                     this.dmgmultiplicator = itemdata.dmgmultiplicator;
                     this.itemtype = itemdata.itemtype;
+                    this.level = itemdata.level;
                 }
                 catch(err)
                 {
@@ -261,7 +349,7 @@ function charactertransform(characterdata)
                 
                 for(var x in abilities)
                 {
-                    characterabilities[abilities[x].itemid] = new chtability(abilities[x]);
+                    characterabilities[abilities[x].itemid] = new chtability(abilities[x], characterdata.level);
                 }
             }
             catch(err)
@@ -274,17 +362,32 @@ function charactertransform(characterdata)
             }
         }
         
-            function chtability(ability)
+            function chtability(ability, level)
             //Képessg betöltése
             {
                 try
                 {
+                    level = Number(level);
                     var abilitydata = gamedata.abilities[ability.itemid];
                     this.itemid = ability.itemid;
                     this.level = ability.level;
                     this.owner = abilitydata.owner
                     this.itemtype = abilitydata.itemtype;
                     this.name = abilitydata.name;
+                    
+                    if(abilitydata.itemtype != "passive" && ability.level)
+                    {
+                        this.energyusage = Math.round(abilitydata.energyusage * level * ability.level / (level + ability.level + 1) * 2.8);
+                        this.active = Math.floor(abilitydata.active + ability.level * abilitydata.activeinc);
+                        this.actualactive = 0;
+                        this.reload = Math.ceil(abilitydata.reload - ability.level * abilitydata.reloadinc);
+                        this.actualreload = 0;
+                    }
+                    
+                    if(abilitydata.basicvalue != undefined)
+                    {
+                        this.value = abilitydata.basicvalue + ability.level * abilitydata.valueinc;
+                    }
                 }
                 catch(err)
                 {

@@ -82,7 +82,10 @@ function targetCharacter(character)
         
         if(control.targettry)
         {
-            if(rand(0, 2000) > 800)
+            var attackValue = rand(0, 2000);
+            if(character.ship.company == "gaa" && character.ability.gaap.level) attackValue += rand(0, character.ability.gaap.value);
+            
+            if(attackValue> 1500)
             {
                 control.target = control.targettry;
                 control.targettry = null;
