@@ -30,6 +30,16 @@ function newround()
             characterdisplayset(x);
         }
         
+        var alliances = ["friend", "enemy"];
+        var abilities = ["pdma1", "mfaa1"];
+        for(var x in alliances)
+        {
+            for(var y in abilities)
+            {
+                if(gameinfo.temp.globalAbilities[alliances[x]][abilities[y]].actualactive) gameinfo.temp.globalAbilities[alliances[x]][abilities[y]].actualactive -= 1;
+            }
+        }
+        
         if(!friend || !enemy)
         {
             autoPlay("stop");
@@ -93,7 +103,9 @@ function newround()
             
             targetCharacter(character);
             if(character.control.target) attack(character);
+            
             shieldRecharge(character);
+            if(character.ability.mfaa2.actualactive) damageAllSquadrons(character);
             batteryRecharge(character);
             
             character.control.lastattack += 1;

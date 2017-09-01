@@ -191,8 +191,12 @@ function quickBarControl(type, data)
                                 div.addEventListener("click", function(){itemUse(ability.itemid); closeBar()});
                                 span.innerHTML = " (Energiahasználat: " + ability.energyusage + ")";
                             break;
+                            case 0.5:
+                                div.style.borderColor = "black";
+                                span.innerHTML = "Blokkolva - " + gameinfo.characters[sessionStorage.charid].ability.gaaa2.actualactive;
+                            break;
                             case 1:
-                                span.innerHTML = " Tölt: " + ability.reload;
+                                span.innerHTML = " Tölt: " + ability.actualreload;
                                 div.style.borderColor = "black";
                             break;
                             case 2:
@@ -278,7 +282,7 @@ function quickBarControl(type, data)
                                 span.innerHTML = " (Energiahasználat: " + equipment.energyusage + " - Használható: " + Math.floor(gameinfo.characters[sessionStorage.charid].ammo[equipment.ammotype].amount / equipment.ammousage) + ")";
                             break;
                             case 1:
-                                span.innerHTML = " Tölt: " + equipment.reload;
+                                span.innerHTML = " Tölt: " + equipment.actualreload;
                                 div.style.borderColor = "black";
                             break;
                             case 2:

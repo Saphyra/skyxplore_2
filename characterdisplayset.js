@@ -32,6 +32,7 @@ function characterdisplayset(charid)
         cdsammouseset(character);
         cdstargetset(character);
         if(character.type == "ship") cdseffectsset(character);
+        else cdsSquadronEffectsSet(character);
         
         var playerSquadrons = [], squadronTargeted = 0;
         for(var x in gameinfo.characters) if(gameinfo.characters[x].type == "squadron" && gameinfo.characters[x].owner == sessionStorage.charid) playerSquadrons.push(x);
@@ -357,6 +358,16 @@ function characterdisplayset(charid)
             
             container.innerHTML = "";
             
+            for(var x in gameinfo.temp.globalAbilities[character.alliance])
+            {
+                var ability = gameinfo.temp.globalAbilities[character.alliance][x]
+                if(x != "mfaa1" && ability.actualactive && !character.ability.gaaa2.actualactive)
+                {
+                    if(container.innerHTML != "") container.innerHTML += ", ";
+                        container.innerHTML += x.toUpperCase() + " (" + ability.actualactive + ")";
+                }
+            }
+            
             for(var x in character.extras)
             {
                 var extra = character.extras[x];
@@ -371,11 +382,34 @@ function characterdisplayset(charid)
             for(var x in character.ability)
             {
                 var ability = character.ability[x];
-                
                 if(ability.actualactive)
                 {
                     if(container.innerHTML != "") container.innerHTML += ", ";
                     container.innerHTML += ability.itemid.toUpperCase() + " (" + ability.actualactive + ")";
+                }
+            }
+        }
+        catch(err)
+        {
+            alert(arguments.callee.name + err.name + ": " + err.message);
+        }
+    }
+    
+    function cdsSquadronEffectsSet(character)
+    {
+        try
+        {
+            var container = document.getElementById("effects" + character.charid);
+            
+            container.innerHTML = "";
+            
+            for(var x in gameinfo.temp.globalAbilities[character.alliance])
+            {
+                var ability = gameinfo.temp.globalAbilities[character.alliance][x]
+                if(x == "mfaa1" && ability.actualactive)
+                {
+                    if(container.innerHTML != "") container.innerHTML += ", ";
+                        container.innerHTML += x.toUpperCase() + " (" + ability.actualactive + ")";
                 }
             }
         }
@@ -513,7 +547,6 @@ function specialBarCreate()
             {
                 var data = specialData[x];
                 var node = document.getElementById("special" + data.id);
-                //container.removeChild(node);
                 container.insertBefore(node, container.childNodes[x]);
                 
                 nodeDisplaySet(node, data);
@@ -532,7 +565,8 @@ function specialBarCreate()
                 var character = gameinfo.characters[sessionStorage.charid];
                 var itemdata = character.extras[itemid];
                 var usable = 0;
-                if(itemdata)
+                if(character.ability.gaaa2.actualactive) usable = 0.5;
+                else if(itemdata)
                 {
                     if(itemdata.actualreload) usable = 1;
                     if(batteryIndexChoose(character, itemdata.energyusage) == null) usable = 2;
@@ -567,15 +601,20 @@ function specialBarCreate()
                 switch(data.status)
                 {
                     case -1:
-                        span.innerHTML = " Aktív: " + itemdata.actualactive;
+                        span.innerHTML = " Aktív: " + data.itemdata.actualactive;
                         node.style.borderColor = "purple";
                     break;
                     case 0:
                         node.style.borderColor = "#00ff00";
                         node.onclick = function(){itemUse(data.id);};
+                        span.innerHTML = "";
+                    break;
+                    case 0.5:
+                        node.style.borderColor = "black";
+                        span.innerHTML = "Blokkolva - " + gameinfo.characters[sessionStorage.charid].ability.gaaa2.actualactive;
                     break;
                     case 1:
-                        span.innerHTML = " Tölt: " + itemdata.reload;
+                        span.innerHTML = " Tölt: " + data.itemdata.actualreload;
                         node.style.borderColor = "black";
                     break;
                     case 2:

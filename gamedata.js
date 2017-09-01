@@ -391,10 +391,10 @@
                 
                 emfp: new ability("emfp", "EMFP - Rajerősítés", "passive", "emf", 5, 2000, "Növeli a rajok sebzését és védelmét.", undefined, undefined, undefined, undefined, undefined, 0, 10),
                 emfa1: new ability("emfa1", "EMFA1 - Raj Pajzs", "active1", "emf", 10, 300, "Az érkező sebzés egy részét szétosztja a rajok között.", 500, 3, 20, 0.2, 0, 30, 3),
-                emfa2: new ability("emfa2", "EMFA2 - Hatótávon Kívül", "active2", "emf", 5, 2000, "A hajót nem lehet támadni, de ő sem indíthat támadást.", 300, 1, 20, 1, 0, undefined, undefined),
+                emfa2: new ability("emfa2", "EMFA2 - Hatótávon Kívül", "active2", "emf", 5, 2000, "A hajót nem lehet támadni, de ő sem indíthat támadást.", 500, 1, 20, 1, 0, undefined, undefined),
                 
                 pdmp: new ability("pdmp", "PDMP - Megnövelt Pajzserő", "passive", "pdm", 5, 2000, "Növeli a hajó pajzserejét.", undefined, undefined, undefined, undefined, undefined, 25, 5),
-                pdma1: new ability("pdma1", "PDMA1 - Pajzsregeneráció", "active1", "pdm", 10, 300, "Növeli a csapat pajzsregenerációját.", 200, 5, 20, 0, 0.5, 0, 50),
+                pdma1: new ability("pdma1", "PDMA1 - Pajzsregeneráció", "active1", "pdm", 10, 300, "Növeli a csapat pajzsregenerációját.", 500, 5, 20, 0, 0.5, 0, 50),
                 pdma2: new ability("pdma2", "PDMA2 - Életmentő Manőver", "active2", "pdm", 5, 2000, "A legjobban sérült szövetségest érő támadások egy része a saját hajót sebzik.", 300, 3, 20, 0.4, 1, 20, 10),
                 
                 idfp: new ability("idfp", "IDFP - Nyomkövetés", "passive", "idf", 5, 2000, "Növeli a rakéták találati pontossgát.", undefined, undefined, undefined, undefined, undefined, 0, 50),
@@ -403,7 +403,7 @@
                 
                 gaap: new ability("gaap", "GAAP - Fejlett Radar", "passive", "gaa", 5, 2000, "Növeli a hajó jelölési esélyét.", undefined, undefined, undefined, undefined, undefined, 0, 200),
                 gaaa1: new ability("gaaa1", "GAAA1 - Pajzslopás", "active1", "gaa", 10, 300, "Az okozott sebzés egy része pajzserővé alakul.", 500, 5, 20, 0, 0.5, 20, 5),
-                gaaa2: new ability("gaaa2", "GAAA2 - Ionágyú", "active2", "gaa", 5, 2000, "A célzott ellenséges hajó nem használhat képességeket.", 500, 0, 20, 1, 1, undefined, undefined),
+                gaaa2: new ability("gaaa2", "GAAA2 - Ionágyú", "active2", "gaa", 5, 2000, "A célzott ellenséges hajó nem használhat képességeket.", 500, 1, 20, 1, 1, undefined, undefined),
                 
                 mfap: new ability("mfap", "MFAP - Fejlett Roncsmentés", "passive", "mfa", 5, 2000, "Növeli a kapott jutalmakat.", undefined, undefined, undefined, undefined, undefined, 0, 10),
                 mfaa1: new ability("mfaa1", "MFAA1 - Rajbénítás", "active1", "mfa", 10, 300, "Csökkenti az ellenséges rajok sebzését.", 500, 1, 30, 0.5, 1, 20, 5),

@@ -25,13 +25,13 @@
                             {
                                 enemy:
                                 {
-                                    pdma1: {actualactive: 0, value: null},
-                                    mfaa1: {actualactive: 0, value: null},
+                                    pdma1: {actualactive: 0, value: null, owner: null},
+                                    mfaa1: {actualactive: 0, value: null, owner: null},
                                 },
                                 friend:
                                 {
-                                    pdma1: {actualactive: 0, value: null},
-                                    mfaa1: {actualactive: 0, value: null},
+                                    pdma1: {actualactive: 0, value: null, owner: null},
+                                    mfaa1: {actualactive: 0, value: null, owner: null},
                                 },
                             },
                             playerammolevel: 1,
@@ -355,7 +355,7 @@
         <DIV id='footer'>
             <TABLE style='width: 100%'>
                 <TR>
-                    <TD style='border-right-style: ridge; border-right-width: 3; width: 34em;'>
+                    <TD style='border-right-style: ridge; border-right-width: 3; width: 35em;'>
                         <DIV class='footerbutton' id='autoplay' onclick='autoPlay("start")' style='width: 6em'> 0 - Indítás</DIV>
                         <DIV class='footerbutton' onclick='newround()'>Új kör</DIV>
                         <DIV class='footerbutton' onclick='quickBarControl("key", 49)'>1 - Lőszer</DIV>

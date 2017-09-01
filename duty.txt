@@ -10,4 +10,38 @@
             extrák
             képességek leírása
             tárgyak
-    -->  
+    -->
+
+emfa1: new ability("emfa1", "EMFA1 - Raj Pajzs", "active1", "emf", 10, 300, "Az érkező sebzés egy részét szétosztja a rajok között.", 500, 3, 20, 0.2, 0, 30, 3),
+emfa2: new ability("emfa2", "EMFA2 - Hatótávon Kívül", "active2", "emf", 5, 2000, "A hajót nem lehet támadni, de ő sem indíthat támadást.", 300, 1, 20, 1, 0, undefined, undefined),
+
+pdma1: new ability("pdma1", "PDMA1 - Pajzsregeneráció", "active1", "pdm", 10, 300, "Növeli a csapat pajzsregenerációját.", 200, 5, 20, 0, 0.5, 0, 50),
+pdma2: new ability("pdma2", "PDMA2 - Életmentő Manőver", "active2", "pdm", 5, 2000, "A legjobban sérült szövetségest érő támadások egy része a saját hajót sebzik.", 300, 3, 20, 0.4, 1, 20, 10),
+
+idfa1: new ability("idfa1", "IDFA1 - Kinetikus Pajzs", "active1", "idf", 10, 300, "Csökkenti a kapott sebzést.", 400, 3, 15, 0.2, 0, 20, 5),
+idfa2: new ability("idfa2", "IDFA2 - Gyorstüzelés", "active2", "idf", 5, 2000, "Csökkenti a rakétk újratöltési idejét.", 500, 5, 20, 0, 1, 0, 1),
+
+gaaa1: new ability("gaaa1", "GAAA1 - Pajzslopás", "active1", "gaa", 10, 300, "Az okozott sebzés egy része pajzserővé alakul.", 500, 5, 20, 0, 0.5, 20, 5),
+gaaa2: new ability("gaaa2", "GAAA2 - Ionágyú", "active2", "gaa", 5, 2000, "A célzott ellenséges hajó nem használhat képességeket.", 500, 0, 20, 1, 1, undefined, undefined),
+
+mfap: new ability("mfap", "MFAP - Fejlett Roncsmentés", "passive", "mfa", 5, 2000, "Növeli a kapott jutalmakat.", undefined, undefined, undefined, undefined, undefined, 0, 10),
+mfaa1: new ability("mfaa1", "MFAA1 - Rajbénítás", "active1", "mfa", 10, 300, "Csökkenti az ellenséges rajok sebzését", 500, 1, 30, 0.5, 10, undefined, undefined),
+mfaa2: new ability("mfaa2", "MFAA2 - Precíziós célzás", "active2", "mfa", 5, 2000, "A hajó az összes ellenséges rajt sebzi.", 500, 0, 20, 1, 1, undefined, undefined),
+
+cria1: new ability("cria1", "CRIA1 - Csökkentett Energiahasználat", "active1", "cri", 10, 300, "Csökkenti a hajó energiafelhasználását.", 300, 5, 20, 0, 0, 20, 5),
+cria2: new ability("cria2", "CRIA2 - Kibervírus", "active2", "cri", 5, 2000, "Leállítja a megcélzott ellenséges hajó generátorait.", 500, 0, 25, 1, 1, undefined, undefined)
+
+efi01: new extra("efi01", "EFI01 - Energiamező", 1, 5000, 5000, 15000, 45000, "efi", "efc01", "Energiatöltet", 10, "A hajó 3 másodpercre sebezhetetlenné válik.", 300, 3),
+pdu01: new extra("pdu01", "PDU01 - Plazma Zavaró Egység", 1, 5000, 5000, 15000, 45000, "pdu", "pdr01", "Plazma Zavarórakéta", 15, "Csökkenti a megcélzott ellenséges hajó fegyvereinek találati pontossgát.", 250, 5),
+edi01: new extra("edi01", "EDI01 - Elektromikus Zavaróimpulzus", 1, 5000, 5000, 15000, 45000, "edi", "edd01", "EDI Drón", 20, "A hajót célzó ellenséges egységek elvesztik a célt, és a hajót 1 másodpercig nem lehet jelölni.", 500, 1),
+abs01: new extra("abs01", "ABS01 - Rendszertisztítás", 1, 5000, 5000, 15000, 45000, "abs", "vsw01", "Vírusírtó szoftver", 15, "Eltávolítja a hajót ért negatív hatásokat.", 300, 1),
+sre01: new extra("sre01", "SRE01 - Pajzsregeneráció Növelés", 1, 5000, 5000, 15000, 45000, "sre", "src01", "Pajzstöltő cella", 15, "5 másodpercig növeli a hajó pajzsregenerációját.", 300, 5),
+clo01: new extra("clo01", "CLO01 - Álcázó Berendezés", 1, 5000, 5000, 15000, 45000, "clo", "clc01", "Álcázó Chip", 5, "Csökkenti az ellenséges hajók célzási esélyét, növeli a hajó támadási értékét, és radarjának célzási esélyét.", 200, 5),
+bol01: new extra("bol01", "BOL01 - Akkumulátor Túltöltés", 1, 5000, 5000, 15000, 45000, "bol", "rba01", "Tartalék Akkumulátor", 20, "5 másodpercig az akkumulátorok töltöttségével megegyező energiát biztosít.", 100, 5),
+mac01: new extra("mac01", "MAC01 - Mágneses köd", 1, 5000, 5000, 15000, 45000, "mac", "mad01", "Mágneses Zavarkeltő Drón", 15, "5 másodpercig 25%-al növeli a hajó kitérési esélyét.", 250, 5),
+ser01: new extra("ser01", "SER01 - Rajzavaró Elektronsugár", 1, 5000, 5000, 15000, 45000, "ser", "csg01", "Töltéstároló Gránát", 10, "A hajót 5 másodpercen keresztül nem támadhatják ellenséges rajok.", 300, 5),
+mdl01: new extra("mdl01", "MDL01 - Rakétaelhárító Lézer", 1, 5000, 5000, 15000, 45000, "mdl", "lac01", "Lézertöltet", 15, "Csökkenti a megcélzott ellenséges hajó rakétáinak találati esélyét.", 200, 5),
+rep01: new extra("rep01", "REP01 - Kis Burkolatjavító Robot", 1, 1000, 1000, 3000, 9000, "rep", "spp01", "Pótalkatrész", 10, "Visszatölti a burkolat 10%-át.", 100, 1),
+rep02: new extra("rep02", "REP02 - Közepes Burkolatjavító Robot", 2, 3000, 3000, 9000, 27000, "rep", "spp01", "Pótalkatrész", 10, "Visszatölti a burkolat 20%-át.", 200, 1),
+rep03: new extra("rep03", "REP03 - Nagy Burkolatjavító Robot", 3, 5000, 5000, 45000, 13500, "rep", "spp01", "Pótalkatrész", 10, "Visszatölti a burkolat 30%-át.", 300, 1),
+                

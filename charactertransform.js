@@ -197,6 +197,7 @@ function charactertransform(characterdata)
                             this.squadrondamage = itemdata.squadrondamage;
                             this.energyusage = itemdata.energyusage;
                             this.ammousage = itemdata.ammousage;
+                            this.slot = itemdata.slot;
                         break;
                         case "hangar":
                             this.squadronplace = itemdata.squadronplace;
@@ -375,7 +376,7 @@ function charactertransform(characterdata)
                     this.itemtype = abilitydata.itemtype;
                     this.name = abilitydata.name;
                     
-                    if(abilitydata.itemtype != "passive" && ability.level)
+                    if(abilitydata.itemtype != "passive")
                     {
                         this.energyusage = Math.round(abilitydata.energyusage * level * ability.level / (level + ability.level + 1) * 2.8);
                         this.active = Math.floor(abilitydata.active + ability.level * abilitydata.activeinc);
@@ -387,6 +388,11 @@ function charactertransform(characterdata)
                     if(abilitydata.basicvalue != undefined)
                     {
                         this.value = abilitydata.basicvalue + ability.level * abilitydata.valueinc;
+                    }
+                    
+                    if(ability.itemid == "pdma2")
+                    {
+                        this.reflect = null;
                     }
                 }
                 catch(err)

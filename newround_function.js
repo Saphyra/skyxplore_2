@@ -105,7 +105,7 @@ function attack(character)
     {
         if(!attackCheck(character)) return;
         if(!Object.keys(character.ammo).length) return;
-
+        if(character.ability.emfa2.actualactive || gameinfo.characters[character.control.target].ability.emfa2.actualactive) return;
         ammosSet(character);
         
         if(character.equipment.cannon)
@@ -196,7 +196,12 @@ function attack(character)
                 }
             }
             
-            var shot = rand(1, weapon.reload) - 1;
+            var reload = weapon.reload;
+            if(weapon.slot == "rocketlauncher" && character.ship.company == "idf" && character.ability.idfa2.actualactive)
+            {
+                reload -= character.ability.idfa2.value;
+            }
+            var shot = rand(1, reload) - 1;
             if(ammo && !shot)
             {
                 energyUse(character, energyUsage, batteryIndex);
@@ -294,6 +299,7 @@ function attack(character)
         {
             try
             {
+                energyUsage = Math.round(energyUsage);
                 if(batteryIndex == -1) character.control.genenergy -= energyUsage;
                 else character.equipment.battery[batteryIndex].actualcapacity -= energyUsage;
                 energySet(character);
@@ -323,17 +329,76 @@ function attack(character)
         {
             try
             {
+                var mfaa1Multi = 1;
+                if(character.type == "squadron" && targetType != "damageAllSquadrons")
+                {
+                    var alliance = (character.alliance == "friend") ? "enemy" : "friend";
+                    if(gameinfo.temp.globalAbilities[alliance].mfaa1.actualactive)
+                    {
+                        var value = gameinfo.temp.globalAbilities[alliance].mfaa1.value;
+                        mfaa1Multi = 1 - value / 100;
+                    }
+                }
+                
                 switch(targetType)
                 {
                     case "ship":
                         var dmgMultiplicator = rand(80, 120) / 100;
-                        var shieldDamage = weapon.shielddamage * dmgMultiplicator;
-                        var hullDamage = weapon.hulldamage * dmgMultiplicator;
+                        var shieldDamage = weapon.shielddamage * dmgMultiplicator * mfaa1Multi;
+                        var hullDamage = weapon.hulldamage * dmgMultiplicator * mfaa1Multi;
+                        
+                        var targetCharacter = gameinfo.characters[character.control.target];
+                        targetCharacter.control.dmgreceived = 0;
+                        
+                        if(targetCharacter.ship.company == "emf" && targetCharacter.ability.emfa1.actualactive)
+                        {
+                            var squadrons = [];
+                            for(var x in gameinfo.characters)
+                            {
+                                if(gameinfo.characters[x].owner == targetCharacter.charid && gameinfo.characters[x].place == "space") squadrons.push(x);
+                            }
+                            
+                            if(squadrons.length)
+                            {
+                                var value = targetCharacter.ability.emfa1.value;
+                                squadronSplashDamage(targetCharacter, squadrons, (shieldDamage + hullDamage) / 2);
+                                shieldDamage *= 1 - value / 100;
+                                hullDamage *= 1 - value /  100;
+                            }
+                        }
+                        
+                        if(targetCharacter.ability.pdma2.actualactive)
+                        {
+                            var reflect = targetCharacter.ability.pdma2.reflect;
+                            if(gameinfo.characters[reflect].place == "space")
+                            {
+                                var value = gameinfo.characters[reflect].ability.pdma2.value;
+                                damage(gameinfo.characters[reflect], (shieldDamage + hullDamage) / 2, undefined, "directship");
+                                
+                                shieldDamage *= 1 - value / 100;
+                                hullDamage *= 1 - value / 100;
+                            }
+                            else
+                            {
+                                targetCharacter.ability.pdma2.actualactive = 0;
+                            }
+                        }
+                        
+                        if(targetCharacter.ship.company == "idf" && targetCharacter.ability.idfa1.actualactive)
+                        {
+                            var value = targetCharacter.ability.idfa1.value;
+                            
+                            shieldDamage *= 1 - value / 100;
+                            hullDamage *= 1 - value / 100;
+                        }
+                        
                         var shieldDamageCopy = shieldDamage;
                         var hullDamageCopy = hullDamage;
                         
-                         var targetCharacter = gameinfo.characters[character.control.target];
-                         targetCharacter.control.dmgreceived = 0;
+                        if(character.ship.company == "gaa" && character.ability.gaaa1.actualactive)
+                        {
+                            gaaa1Recharge(character, character.ability.gaaa1.value, (hullDamageCopy + shieldDamageCopy) / 2);
+                        }
                             
                         if(targetCharacter.equipment.shield)
                         {
@@ -379,7 +444,7 @@ function attack(character)
                     break;
                     case "squadron":
                         var dmgMultiplicator = rand(80, 120) / 100;
-                        var damage = weapon.squadrondamage * dmgMultiplicator;
+                        var damageRec = weapon.squadrondamage * dmgMultiplicator * mfaa1Multi;
                         
                         if(strikeBackTarget == undefined)
                         {
@@ -397,13 +462,13 @@ function attack(character)
                             var shieldIndex = rand(0, targetCharacter.equipment.squadronshield.length - 1);
                             var shield = targetCharacter.equipment.squadronshield[shieldIndex];
                             
-                            shield.actualshield -= damage;
+                            shield.actualshield -= damageRec;
                             shield.actualshield = Math.round(shield.actualshield);
                             
                             if(shield.actualshield >= 0) return;
                             else
                             {
-                                damage = Math.abs(shield.actualshield);
+                                damageRec = Math.abs(shield.actualshield);
                                 shield.actualshield = 0;
                             }
                         }
@@ -413,23 +478,158 @@ function attack(character)
                             var hullIndex = rand(0, targetCharacter.equipment.squadronhull.length - 1);
                             var hull = targetCharacter.equipment.squadronhull[hullIndex];
 
-                            hull.actualhull -= damage;
+                            hull.actualhull -= damageRec;
                             hull.actualhull = Math.round(hull.actualhull);
                             
                             if(hull.actualhull >= 0) return;
                             else
                             {
-                                damage = Math.abs(hull.actualhull);
+                                damageRec = Math.abs(hull.actualhull);
                                 hull.actualhull = 0;
                             }
                         }
                         
-                        targetCharacter.ship.actualcorehull -= damage;
+                        targetCharacter.ship.actualcorehull -= damageRec;
                         targetCharacter.ship.actualcorehull = Math.round(targetCharacter.ship.actualcorehull);
                         
                         if(targetCharacter.ship.actualcorehull <= 0)
                         {
                             death(targetCharacter);
+                        }
+                    break;
+                    case "direct":
+                        var damageRec = weapon;
+                        
+                        character.control.dmgreceived = 0;
+                        
+                        if(character.equipment.squadronshield)
+                        {
+                            var shieldIndex = rand(0, character.equipment.squadronshield.length - 1);
+                            var shield = character.equipment.squadronshield[shieldIndex];
+                            
+                            shield.actualshield -= damageRec;
+                            shield.actualshield = Math.round(shield.actualshield);
+                            
+                            if(shield.actualshield >= 0) return;
+                            else
+                            {
+                                damageRec = Math.abs(shield.actualshield);
+                                shield.actualshield = 0;
+                            }
+                        }
+                       
+                        if(character.equipment.squadronhull)
+                        {
+                            var hullIndex = rand(0, character.equipment.squadronhull.length - 1);
+                            var hull = character.equipment.squadronhull[hullIndex];
+                            
+                            hull.actualhull -= damageRec;
+                            hull.actualhull = Math.round(hull.actualhull);
+                            
+                            if(hull.actualhull >= 0) return;
+                            else
+                            {
+                                damageRec = Math.abs(hull.actualhull);
+                                hull.actualhull = 0;
+                            }
+                        }
+                        
+                        character.ship.actualcorehull -= damageRec;
+                        character.ship.actualcorehull = Math.round(character.ship.actualcorehull);
+                        
+                        if(character.ship.actualcorehull <= 0)
+                        {
+                            death(character);
+                        }
+                    break;
+                    case "directship":
+                        var damageRec = weapon;
+                        
+                        character.control.dmgreceived = 0;
+                        if(character.equipment.shield)
+                        {
+                            var shieldIndex = rand(0, character.equipment.shield.length - 1);
+                            var shield = character.equipment.shield[shieldIndex];
+                            
+                            shield.actualshield -= damageRec;
+                            shield.actualshield = Math.round(shield.actualshield);
+                            
+                            if(shield.actualshield >= 0) return;
+                            else
+                            {
+                                damageRec = Math.abs(shield.actualshield);
+                                shield.actualshield = 0;
+                            }
+                        }
+                        
+                        if(character.equipment.hull)
+                        {
+                            var hullIndex = rand(0, character.equipment.hull.length - 1);
+                            var hull = character.equipment.hull[hullIndex];
+                            
+                            hull.actualhull -= damageRec;
+                            hull.actualhull = Math.round(hull.actualhull);
+                            
+                            if(hull.actualhull >= 0) return;
+                            else
+                            {
+                                damageRec = Math.abs(hull.actualhull);
+                                hull.actualhull = 0;
+                            }
+                        }
+                        
+                        character.ship.actualcorehull -= damageRec;
+                        character.ship.actualcorehull = Math.round(character.ship.actualcorehull);
+                        
+                        if(character.ship.actualcorehull <= 0)
+                        {
+                            death(character);
+                        }
+                    break;
+                    case "damageAllSquadrons":
+                        var dmgMultiplicator = rand(80, 120) / 100;
+                        var damageRec = weapon.squadrondamage * dmgMultiplicator * mfaa1Multi;
+                        
+                        character.control.dmgreceived = 0;
+                        
+                        if(character.equipment.squadronshield)
+                        {
+                            var shieldIndex = rand(0, character.equipment.squadronshield.length - 1);
+                            var shield = character.equipment.squadronshield[shieldIndex];
+                            
+                            shield.actualshield -= damageRec;
+                            shield.actualshield = Math.round(shield.actualshield);
+                            
+                            if(shield.actualshield >= 0) return;
+                            else
+                            {
+                                damageRec = Math.abs(shield.actualshield);
+                                shield.actualshield = 0;
+                            }
+                        }
+                        
+                        if(character.equipment.squadronhull)
+                        {
+                            var hullIndex = rand(0, character.equipment.squadronhull.length - 1);
+                            var hull = character.equipment.squadronhull[hullIndex];
+
+                            hull.actualhull -= damageRec;
+                            hull.actualhull = Math.round(hull.actualhull);
+                            
+                            if(hull.actualhull >= 0) return;
+                            else
+                            {
+                                damageRec = Math.abs(hull.actualhull);
+                                hull.actualhull = 0;
+                            }
+                        }
+                        
+                        character.ship.actualcorehull -= damageRec;
+                        character.ship.actualcorehull = Math.round(character.ship.actualcorehull);
+                        
+                        if(character.ship.actualcorehull <= 0)
+                        {
+                            death(character);
                         }
                     break;
                 }
@@ -441,6 +641,46 @@ function attack(character)
             }
         }
         
+            function squadronSplashDamage(targetCharacter, squadrons, squadronDamage)
+            //EMFA1 képesség megoszló sebzés
+            {
+                try
+                {
+                    squadronDamage /= squadrons.length;
+                    for(var x in squadrons)
+                    {
+                        damage(gameinfo.characters[squadrons[x]], squadronDamage, undefined, "direct");
+                    }
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+            }
+            
+            function gaaa1Recharge(character, value, damage)
+            {
+                try
+                {
+                    var recharge = damage * value / 100;
+                    
+                    if(character.equipment.shield)
+                    {
+                        var shields = character.equipment.shield;
+                        shields.sort(function(a, b){return a.actualshield - b.actualshield});
+                        
+                        var shield = shields[0];
+                        shield.actualshield += recharge;
+                        if(shield.actualshield > shield.shieldenergy) shield.actualshield = shield.shieldenergy;
+                        shield.actualshield = Math.round(shield.actualshield);
+                    }
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+            }
+            
             function death(character)
             //A megadott karakter státuszát meghalt-ra állítja
             {
@@ -452,6 +692,12 @@ function attack(character)
                         if(gameinfo.characters[x].owner == character.charid) death(gameinfo.characters[x]);
                         if(gameinfo.characters[x].control.target == character.charid) gameinfo.characters[x].control.target = null;
                         if(gameinfo.characters[x].control.targettry == character.charid) gameinfo.characters[x].control.targettry = null;
+                    }
+                    
+                    for(var x in gameinfo.temp.globalAbilities[character.alliance])
+                    {
+                        var ability = gameinfo.temp.globalAbilities[character.alliance][x];
+                        if(ability.owner == character.charid) ability.actualactive = 0;
                     }
                 }
                 catch(err)
@@ -488,7 +734,13 @@ function shieldRecharge(character)
             var batteryIndex = batteryIndexChoose(character, shield.energyusage);
             
             var multiplicator = 1;
+            
             if(character.control.dmgreceived > 2) multiplicator *= 5;
+            if(gameinfo.temp.globalAbilities[character.alliance].pdma1.actualactive)
+            {
+                multiplicator *= (100 + gameinfo.temp.globalAbilities[character.alliance].pdma1.value) / 100;
+            }
+            
             if(batteryIndex != null)
             {
                 energyUse(character, shield.energyusage, batteryIndex);
@@ -536,6 +788,69 @@ function batteryRecharge(character)
         }
         
         energySet(character);
+    }
+    catch(err)
+    {
+        alert(arguments.callee.name + err.name + ": " + err.message);
+    }
+}
+
+function damageAllSquadrons(character)
+//mfaa2 képesség
+{
+    try
+    {
+        if(!character.equipment.rifle) return;
+        
+        for(var x in gameinfo.characters)
+        {
+            var targetCharacter = gameinfo.characters[x];
+            
+            if(targetCharacter.place != "space" || targetCharacter.type != "squadron" || targetCharacter.alliance == character.alliance) continue;
+            
+            for(var y in character.equipment.rifle)
+            {
+                if(targetCharacter.place == "dead") break;
+                
+                var weapon = character.equipment.rifle[y];
+                
+                if(character.control.rifleammo)
+                {
+                    var ammo = character.ammo[character.control.rifleammo];
+                    if(ammo)
+                    {
+                        var energyUsage = weapon.energyusage * ammo.energymultiplicator;
+                        var batteryIndex = batteryIndexChoose(character, energyUsage);
+                    }
+                    
+                    while(ammo == undefined || batteryIndex == null || ammo.amount < weapon.ammousage)
+                    {
+                        character.control.rifleammo = ammoChange(character.control.rifleammo);
+                        var ammo = character.ammo[character.control.rifleammo];
+                        if(ammo)
+                        {
+                            var energyUsage = weapon.energyusage * ammo.energymultiplicator;
+                            var batteryIndex = batteryIndexChoose(character, energyUsage);
+                        }
+                        
+                        if(character.control.rifleammo == null) break;
+                    }
+                    
+                    var shot = rand(1, weapon.reload) - 1;
+                    
+                    if(ammo && !shot)
+                    {
+                        energyUse(character, energyUsage, batteryIndex);
+                        ammo.amount -= weapon.ammousage;
+                        
+                        if(hitSet(weapon.accuracy))
+                        {
+                            damage(targetCharacter, weapon, ammo, "allsquadrons");
+                        }
+                    }
+                }
+            }
+        }
     }
     catch(err)
     {
@@ -780,6 +1095,7 @@ function squadronAttack(character)
     {
         var owner = gameinfo.characters[character.owner];
         if(!Object.keys(owner.ammo)) return;
+        if(gameinfo.characters[character.control.target].type == "ship" && gameinfo.characters[character.control.target].ability.emfa2.actualactive) return;
         squadronAmmosSet(character);
         
         
@@ -803,6 +1119,7 @@ function squadronAttack(character)
     }
     catch(err)
     {
+        alert(character.control.target);
         alert(arguments.callee.name + err.name + ": " + err.message);
     }
 }
