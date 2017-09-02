@@ -60,6 +60,8 @@ function quickBarControl(type, data)
             }
             else
             {
+                document.getElementById("characterammos").style.display = "none";
+                document.getElementById("charactercargo").style.display = "none";
                 document.getElementById("settingscontainer").style.display = "block";
                 autoPlay("stop");
             }

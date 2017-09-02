@@ -34,7 +34,7 @@
                                     mfaa1: {actualactive: 0, value: null, owner: null},
                                 },
                             },
-                            playerammolevel: 1,
+                            playerammolevel: null,
                             activebar: null,
                         };
                         
@@ -45,6 +45,7 @@
                     alert(arguments.callee.name + err.name + ": " + err.message);
                 }
             })();
+            
         </SCRIPT>
         <SCRIPT src='charactertransform.js'></SCRIPT>
         <SCRIPT src='charactergenerate.js'></SCRIPT>
@@ -83,9 +84,62 @@
                 alert("load: " + err.name + ": " + err.message);
             }
             
+            gameinfo.temp.playerammolevel = playerAmmoLevelSet();
+            function playerAmmoLevelSet()
+            {
+                try
+                {
+                    var ammos = gameinfo.characters[sessionStorage.charid].ammo;
+                    var equipment = gameinfo.characters[sessionStorage.charid].equipment;
+                    
+                    if(!ammos) return 1;
+                    
+                    var ammoTypes = 
+                    {
+                        cannonball: [],
+                        ioncell: [],
+                        rocket: [],
+                        sabrocket: [],
+                        bullet: [],
+                    };
+                    
+                    for(var x in ammos)
+                    {
+                        var ammo = ammos[x];
+                        
+                        if(ammo.itemtype != "specialammo" && ammo.amount)
+                        {
+                            ammoTypes[ammo.itemtype].push(ammo.level);
+                        }
+                    }
+                    
+                    var ammoLevels = [];
+                    
+                    for(var x in ammoTypes)
+                    {
+                        var ammoType = ammoTypes[x];
+                        
+                        ammoLevels.push((ammoType.length) ? ammoType.sort()[0] : 1);
+                    }
+                    
+                    return ammoLevels.reverse()[0];
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+            }
+                
         </SCRIPT>
         
         <STYLE>
+            .menucontainer
+            {
+                max-height: 80%;
+                min-height: 40%;
+                overflow-y: auto;
+            }
+        
             #contentcontainer
             {
                 position: fixed;
@@ -150,6 +204,31 @@
                             background-image: url('pixelpurple.jpg');
                             cursor: pointer;
                         }
+                        .cargobar:hover, .ammobar:hover
+                        {
+                            border-color: red;
+                        }
+                        
+                            .infotable
+                            {
+                                margin: auto;
+                                border-collapse: collapse;
+                            }
+                                
+                                .inforow
+                                {
+                                    font-size: 20;
+                                }
+                                .inforow:hover
+                                {
+                                    background-color: rgba(120,120,120,1);
+                                }
+                                
+                                    .inforow td
+                                    {
+                                        border: 2px ridge;
+                                        padding: 3px;
+                                    }
                 
                 #bots
                 {
@@ -385,6 +464,22 @@
        <DIV class='menubar'><BUTTON id='back' onclick='window.location.href = "character.html"'>Vissza</BUTTON></DIV>
     </DIV>
     
+    <DIV class='menucontainer' id='characterammos'>
+        <DIV class='menutitle'>Lőszer</DIV>
+        <DIV class='menuexit' id='settingsexit'><BUTTON onclick='document.getElementById("characterammos").style.display = "none";'>X</BUTTON></DIV>
+        <TABLE id='ammostable' class='infotable'>
+        
+        </TABLE>
+    </DIV>
+    
+    <DIV class='menucontainer' id='charactercargo'>
+        <DIV class='menutitle'>Raktér</DIV>
+        <DIV class='menuexit' id='settingsexit'><BUTTON onclick='document.getElementById("charactercargo").style.display = "none";'>X</BUTTON></DIV>
+        <TABLE id='cargotable' class='infotable'>
+        
+        </TABLE>
+    </DIV>
+    
     <SCRIPT>
         (function sizeset()
         //Beállítja az elemek méretét
@@ -443,6 +538,7 @@
         })();
         
             function containercreate(containerid, character)
+            //Létrehozza a karakter vázát
             {
                 try
                 {
@@ -499,6 +595,7 @@
                         var ammobar = document.createElement("DIV");
                             ammobar.className = "bar ammobar";
                             ammobar.id = "ammobar" + character.charid;
+                            ammobar.addEventListener("click", loadAmmos);
                         div.appendChild(ammobar);
                         
                         if(containerid == "playership")
@@ -506,6 +603,7 @@
                             var cargobar = document.createElement("DIV");
                                 cargobar.className = "bar cargobar";
                                 cargobar.id = "cargobar" + character.charid;
+                                cargobar.addEventListener("click", loadCargo);
                             div.appendChild(cargobar);
                         }
                     }
@@ -541,25 +639,47 @@
                 }
             }
             
-            function autoPlay(type)
+            function loadAmmos()
+            //Megjeleníti a karakter lőszerkészletét
             {
                 try
                 {
-                    switch(type)
+                    document.getElementById("settingscontainer").style.display = "none";
+                    document.getElementById("charactercargo").style.display = "none";
+                    autoPlay("stop");
+                    document.getElementById("characterammos").style.display = "block";
+                    
+                    var container = document.getElementById("ammostable");
+                        container.innerHTML = "";
+                    var ammos = gameinfo.characters[sessionStorage.charid].ammo;
+                    
+                    var disp = 0;
+                    var ammoids = [];
+                    for(var x in ammos)
                     {
-                        case "start":
-                            clearInterval(gameinfo.newRoundInterval);
-                            gameinfo.newRoundInterval = setInterval(function(){newround();}, 1000);
-                            document.getElementById("autoplay").innerHTML = "0 - Leállítás";
-                            document.getElementById("autoplay").onclick = function(){autoPlay("stop")};
-                            gameinfo.autoPlay = 1;
-                        break;
-                        case "stop":
-                            clearInterval(gameinfo.newRoundInterval);
-                            document.getElementById("autoplay").innerHTML = "0 - Indítás";
-                            document.getElementById("autoplay").onclick = function(){autoPlay("start")};
-                            gameinfo.autoPlay = 0;
-                        break;
+                        ammoids.push(x);
+                    }
+                    
+                    ammoids.sort();
+                    
+                    for(var x in ammoids)
+                    {
+                        var ammo = ammos[ammoids[x]];
+                        if(ammo.amount) 
+                        {
+                            container.appendChild(ammosRowCreate(ammo));
+                            disp = 1;
+                        }
+                    }
+                    
+                    if(!disp)
+                    {
+                        var row = document.createElement("TR");
+                            row.className = "inforow";
+                            var cell = document.createElement("TD");
+                                cell.innerHTML = "Nincs lőszer.";
+                        row.appendChild(cell);
+                        container.appendChild(row);
                     }
                 }
                 catch(err)
@@ -567,6 +687,94 @@
                     alert(arguments.callee.name + err.name + ": " + err.message);
                 }
             }
+            
+                function ammosRowCreate(ammo)
+                {
+                    try
+                    {
+                        var row = document.createElement("TR");
+                            row.className = "inforow";
+                            var nameCell = document.createElement("TD");
+                                nameCell.innerHTML = gamedata.items[ammo.itemid].name;
+                                nameCell.style.textAlign = "right";
+                        row.appendChild(nameCell);
+                            var amountCell = document.createElement("TD");
+                                amountCell.innerHTML = ammo.amount;
+                                amountCell.style.minWidth = "5em";
+                                amountCell.style.textAlign = "right";
+                        row.appendChild(amountCell);
+                    }
+                    catch(err)
+                    {
+                        alert(arguments.callee.name + err.name + ": " + err.message);
+                    }
+                    finally
+                    {
+                        return row;
+                    }
+                }
+            
+            function loadCargo()
+            //Megjeleníti a karakter rakterének tartalmát
+            {
+                try
+                {
+                    document.getElementById("settingscontainer").style.display = "none";
+                    document.getElementById("characterammos").style.display = "none";
+                    autoPlay("stop");
+                    document.getElementById("charactercargo").style.display = "block";
+                    
+                    var container = document.getElementById("cargotable");
+                        container.innerHTML = "";
+                    var cargo = gameinfo.characters[sessionStorage.charid].cargo;
+                    
+                    if(cargo.length)
+                    {
+                        
+                    }
+                    else
+                    {
+                        var row = document.createElement("TR");
+                            row.className = "inforow";
+                            var cell = document.createElement("TD");
+                                cell.innerHTML = "Raktér üres.";
+                        row.appendChild(cell);
+                        container.appendChild(row);
+                    }
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+            }
+            
+        function autoPlay(type)
+        //Automata körváltás
+        {
+            try
+            {
+                switch(type)
+                {
+                    case "start":
+                        clearInterval(gameinfo.newRoundInterval);
+                        gameinfo.newRoundInterval = setInterval(function(){newround();}, 1000);
+                        document.getElementById("autoplay").innerHTML = "0 - Leállítás";
+                        document.getElementById("autoplay").onclick = function(){autoPlay("stop")};
+                        gameinfo.autoPlay = 1;
+                    break;
+                    case "stop":
+                        clearInterval(gameinfo.newRoundInterval);
+                        document.getElementById("autoplay").innerHTML = "0 - Indítás";
+                        document.getElementById("autoplay").onclick = function(){autoPlay("start")};
+                        gameinfo.autoPlay = 0;
+                    break;
+                }
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        }
     </SCRIPT>
     
 </BODY>

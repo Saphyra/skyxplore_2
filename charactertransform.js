@@ -121,6 +121,7 @@ function charactertransform(characterdata)
             this.ammo = chtammos(characterdata);
             this.ability = chtabilities(characterdata);
             this.control = new chtshipcontrol(characterdata);
+            this.cargo = {};
         }
         catch(err)
         {
