@@ -286,6 +286,7 @@ function charactertransform(characterdata)
                     this.actualreload = 0;
                     this.active = itemdata.active;
                     this.actualactive = 0;
+                    this.level = itemdata.level;
                 }
                 catch(err)
                 {

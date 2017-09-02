@@ -277,7 +277,7 @@
                                 if(ammodata.itemid == itemdata.itemid && ammodata.place == "hangar")
                                 {
                                     chardata.credit -= itemdata.buyprice * amount;
-                                    ammodata.amount += Number(amount);
+                                    ammodata.amount = ammodata.amount + Number(amount);
                                     match = 1;
                                 }
                             }
@@ -318,7 +318,7 @@
                     {
                         this.itemid = itemid;
                         this.place = place;
-                        this.amount = amount;
+                        this.amount = Number(amount);
                     }
     </SCRIPT>
     

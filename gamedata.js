@@ -286,19 +286,19 @@
                 han03: new hangar("han03", "HAN03 - Nagy Hangár", 3, 7000, 7000, 21000, 63000, 3, 0.3),
                 
                 //new extra(itemid, name, level, construction, craftprice, sellprice, buyprice, effect, ammotype, ammoname, reload, description, energyusage, active),
-                efi01: new extra("efi01", "EFI01 - Energiamező", 1, 5000, 5000, 15000, 45000, "efi", "efc01", "Energiatöltet", 10, "A hajó 3 másodpercre sebezhetetlenné válik.", 300, 3),
+                efi01: new extra("efi01", "EFI01 - Energiamező", 1, 5000, 5000, 15000, 45000, "efi", "efc01", "Energiatöltet", 15, "A hajó 3 másodpercre sebezhetetlenné válik.", 300, 3),
                 pdu01: new extra("pdu01", "PDU01 - Plazma Zavaró Egység", 1, 5000, 5000, 15000, 45000, "pdu", "pdr01", "Plazma Zavarórakéta", 15, "Csökkenti a megcélzott ellenséges hajó fegyvereinek találati pontossgát.", 250, 5),
                 edi01: new extra("edi01", "EDI01 - Elektromikus Zavaróimpulzus", 1, 5000, 5000, 15000, 45000, "edi", "edd01", "EDI Drón", 20, "A hajót célzó ellenséges egységek elvesztik a célt, és a hajót 1 másodpercig nem lehet jelölni.", 500, 1),
-                abs01: new extra("abs01", "ABS01 - Rendszertisztítás", 1, 5000, 5000, 15000, 45000, "abs", "vsw01", "Vírusírtó szoftver", 15, "Eltávolítja a hajót ért negatív hatásokat.", 300, 1),
+                abs01: new extra("abs01", "ABS01 - Rendszertisztítás", 1, 5000, 5000, 15000, 45000, "abs", "vsw01", "Vírusírtó szoftver", 15, "Eltávolítja a hajót ért negatív hatásokat.", 300, 2),
                 sre01: new extra("sre01", "SRE01 - Pajzsregeneráció Növelés", 1, 5000, 5000, 15000, 45000, "sre", "src01", "Pajzstöltő cella", 15, "5 másodpercig növeli a hajó pajzsregenerációját.", 300, 5),
-                clo01: new extra("clo01", "CLO01 - Álcázó Berendezés", 1, 5000, 5000, 15000, 45000, "clo", "clc01", "Álcázó Chip", 5, "Csökkenti az ellenséges hajók célzási esélyét, növeli a hajó támadási értékét, és radarjának célzási esélyét.", 200, 5),
+                clo01: new extra("clo01", "CLO01 - Álcázó Berendezés", 1, 5000, 5000, 15000, 45000, "clo", "clc01", "Álcázó Chip", 15, "Csökkenti az ellenséges hajók célzási esélyét, növeli a hajó támadási értékét, és radarjának célzási esélyét.", 200, 5),
                 bol01: new extra("bol01", "BOL01 - Akkumulátor Túltöltés", 1, 5000, 5000, 15000, 45000, "bol", "rba01", "Tartalék Akkumulátor", 20, "5 másodpercig az akkumulátorok töltöttségével megegyező energiát biztosít.", 100, 5),
                 mac01: new extra("mac01", "MAC01 - Mágneses köd", 1, 5000, 5000, 15000, 45000, "mac", "mad01", "Mágneses Zavarkeltő Drón", 15, "5 másodpercig 25%-al növeli a hajó kitérési esélyét.", 250, 5),
                 ser01: new extra("ser01", "SER01 - Rajzavaró Elektronsugár", 1, 5000, 5000, 15000, 45000, "ser", "csg01", "Töltéstároló Gránát", 10, "A hajót 5 másodpercen keresztül nem támadhatják ellenséges rajok.", 300, 5),
                 mdl01: new extra("mdl01", "MDL01 - Rakétaelhárító Lézer", 1, 5000, 5000, 15000, 45000, "mdl", "lac01", "Lézertöltet", 15, "Csökkenti a megcélzott ellenséges hajó rakétáinak találati esélyét.", 200, 5),
-                rep01: new extra("rep01", "REP01 - Kis Burkolatjavító Robot", 1, 1000, 1000, 3000, 9000, "rep", "spp01", "Pótalkatrész", 10, "Visszatölti a burkolat 10%-át.", 100, 1),
-                rep02: new extra("rep02", "REP02 - Közepes Burkolatjavító Robot", 2, 3000, 3000, 9000, 27000, "rep", "spp01", "Pótalkatrész", 10, "Visszatölti a burkolat 20%-át.", 200, 1),
-                rep03: new extra("rep03", "REP03 - Nagy Burkolatjavító Robot", 3, 5000, 5000, 45000, 13500, "rep", "spp01", "Pótalkatrész", 10, "Visszatölti a burkolat 30%-át.", 300, 1),
+                rep01: new extra("rep01", "REP01 - Kis Burkolatjavító Robot", 1, 1000, 1000, 3000, 9000, "rep", "spp01", "Pótalkatrész", 10, "Visszatölti a burkolat 10%-át.", 100, 2),
+                rep02: new extra("rep02", "REP02 - Közepes Burkolatjavító Robot", 2, 3000, 3000, 9000, 27000, "rep", "spp01", "Pótalkatrész", 10, "Visszatölti a burkolat 20%-át.", 200, 2),
+                rep03: new extra("rep03", "REP03 - Nagy Burkolatjavító Robot", 3, 5000, 5000, 45000, 13500, "rep", "spp01", "Pótalkatrész", 10, "Visszatölti a burkolat 30%-át.", 300, 2),
                 
                 //new extender(itemid, name, level, construction, craftprice, sellprice, buyprice, effect, slotextend),
                 
@@ -411,7 +411,7 @@
                 
                 crip: new ability("crip", "CRIP - Gyors Újratöltés", "passive", "cri", 5, 2000, "Csökkenti a felszerelések és képességek újratöltési idejét.", undefined, undefined, undefined, undefined, undefined, 0, 1),
                 cria1: new ability("cria1", "CRIA1 - Csökkentett Energiahasználat", "active1", "cri", 10, 300, "Csökkenti a hajó energiafelhasználását.", 300, 5, 20, 0, 0, 20, 5),
-                cria2: new ability("cria2", "CRIA2 - Kibervírus", "active2", "cri", 5, 2000, "Leállítja a megcélzott ellenséges hajó generátorait.", 500, 0, 25, 1, 1, undefined, undefined)
+                cria2: new ability("cria2", "CRIA2 - Kibervírus", "active2", "cri", 5, 2000, "Leállítja a megcélzott ellenséges hajó generátorait.", 500, 1, 25, 1, 1, undefined, undefined)
             },
             
             property: property,

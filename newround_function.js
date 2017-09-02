@@ -6,7 +6,16 @@ function genEnergySet(character)
         var generators = character.equipment.generator;
         for(var x in generators)
         {
+            if(character.ability.cria2.actualactive) break;
             character.control.genenergy += generators[x].energyregen;
+        }
+        
+        if(character.extras.bol01.actualactive && character.equipment.battery)
+        {
+            for(var x in character.equipment.battery)
+            {
+                character.control.genenergy += character.equipment.battery[x].maxrecharge;
+            }
         }
     }
     catch(err)
@@ -82,10 +91,13 @@ function targetCharacter(character)
         
         if(control.targettry)
         {
+            if(gameinfo.characters[control.targettry].extras.edi01.actualactive) return;
             var attackValue = rand(0, 2000);
             if(character.ship.company == "gaa" && character.ability.gaap.level) attackValue += rand(0, character.ability.gaap.value);
+            if(character.extras.clo01.actualactive) attackValue += rand(0, 500);
+            if(gameinfo.characters[control.targettry].extras.clo01.actualactive) attackValue -= rand(0, 500);
             
-            if(attackValue> 1500)
+            if(attackValue > 1500)
             {
                 control.target = control.targettry;
                 control.targettry = null;
@@ -207,7 +219,18 @@ function attack(character)
                 energyUse(character, energyUsage, batteryIndex);
                 ammo.amount -= weapon.ammousage;
                 
-                if(hitSet(weapon.accuracy))
+                var accuracy = weapon.accuracy;
+                
+                if(character.extras.pdu01.actualactive)
+                {
+                    accuracy -= 250;
+                }
+                if(weapon.slot == "rocketlauncher" && character.extras.mdl01.actualactive)
+                {
+                    accuracy -= 250;
+                }
+                
+                if(hitSet(accuracy))
                 {
                     damage(character, weapon, ammo, "ship");
                 }
@@ -299,6 +322,11 @@ function attack(character)
         {
             try
             {
+                if(character.type == "ship" && character.ability.cria1.actualactive)
+                {
+                    var value = character.ability.cria1.value;
+                    energyUsage *= 1 - value / 100;
+                }
                 energyUsage = Math.round(energyUsage);
                 if(batteryIndex == -1) character.control.genenergy -= energyUsage;
                 else character.equipment.battery[batteryIndex].actualcapacity -= energyUsage;
@@ -349,6 +377,12 @@ function attack(character)
                         
                         var targetCharacter = gameinfo.characters[character.control.target];
                         targetCharacter.control.dmgreceived = 0;
+                        
+                        if(targetCharacter.extras.efi01.actualactive) return;
+                        if(targetCharacter.extras.mac01.actualactive)
+                        {
+                            if(rand(0, 1000) < 250) return;
+                        }
                         
                         if(targetCharacter.ship.company == "emf" && targetCharacter.ability.emfa1.actualactive)
                         {
@@ -545,6 +579,8 @@ function attack(character)
                     case "directship":
                         var damageRec = weapon;
                         
+                        if(character.extras.efi01.actualactive) return;
+                        
                         character.control.dmgreceived = 0;
                         if(character.equipment.shield)
                         {
@@ -740,6 +776,7 @@ function shieldRecharge(character)
             {
                 multiplicator *= (100 + gameinfo.temp.globalAbilities[character.alliance].pdma1.value) / 100;
             }
+            if(character.type == "ship" && character.extras.sre01.actualactive) multiplicator *= 5;
             
             if(batteryIndex != null)
             {
@@ -1032,7 +1069,12 @@ function squadronTarget(character)
         
         if(character.control.targettry)
         {
-            if(rand(0, 2000) > 800)
+            if(gameinfo.characters[character.control.targettry].type == "ship" && gameinfo.characters[character.control.targettry].extras.edi01.actualactive) return;
+            
+            var attackValue = rand(0, 2000);
+            if(gameinfo.characters[character.control.targettry].type == "ship" && gameinfo.characters[character.control.targettry].extras.clo01.actualactive) attackValue -= rand(0, 500);
+            
+            if(attackValue > 1500)
             {
                 character.control.target = character.control.targettry;
                 character.control.targettry = null;
@@ -1175,6 +1217,7 @@ function squadronAttack(character)
             switch(gameinfo.characters[character.control.target].type)
             {
                 case "ship":
+                    if(gameinfo.characters[character.control.target].extras.ser01.actualactive) return;
                     for(var x in weapons.cannon)
                     {
                         if(character.control.target == null) return;
@@ -1334,7 +1377,13 @@ function squadronAttack(character)
                                     energyUse(targetCharacter, energyUsage, batteryIndex);
                                     ammo.amount -= weapon.ammousage;
                                     
-                                    if(hitSet(weapon.accuracy))
+                                    var accuracy = weapon.accuracy;
+                                    if(character.type == "ship" && character.extras.pdu01.actualactive)
+                                    {
+                                        accuracy -= 250;
+                                    }
+                                    
+                                    if(hitSet(accuracy))
                                     {
                                         damage(targetCharacter, weapon, ammo, "squadron", character);
                                     }

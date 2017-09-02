@@ -63,6 +63,7 @@ function newround()
             for(var x in gameinfo.characters)
             {
                 attackNum[x] = rand(0, 1000);
+                if(gameinfo.characters[x].type == "ship" && gameinfo.characters[x].extras.clo01.actualactive) attackNum[x] += rand(0, 500);
                 if(gameinfo.temp.energy[x] == undefined) energySet(gameinfo.characters[x]);
             }
             

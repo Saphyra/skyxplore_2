@@ -578,7 +578,12 @@ function specialBarCreate()
                     var itemdata = character.ability[itemid];
                     if(itemdata.actualreload) usable = 1;
                     if(batteryIndexChoose(character, itemdata.energyusage) == null) usable = 2;
-                    if(itemdata.actualactive) usable = -1;
+                    if(itemdata.actualactive)
+                    {
+                        usable = -1;
+                        
+                        if(itemdata.itemid == "cria2" || itemdata.itemid == "pdu01" || itemdata.itemid == "mdl01") usable = 0;
+                    }
                 }
                 
                 var status = {id: itemid, status: usable, itemdata: itemdata};

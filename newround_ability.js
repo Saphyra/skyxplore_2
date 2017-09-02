@@ -77,15 +77,15 @@ function activateSet(character)
                 {
                     if(gameinfo.characters[x].owner == character.charid && gameinfo.characters[x].place == "space") squadrons.push(x);
                 }
-                if(attackers && shipStatus < 90 && squadrons.length && !character.ability.emfa1.actualreload && character.ability.emfa1.level && !character.ability.emfa2.actualactive) activeArr.push("emfa1");
-                if(attackers && shipStatus < 80 && !character.ability.emfa2.actualreload && character.ability.emfa2.level && character.ability.emfa1.actualactive && activeArr.indexOf("emfa1") < 0) activeArr.push("emfa2");
+                if(attackers && shipStatus < 90 && squadrons.length && !character.ability.emfa1.actualreload && character.ability.emfa1.level && !character.ability.emfa2.actualactive && !character.extras.edi01.actualactive) activeArr.push("emfa1");
+                if(attackers && shipStatus < 80 && !character.ability.emfa2.actualreload && character.ability.emfa2.level && character.ability.emfa1.actualactive && activeArr.indexOf("emfa1") < 0  && !character.extras.edi01.actualactive && !character.ability.emfa1.actualactive) activeArr.push("emfa2");
             break;
             case "pdm":
                 if(!gameinfo.temp.globalAbilities[character.alliance].pdma1.actualactive && !character.ability.pdma1.actualreload  && character.ability.pdma1.level) activeArr.push("pdma1");
                 if(shipStatus > 50 && !character.ability.pdma2.actualreload && character.ability.pdma2.level) activeArr.push("pdma2");
             break;
             case "idf":
-                if(attackers && !character.ability.idfa1.actualreload && character.ability.idfa1.level) activeArr.push("idfa1");
+                if(attackers && !character.ability.idfa1.actualreload && character.ability.idfa1.level && !character.extras.edi01.actualactive) activeArr.push("idfa1");
                 if(character.control.target && !character.ability.idfa2.actualreload && character.ability.idfa2.level) activeArr.push("idfa2");
             break;
             case "mfa":
@@ -113,9 +113,9 @@ function activateSet(character)
         if(attackers && shipStatus < 50 && !character.extras.edi01.actualreload) activeArr.push("edi01"); //Elektronikus zavaróimpulzus
         if(attackers && shipStatus < 70 && !character.extras.efi01.actualreload) activeArr.push("efi01"); //Energiamező
         if(hullStatus < 70) activeArr.push("rep"); //Javító robot
-        if(energyStatus < 70 && !character.extras.bol01.actualreload) activeArr.push("bol01"); //Akkumulátor túltöltés
+        if(energyStatus < 70 && !character.extras.bol01.actualreload && character.equipment.battery) activeArr.push("bol01"); //Akkumulátor túltöltés
         if(attackers && !character.extras.mac01.actualreload) activeArr.push("mac01"); //Mágneses köd
-        if(attackerSquadrons && !character.extras.ser01.actualreload) activeArr.push("ser01"); //Rajzavaró elektronsugár
+        if(attackerSquadrons && !character.extras.ser01.actualreload && !character.extras.efi01.actualactive) activeArr.push("ser01"); //Rajzavaró elektronsugár
         if(attackers && !character.extras.mdl01.actualreload) activeArr.push("mdl01"); //Rakétaelhárító lézer
         if(character.control.target && !character.extras.pdu01.actualreload) activeArr.push("pdu01"); //Plazma Zavaró Egység
         if(attackers && shieldStatus < 70 && !character.extras.sre01.actualreload) activeArr.push("sre01"); //Pajzsregeneráció Növelés
@@ -174,15 +174,18 @@ function activateSet(character)
         }
     }
     
-    function negativeEffects(characters)
+    function negativeEffects(character)
     //Igaz, ha a hajót negatív képesség éri
     {
         try
         {
             var negativeObj = 
-            {
-                
-            };
+            [
+                {itemid: "gaaa2", type: "ability"},
+                {itemid: "cria2", type: "ability"},
+                {itemid: "pdu01", type: "extras"},
+                {itemid: "mdl01", type: "extras"},
+            ]
             
             for(var x in negativeObj)
             {
@@ -340,7 +343,166 @@ function activateSpecial(character)
                 specialData.actualreload = specialData.reload;
                 specialData.actualactive = specialData.active;
             }
-            
+            else if(itemid == "cria1")
+            {
+                if(!specialData.level) continue;
+                if(specialData.actualreload) continue;
+                
+                energyUse(character, specialData.energyusage, batteryIndex);
+                
+                specialData.actualreload = specialData.reload;
+                specialData.actualactive = specialData.active;
+            }
+            else if(itemid == "cria2")
+            {
+                if(!specialData.level) continue;
+                if(specialData.actualreload) continue;
+                if(!gameinfo.characters[character.control.target]) continue;
+                
+                energyUse(character, specialData.energyusage, batteryIndex);
+                
+                specialData.actualreload = specialData.reload;
+                gameinfo.characters[character.control.target].ability.cria2.actualactive = specialData.active;
+            }
+            else if(itemid == "efi01")
+            {
+                if(specialData.actualreload) continue;
+                if(!character.ammo[specialData.ammotype] || character.ammo[specialData.ammotype].amount < specialData.ammousage) continue;
+                
+                energyUse(character, specialData.energyusage, batteryIndex);
+                character.ammo[specialData.ammotype].amount -= specialData.ammousage;
+                
+                specialData.actualreload = specialData.reload;
+                specialData.actualactive = specialData.active;
+            }
+            else if(itemid == "pdu01")
+            {
+                if(specialData.actualreload) continue;
+                if(!character.ammo[specialData.ammotype] || character.ammo[specialData.ammotype].amount < specialData.ammousage) continue;
+                if(!gameinfo.characters[character.control.target]) continue;
+                
+                energyUse(character, specialData.energyusage, batteryIndex);
+                character.ammo[specialData.ammotype].amount -= specialData.ammousage;
+                
+                specialData.actualreload = specialData.reload;
+                gameinfo.characters[character.control.target].extras.pdu01.actualactive = specialData.active;
+            }
+            else if(itemid == "edi01")
+            {
+                if(specialData.actualreload) continue;
+                if(!character.ammo[specialData.ammotype] || character.ammo[specialData.ammotype].amount < specialData.ammousage) continue;
+                
+                energyUse(character, specialData.energyusage, batteryIndex);
+                character.ammo[specialData.ammotype].amount -= specialData.ammousage;
+                
+                specialData.actualreload = specialData.reload;
+                specialData.actualactive = specialData.active;
+                
+                targetIdUnset(character.charid);
+            }
+            else if(itemid == "abs01")
+            {
+                if(specialData.actualreload) continue;
+                if(!character.ammo[specialData.ammotype] || character.ammo[specialData.ammotype].amount < specialData.ammousage) continue;
+                
+                energyUse(character, specialData.energyusage, batteryIndex);
+                character.ammo[specialData.ammotype].amount -= specialData.ammousage;
+                
+                specialData.actualreload = specialData.reload;
+                specialData.actualactive = specialData.active;
+                
+                cleanSystems(character);
+            }
+            else if(itemid == "sre01")
+            {
+                if(specialData.actualreload) continue;
+                if(!character.ammo[specialData.ammotype] || character.ammo[specialData.ammotype].amount < specialData.ammousage) continue;
+                
+                energyUse(character, specialData.energyusage, batteryIndex);
+                character.ammo[specialData.ammotype].amount -= specialData.ammousage;
+                
+                specialData.actualreload = specialData.reload;
+                specialData.actualactive = specialData.active;
+            }
+            else if(itemid == "clo01")
+            {
+                if(specialData.actualreload) continue;
+                if(!character.ammo[specialData.ammotype] || character.ammo[specialData.ammotype].amount < specialData.ammousage) continue;
+                
+                energyUse(character, specialData.energyusage, batteryIndex);
+                character.ammo[specialData.ammotype].amount -= specialData.ammousage;
+                
+                specialData.actualreload = specialData.reload;
+                specialData.actualactive = specialData.active;
+            }
+            else if(itemid == "bol01")
+            {
+                if(specialData.actualreload) continue;
+                if(!character.ammo[specialData.ammotype] || character.ammo[specialData.ammotype].amount < specialData.ammousage) continue;
+                
+                energyUse(character, specialData.energyusage, batteryIndex);
+                character.ammo[specialData.ammotype].amount -= specialData.ammousage;
+                
+                specialData.actualreload = specialData.reload;
+                specialData.actualactive = specialData.active;
+            }
+            else if(itemid == "mac01")
+            {
+                if(specialData.actualreload) continue;
+                if(!character.ammo[specialData.ammotype] || character.ammo[specialData.ammotype].amount < specialData.ammousage) continue;
+                
+                energyUse(character, specialData.energyusage, batteryIndex);
+                character.ammo[specialData.ammotype].amount -= specialData.ammousage;
+                
+                specialData.actualreload = specialData.reload;
+                specialData.actualactive = specialData.active;
+            }
+            else if(itemid == "ser01")
+            {
+                if(specialData.actualreload) continue;
+                if(!character.ammo[specialData.ammotype] || character.ammo[specialData.ammotype].amount < specialData.ammousage) continue;
+                
+                energyUse(character, specialData.energyusage, batteryIndex);
+                character.ammo[specialData.ammotype].amount -= specialData.ammousage;
+                
+                specialData.actualreload = specialData.reload;
+                specialData.actualactive = specialData.active;
+            }
+            else if(itemid == "mdl01")
+            {
+                if(specialData.actualreload) continue;
+                if(!character.ammo[specialData.ammotype] || character.ammo[specialData.ammotype].amount < specialData.ammousage) continue;
+                
+                energyUse(character, specialData.energyusage, batteryIndex);
+                character.ammo[specialData.ammotype].amount -= specialData.ammousage;
+                
+                specialData.actualreload = specialData.reload;
+                specialData.actualactive = specialData.active;
+            }
+            else if(itemid == "rep01" || itemid == "rep02" || itemid == "rep03")
+            {
+                if(specialData.actualreload) continue;
+                if(!character.ammo[specialData.ammotype] || character.ammo[specialData.ammotype].amount < specialData.ammousage) continue;
+                
+                energyUse(character, specialData.energyusage, batteryIndex);
+                character.ammo[specialData.ammotype].amount -= specialData.ammousage;
+                
+                specialData.actualreload = specialData.reload;
+                specialData.actualactive = specialData.active;
+                
+                var heal = specialData.level / 10;
+                
+                if(character.equipment.hull)
+                {
+                    for(var x in character.equipment.hull)
+                    {
+                        var hull = character.equipment.hull[x];
+                        
+                        hull.actualhull += hull.hullenergy * heal;
+                        if(hull.actualhull > hull.hullenergy) hull.actualhull = hull.hullenergy;
+                    }
+                }
+            }
         }
     }
     catch(err)
@@ -359,6 +521,7 @@ function activateSpecial(character)
             for(var x in gameinfo.characters)
             {
                 var lowestCharacter = gameinfo.characters[x];
+                if(lowestCharacter.charid == character.charid) continue;
                 if(lowestCharacter.alliance == character.alliance && lowestCharacter.place == "space" && lowestCharacter.type == "ship")
                 {
                     if(lowestCharacter.ability.pdma2.actualactive) continue;
@@ -441,6 +604,30 @@ function activateSpecial(character)
             for(var x in character.ability)
             {
                 if(blockable.indexOf(character.ability[x].itemid) > -1) character.ability[x].actualactive = 0;
+            }
+        }
+        catch(err)
+        {
+            alert(arguments.callee.name + err.name + ": " + err.message);
+        }
+    }
+    
+    function cleanSystems(character)
+    {
+        try
+        {
+            var negativeObj = 
+            [
+                {itemid: "gaaa2", type: "ability"},
+                {itemid: "cria2", type: "ability"},
+                {itemid: "pdu01", type: "extras"},
+                {itemid: "mdl01", type: "extras"},
+            ];
+            
+            for(var x in negativeObj)
+            {
+                var negative = negativeObj[x];
+                character[negative.type][negative.itemid].actualactive = 0;
             }
         }
         catch(err)
