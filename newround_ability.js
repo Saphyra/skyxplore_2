@@ -105,7 +105,7 @@ function activateSet(character)
                 if(hasActiveAbilities(character.control.target) && !character.ability.gaaa2.actualreload && character.ability.gaaa2.level) activeArr.push("gaaa2");
             break;
             case "cri":
-                if(!character.ability.cria1.actualreload && character.ability.cria1.level) activeArr.push("cria1");
+                if(!character.ability.cria1.actualreload && character.ability.cria1.level && energyStatus < 80) activeArr.push("cria1");
                 if(character.control.target && !character.ability.cria2.actualreload && character.ability.cria2.level) activeArr.push("cria2");
             break;
         }
@@ -525,6 +525,7 @@ function activateSpecial(character)
                 if(lowestCharacter.alliance == character.alliance && lowestCharacter.place == "space" && lowestCharacter.type == "ship")
                 {
                     if(lowestCharacter.ability.pdma2.actualactive) continue;
+                    if(lowestCharacter.ability.gaaa2.actualactive) continue;
                     
                     var lowestCorehullStatus = lowestCharacter.ship.actualcorehull / lowestCharacter.ship.corehull * 100;
                     var lowestHullStatus = 0;

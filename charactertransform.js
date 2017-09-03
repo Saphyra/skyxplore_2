@@ -142,6 +142,7 @@ function charactertransform(characterdata)
                 this.actualcargo = 0;
                 this.ammostorage = shipdata.basicammostorage;
                 this.actualammostorage = equipped.ship.ammo;
+                this.level = shipdata.level;
             }
             catch(err)
             {

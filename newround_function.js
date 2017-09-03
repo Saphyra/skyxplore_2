@@ -149,10 +149,9 @@ function attack(character)
         {
             if(character.charid == sessionStorage.charid) return 1;
             
-            if(character.equipment.generator && character.equipment.battery && gameinfo.temp.energy[character.charid].percent < 70 && character.control.dmgreceived > 1 && !character.control.lastattack)
+            if(character.equipment.generator && character.equipment.battery && gameinfo.temp.energy[character.charid].percent < 70 && character.control.dmgreceived > 1 && character.control.lastattack)
             {
                 return 0;
-                alert("A karakter nem támad");
             }
             else return 1;
         }
@@ -735,6 +734,8 @@ function attack(character)
                         var ability = gameinfo.temp.globalAbilities[character.alliance][x];
                         if(ability.owner == character.charid) ability.actualactive = 0;
                     }
+                    
+                    if(character.type == "ship") loot(character);
                 }
                 catch(err)
                 {
@@ -1061,6 +1062,7 @@ function squadronTarget(character)
             {
                 character.control.targettry = squadronTargetChoose(character, "squadron");
             }
+            
             if(!character.control.targettry && weapons.cannon)
             {
                 character.control.targettry = squadronTargetChoose(character, "ship");
