@@ -36,6 +36,7 @@
                             },
                             playerammolevel: null,
                             activebar: null,
+                            focus: 0,
                         };
                         
                     window.gameinfo = gameinfo;
@@ -214,6 +215,8 @@
                             {
                                 margin: auto;
                                 border-collapse: collapse;
+                                min-width: 50%;
+                                text-align: center;
                             }
                                 
                                 .inforow
@@ -668,6 +671,18 @@
                         var ammo = ammos[ammoids[x]];
                         if(ammo.amount) 
                         {
+                            if(!disp)
+                            {
+                                var row = document.createElement("TR");
+                                    row.className = "inforow";
+                                    var nameCell = document.createElement("TD");
+                                        nameCell.innerHTML = "Lőszer";
+                                row.appendChild(nameCell);
+                                    var amountCell = document.createElement("TD");
+                                        amountCell.innerHTML = "Mennyiség";
+                                row.appendChild(amountCell);
+                                container.appendChild(row);
+                            }
                             container.appendChild(ammosRowCreate(ammo));
                             disp = 1;
                         }
@@ -727,13 +742,31 @@
                     
                     var container = document.getElementById("cargotable");
                         container.innerHTML = "";
-                    var cargo = gameinfo.characters[sessionStorage.charid].cargo;
+                    var cargos = gameinfo.characters[sessionStorage.charid].cargo;
                     
-                    if(cargo.length)
+                    var isEmpty = 0;
+                    for(var x in cargos)
                     {
-                        
+                        if(!isEmpty)
+                        {
+                            var row = document.createElement("TR");
+                                row.className = "inforow";
+                                var nameCell = document.createElement("TD");
+                                    nameCell.innerHTML = "Tárgy";
+                            row.appendChild(nameCell);
+                                var amountCell = document.createElement("TD");
+                                    amountCell.innerHTML = "Mennyiség";
+                            row.appendChild(amountCell);
+                                var dropCell = document.createElement("TD");
+                                    dropCell.innerHTML = "Kidobás";
+                            row.appendChild(dropCell);
+                            container.appendChild(row);
+                        }
+                        isEmpty = 1;
+                        if(cargos[x].amount) container.appendChild(cargoRowCreate(cargos[x]));
                     }
-                    else
+                    
+                    if(!isEmpty)
                     {
                         var row = document.createElement("TR");
                             row.className = "inforow";
@@ -748,6 +781,71 @@
                     alert(arguments.callee.name + err.name + ": " + err.message);
                 }
             }
+                
+                function cargoRowCreate(cargo)
+                {
+                    try
+                    {
+                        var row = document.createElement("TR");
+                            row.className = "inforow";
+                                var nameCell = document.createElement("TD");
+                                    var name = (gamedata.items[cargo.itemid]) ? gamedata.items[itemid].name : gamedata.abilities[cargo.itemid].name;
+                                    nameCell.innerHTML = name;
+                                    nameCell.style.textAlign = "right";
+                            row.appendChild(nameCell);
+                                var amountCell = document.createElement("TD");
+                                    amountCell.innerHTML = cargo.amount;
+                            row.appendChild(amountCell);
+                                var dropCell = document.createElement("TD");
+                                    var dropInput = document.createElement("INPUT");
+                                        dropInput.type = "number";
+                                        dropInput.min = 1;
+                                        dropInput.max = cargo.amount;
+                                        dropInput.id = "drop" + cargo.itemid;
+                                        dropInput.value = 1;
+                                        dropInput.size = 4;
+                                        dropInput.addEventListener("focusin", function(){gameinfo.temp.focus = 1});
+                                        dropInput.addEventListener("focusout", function(){gameinfo.temp.focus = 0});
+                                dropCell.appendChild(dropInput);
+                                    var dropButton = document.createElement("BUTTON");
+                                        dropButton.addEventListener("click", function(){dropCargo(cargo.itemid);});
+                                        dropButton.innerHTML = "Eldobás";
+                                dropCell.appendChild(dropButton);
+                            row.appendChild(dropCell)
+                    }
+                    catch(err)
+                    {
+                        alert(arguments.callee.name + err.name + ": " + err.message);
+                    }
+                    finally
+                    {
+                        return row;
+                    }
+                }
+            
+                    function dropCargo(cargoId)
+                    {
+                        try
+                        {
+                            var deletable = document.getElementById("drop" + cargoId).value;
+                            var cargo = gameinfo.characters[sessionStorage.charid].cargo[cargoId];
+                            
+                            if(deletable < 1) return;
+                            else if(deletable > cargo.amount) cargo.amount = 0;
+                            else
+                            {
+                                cargo.amount -= Number(deletable);
+                            }
+                            
+                            cargoSet(gameinfo.characters[sessionStorage.charid]);
+                            loadCargo();
+                            characterdisplayset(sessionStorage.charid);
+                        }
+                        catch(err)
+                        {
+                            alert(arguments.callee.name + err.name + ": " + err.message);
+                        }
+                    }
             
         function autoPlay(type)
         //Automata körváltás

@@ -4,22 +4,7 @@ function loot(character)
     {
         var lootNum = character.ship.level * 15;
         
-        var livingCharacters = [];
-        var partCharacters = [];
-        var ammoCharacters = [];
-        for(var x in gameinfo.characters)
-        {
-            var lootCharacter = gameinfo.characters[x];
-            
-            if(lootCharacter.type == "ship" && lootCharacter.place == "space" && lootCharacter.alliance != character.alliance)
-            {
-                livingCharacters.push(x);
-                
-                if(lootCharacter.ship.actualcargo < lootCharacter.ship.cargo) partCharacters.push(x);
-                if(lootCharacter.ship.actualammostorage < lootCharacter.ship.ammostorage) ammoCharacters.push(x);
-            }
-        }
-        
+        var characterLists = setCharacterList(character);
         
         for(var x = 0; x < lootNum; x++)
         {
@@ -28,17 +13,27 @@ function loot(character)
             switch(reward.type)
             {
                 case "credit":
-                
+                    var targetCharacterId = characterLists.livingCharacters[rand(0, characterLists.livingCharacters.length - 1)];
+                    if(targetCharacterId == sessionStorage.charid) chardata.credit = Number(chardata.credit) + reward.value;
                 break;
                 case "diamond":
-                
+                    var targetCharacterId = characterLists.livingCharacters[rand(0, characterLists.livingCharacters.length - 1)];
+                    if(targetCharacterId == sessionStorage.charid) chardata.diamond =  Number(chardata.diamond) + reward.value;
                 break;
                 case "part":
-                
+                    if(characterLists.partCharacters.length)
+                    {
+                        var targetCharacterId = characterLists.partCharacters[rand(0, characterLists.partCharacters.length - 1)];
+                        var targetCharacter = gameinfo.characters[targetCharacterId];
+                        if(!targetCharacter.cargo[reward.id.itemid]) targetCharacter.cargo[reward.id.itemid] = new cargoReward(reward);
+                        else targetCharacter.cargo[reward.id.itemid].amount += reward.value;
+                    }
+                    cargoSet(targetCharacter);
+                    var characterLists = setCharacterList(character);
                 break;
                 case "ammo":
-                    if(!ammoCharacters.length) break;
-                    var targetCharacterId = ammoCharacters[rand(0, ammoCharacters.length - 1)];
+                    if(!characterLists.ammoCharacters.length) break;
+                    var targetCharacterId = characterLists.ammoCharacters[rand(0, characterLists.ammoCharacters.length - 1)];
                     var targetCharacter = gameinfo.characters[targetCharacterId];
                     
                     var maxAmount = targetCharacter.ship.ammostorage - targetCharacter.ship.actualammostorage;
@@ -53,6 +48,8 @@ function loot(character)
                     {
                         targetCharacter.ammo[reward.id.itemid].amount += reward.value;
                     }
+                    ammoStorageSet(targetCharacter);
+                    var characterLists = setCharacterList(character);
                 break;
             }
         }
@@ -62,6 +59,43 @@ function loot(character)
         alert(arguments.callee.name + err.name + ": " + err.message);
     }
 }
+
+    function setCharacterList(character)
+    {
+        try
+        {
+            var livingCharacters = [];
+            var partCharacters = [];
+            var ammoCharacters = [];
+            for(var x in gameinfo.characters)
+            {
+                var lootCharacter = gameinfo.characters[x];
+                
+                if(lootCharacter.type == "ship" && lootCharacter.place == "space" && lootCharacter.alliance != character.alliance)
+                {
+                    livingCharacters.push(x);
+                    
+                    if(lootCharacter.ship.actualcargo < lootCharacter.ship.cargo) partCharacters.push(x);
+                    if(lootCharacter.ship.actualammostorage < lootCharacter.ship.ammostorage) ammoCharacters.push(x);
+                }
+            }
+            
+            var result =
+            {
+                livingCharacters: livingCharacters,
+                partCharacters: partCharacters,
+                ammoCharacters: ammoCharacters,
+            };
+        }
+        catch(err)
+        {
+            alert(arguments.callee.name + err.name + ": " + err.message);
+        }
+        finally
+        {
+            return result;
+        }
+    }
 
     function rewardSet(level)
     {
@@ -84,7 +118,9 @@ function loot(character)
                     reward.value = rand(1, 100);
                 break;
                 case "part":
-                    
+                    reward.id.type = "ability";
+                    reward.id.itemid = "pdma1";
+                    reward.value = 1;
                 break;
                 case "ammo":
                     var ammoReward = ammoRewardSet();
@@ -149,3 +185,36 @@ function loot(character)
                 return reward;
             }
         }
+        
+        function cargoReward(reward)
+        {
+            try
+            {
+                this.itemid = reward.id.itemid;
+                this.type = reward.id.type;
+                this.amount = reward.value;
+            }
+            catch(err)
+            {
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        }
+        
+    function cargoSet(character)
+    {
+        try
+        {
+            var actualCargo = 0;
+            
+            for(var x in character.cargo)
+            {
+                actualCargo += character.cargo[x].amount;
+            }
+            
+            character.ship.actualcargo = actualCargo;
+        }
+        catch(err)
+        {
+            alert(arguments.callee.name + err.name + ": " + err.message);
+        }
+    }

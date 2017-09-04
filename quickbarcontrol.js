@@ -15,21 +15,25 @@ function quickBarControl(type, data)
                     case 48:
                     case 96:
                     //Autoplay indítás / leállítás
+                        if(gameinfo.temp.focus) break;
                         (gameinfo.autoPlay) ? autoPlay("stop") : autoPlay("start");
                     break;
                     case 49:
                     case 97:
                     //Lőszerlista megnyitása
+                        if(gameinfo.temp.focus) break;
                         (gameinfo.temp.activebar == "ammo") ? closeBar() : ammoBarLoad();
                     break;
                     case 50:
                     case 98:
                     //Képesség lista megnyitása
+                        if(gameinfo.temp.focus) break;
                         (gameinfo.temp.activebar == "ability") ? closeBar() : abilityBarLoad();
                     break;
                     case 51:
                     case 99:
                     //felszereléslista megnyitása
+                        if(gameinfo.temp.focus) break;
                         (gameinfo.temp.activebar == "equipment")? closeBar() : equipmentBarLoad();
                     break;
                     default:

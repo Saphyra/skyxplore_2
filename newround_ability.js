@@ -120,7 +120,7 @@ function activateSet(character)
         if(character.control.target && !character.extras.pdu01.actualreload) activeArr.push("pdu01"); //Plazma Zavaró Egység
         if(attackers && shieldStatus < 70 && !character.extras.sre01.actualreload) activeArr.push("sre01"); //Pajzsregeneráció Növelés
         if(!character.extras.clo01.actualreload && !character.extras.clo01.actualreload) activeArr.push("clo01") //Álcázó berendezés
-        if(negativeEffects(character) && !character.extras.abs01.actualreload) activeArr.push("abs01"); //Rendszertisztítás
+        if(negativeEffects(character) && !character.extras.abs01.actualreload && activeArr.length) activeArr.push("abs01"); //Rendszertisztítás
     }
     catch(err)
     {
