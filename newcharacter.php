@@ -4,8 +4,8 @@
     $charname = $_REQUEST["charname"];
     $company = $_REQUEST["company"];
     $ownerid = $_REQUEST["ownerid"];
-    $credit = 10000000;
-    $diamond = 10000000;
+    $credit = 10000;
+    $diamond = 3000;
     $level = 1;
     $data = $_REQUEST["data"];
     $shipid = $_REQUEST["shipid"];

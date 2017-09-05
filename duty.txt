@@ -12,5 +12,5 @@
             tárgyak
     -->
 
-raj célpontok // nem támad rajt
-                
+    mfap
+skip

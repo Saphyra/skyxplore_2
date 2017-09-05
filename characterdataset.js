@@ -183,7 +183,7 @@ function characterdataset(company)
             var squadronnum = 0;
             for(x = 0; x < shipdata.hangarslot; x++)
             {
-                se = {itemtype: "hangar", level: 1};
+                se = {type: "hangar", level: 1};
                 eqid = gamedata.search(se);
                 hangardata = gamedata.items[eqid];
 

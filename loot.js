@@ -1,8 +1,9 @@
 function loot(character)
+//Zsákmánykiosztás
 {
     try
     {
-        var lootNum = character.ship.level * 15;
+        var lootNum = character.ship.level * 10 * rand(1, 3);
         
         var characterLists = setCharacterList(character);
         
@@ -14,27 +15,46 @@ function loot(character)
             {
                 case "credit":
                     var targetCharacterId = characterLists.livingCharacters[rand(0, characterLists.livingCharacters.length - 1)];
-                    if(targetCharacterId == sessionStorage.charid) chardata.credit = Number(chardata.credit) + reward.value;
+                    if(targetCharacterId == sessionStorage.charid)
+                    {
+                        if(gameinfo.characters[sessionStorage.charid].ability.mfap.level) reward.value = Math.ceil(reward.value * (1 + gameinfo.characters[sessionStorage.charid].ability.mfap.value / 100));
+                        chardata.credit = Number(chardata.credit) + reward.value;
+                        gameinfo.temp.creditLoot += reward.value;
+                    }
                 break;
                 case "diamond":
                     var targetCharacterId = characterLists.livingCharacters[rand(0, characterLists.livingCharacters.length - 1)];
-                    if(targetCharacterId == sessionStorage.charid) chardata.diamond =  Number(chardata.diamond) + reward.value;
+                    if(targetCharacterId == sessionStorage.charid)
+                    {
+                        if(gameinfo.characters[sessionStorage.charid].ability.mfap.level) reward.value = Math.ceil(reward.value * (1 + gameinfo.characters[sessionStorage.charid].ability.mfap.value / 100));
+                        chardata.diamond =  Number(chardata.diamond) + reward.value;
+                        gameinfo.temp.diamondLoot += reward.value;
+                    }
                 break;
                 case "part":
                     if(characterLists.partCharacters.length)
                     {
                         var targetCharacterId = characterLists.partCharacters[rand(0, characterLists.partCharacters.length - 1)];
                         var targetCharacter = gameinfo.characters[targetCharacterId];
+                        
+                        if(targetCharacter.ability.mfap.level) reward.value = Math.ceil(reward.value * (1 + targetCharacter.ability.mfap.value / 100));
+                        
+                        reward.value = (reward.value > targetCharacter.ship.cargo - targetCharacter.ship.actualcargo) ? targetCharacter.ship.cargo - targetCharacter.ship.actualcargo : reward.value;
+                       
                         if(!targetCharacter.cargo[reward.id.itemid]) targetCharacter.cargo[reward.id.itemid] = new cargoReward(reward);
                         else targetCharacter.cargo[reward.id.itemid].amount += reward.value;
+                        
+                        cargoSet(targetCharacter);
+                        var characterLists = setCharacterList(character);
                     }
-                    cargoSet(targetCharacter);
-                    var characterLists = setCharacterList(character);
+                    
                 break;
                 case "ammo":
                     if(!characterLists.ammoCharacters.length) break;
                     var targetCharacterId = characterLists.ammoCharacters[rand(0, characterLists.ammoCharacters.length - 1)];
                     var targetCharacter = gameinfo.characters[targetCharacterId];
+                    
+                    if(targetCharacter.ability.mfap.level) reward.value = Math.ceil(reward.value * (1 + targetCharacter.ability.mfap.value / 100));
                     
                     var maxAmount = targetCharacter.ship.ammostorage - targetCharacter.ship.actualammostorage;
                     
@@ -61,6 +81,7 @@ function loot(character)
 }
 
     function setCharacterList(character)
+    //Csoportba szedi azokat a karaktereket, akik kaphatnak zsákmányt
     {
         try
         {
@@ -70,6 +91,8 @@ function loot(character)
             for(var x in gameinfo.characters)
             {
                 var lootCharacter = gameinfo.characters[x];
+                
+                if(lootCharacter.control.lastattack > 5) continue;
                 
                 if(lootCharacter.type == "ship" && lootCharacter.place == "space" && lootCharacter.alliance != character.alliance)
                 {
@@ -98,14 +121,15 @@ function loot(character)
     }
 
     function rewardSet(level)
+    //Összeállítja a zsákmányt
     {
         try
         {
             var reward = {type: null, id: {type: null, itemid: null}, value: null};
             
             var typeNum = rand(1, 14);
-            if(typeNum <= 4) reward.type = "credit";
-            else if(typeNum <= 6) reward.type = "diamond";
+            if(typeNum <= 3) reward.type = "credit";
+            else if(typeNum <= 5) reward.type = "diamond";
             else if(typeNum <= 10) reward.type = "part";
             else reward.type = "ammo";
             
@@ -118,9 +142,7 @@ function loot(character)
                     reward.value = rand(1, 100);
                 break;
                 case "part":
-                    reward.id.type = "ability";
-                    reward.id.itemid = "pdma1";
-                    reward.value = 1;
+                    partRewardSet(level, reward);
                 break;
                 case "ammo":
                     var ammoReward = ammoRewardSet();
@@ -140,6 +162,7 @@ function loot(character)
     }
     
         function ammoRewardSet()
+        //Lőszer zsákmányolása
         {
             try
             {
@@ -187,6 +210,7 @@ function loot(character)
         }
         
         function cargoReward(reward)
+        //Lőszer objektum
         {
             try
             {
@@ -200,7 +224,150 @@ function loot(character)
             }
         }
         
+        function partRewardSet(level, reward)
+        //Alkatrész zsákmányolása
+        {
+            try
+            {
+                reward.value = rand(1, 10);
+                var num = rand(0, 3);
+                switch(num)
+                {
+                    case 0:
+                        reward.id.type = "abilities";
+                        reward.id.itemid = Object.keys(gamedata.abilities)[rand(0, Object.keys(gamedata.abilities).length - 1)];
+                    break;
+                    default:
+                        reward.id.type = "construction";
+                        var fullItemList = {};
+                            for(var x in gamedata.items)
+                            {
+                                if(gamedata.items[x].construction)
+                                {
+                                    var itemdata = gamedata.items[x];
+                                    
+                                    if(itemdata.itemtype)
+                                    {
+                                        if(!fullItemList[itemdata.type]) fullItemList[itemdata.type] = {};
+                                        if(!fullItemList[itemdata.type][itemdata.itemtype]) fullItemList[itemdata.type][itemdata.itemtype] = 0;
+                                        if(itemdata.level > fullItemList[itemdata.type][itemdata.itemtype]) fullItemList[itemdata.type][itemdata.itemtype] = itemdata.level;
+                                    }
+                                    else
+                                    {
+                                        if(!fullItemList[itemdata.type]) fullItemList[itemdata.type] = 0;
+                                        if(itemdata.level > fullItemList[itemdata.type]) fullItemList[itemdata.type] = itemdata.level;
+                                    }
+                                }
+                            }
+                        
+                        var typeList = [];
+                        for(var x in fullItemList)
+                        {
+                            var item = fullItemList[x];
+                            if(typeof item == "object")
+                            {
+                                for(var y in item)
+                                {
+                                    var itemtype = item[y];
+                                    typeList.push({type: "itemtype", value: y, maxLevel: itemtype});
+                                }
+                            }
+                            else
+                            {
+                                typeList.push({type: "type", value: x, maxLevel: item});
+                            }
+                        }
+                        
+                        var rewardItem = typeList[rand(0, typeList.length - 1)];
+                        
+                        var level = partLevelSet(rewardItem.maxLevel, level);
+                        
+                        var searchObj = {level: level};
+                            searchObj[rewardItem.type] = rewardItem.value;
+                        var itemid = gamedata.search(searchObj);
+                        
+                        if(typeof itemid == "object")
+                        {
+                            reward.id.itemid = itemid[rand(0, itemid.length - 1)];
+                        }
+                        else reward.id.itemid = itemid;
+                    break;
+                }
+            }
+            catch(err)
+            {
+                alert(searchObj.level + " - " + searchObj.type + " - " + searchObj.itemtype);
+                alert(arguments.callee.name + err.name + ": " + err.message);
+            }
+        }
+        
+            function partLevelSet(maxLevel, level)
+            {
+                try
+                {
+                    if(!maxLevel)
+                    {
+                        throw "MaxLevel error: " + maxLevel;
+                    }
+                    if(!level) throw "level error: " + level;
+                    var resultLevel = 1;
+                    var rates = [100];
+                    
+                    if(maxLevel == 1) return 1;
+                    if(maxLevel < 10)
+                    {
+                        var multiplicator = 10 / maxLevel;
+                        maxLevel *= multiplicator;
+                    }
+                    
+                    for(var x = 1; x <= maxLevel; x++)
+                    {
+                        if(x === 1)
+                        {
+                            rates[x] = rates[0] * 1.5;
+                        }
+                        else if(x <= level)
+                        {
+                            rates[x] = rates[x - 1] + (rates[x - 1] - rates[x - 2]) * 3;
+                        }
+                        else
+                        {
+                            rates[x] = rates[x - 1] + Math.ceil((rates[x - 1] - rates[x - 2]) / 2);
+                        }
+                    }
+                    
+                    var rate = rand(0, rates[9]);
+                    
+                    for(var x in rates)
+                    {
+                        if(rate >= rates[x])
+                        {
+                            resultLevel = Number(x) + 1;
+                        }
+                    }
+                    
+                    if(multiplicator)
+                    {
+                        resultLevel = Math.round(resultLevel / multiplicator);
+                        if(!resultLevel) resultLevel = 1;
+                    }
+                }
+                catch(err)
+                {
+                    alert(arguments.callee.name + err.name + ": " + err.message);
+                }
+                finally
+                {
+                    if(resultLevel == undefined) alert("undefined" + rate + " - " + rates);
+                    if(resultLevel == NaN) alert("NaN" + rate + " - " + rates);
+                    if(resultLevel == 0) alert("Nulla" + rate + " - " + rates  + " - " + multiplicator);
+                    if(resultLevel == 11) alert("Over" + rate + " - " + rates  + " - " + multiplicator);
+                    return resultLevel;
+                }
+            }
+        
     function cargoSet(character)
+    //Frissíti a karakter rakterét
     {
         try
         {
@@ -215,6 +382,7 @@ function loot(character)
         }
         catch(err)
         {
+            alert(arguments.callee.caller.toString());
             alert(arguments.callee.name + err.name + ": " + err.message);
         }
     }

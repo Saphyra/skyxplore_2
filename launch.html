@@ -12,32 +12,42 @@
             {
                 try
                 {
-                    var gameinfo = {};
-                        gameinfo.characters = {};
-                        gameinfo.openedbar = null;
-                        gameinfo.numberassign = {};
-                        gameinfo.activebar = null;
-                        gameinfo.temp = 
-                        {
-                            energy: {},
-                            activeExtra: {},
-                            globalAbilities:
+                    if(sessionStorage.game)
+                    {
+                        var gameinfo = JSON.parse(sessionStorage.game);
+                        
+                    }
+                    else
+                    {
+                        var gameinfo = {};
+                            gameinfo.characters = {};
+                            gameinfo.openedbar = null;
+                            gameinfo.numberassign = {};
+                            gameinfo.activebar = null;
+                            gameinfo.temp = 
                             {
-                                enemy:
+                                energy: {},
+                                activeExtra: {},
+                                globalAbilities:
                                 {
-                                    pdma1: {actualactive: 0, value: null, owner: null},
-                                    mfaa1: {actualactive: 0, value: null, owner: null},
+                                    enemy:
+                                    {
+                                        pdma1: {actualactive: 0, value: null, owner: null},
+                                        mfaa1: {actualactive: 0, value: null, owner: null},
+                                    },
+                                    friend:
+                                    {
+                                        pdma1: {actualactive: 0, value: null, owner: null},
+                                        mfaa1: {actualactive: 0, value: null, owner: null},
+                                    },
                                 },
-                                friend:
-                                {
-                                    pdma1: {actualactive: 0, value: null, owner: null},
-                                    mfaa1: {actualactive: 0, value: null, owner: null},
-                                },
-                            },
-                            playerammolevel: null,
-                            activebar: null,
-                            focus: 0,
-                        };
+                                playerammolevel: null,
+                                activebar: null,
+                                focus: 0,
+                                creditLoot: 0,
+                                diamondLoot: 0,
+                            };
+                    }
                         
                     window.gameinfo = gameinfo;
                 }
@@ -57,21 +67,28 @@
         <SCRIPT src='newround_function.js'></SCRIPT>
         <SCRIPT src='newround_ability.js'></SCRIPT>
         <SCRIPT src='loot.js'></SCRIPT>
+        <SCRIPT src='endgame.js'></SCRIPT>
         <SCRIPT>
-            try
+            
+            (function basicload()
+            //betölti a játék kezdőadatait
             {
-                (function basicload()
-                //betölti a játék kezdőadatait
+                try
                 {
                     characterload();
-                    var playerid = sessionStorage.charid;
-                    charactertransform(chardata);
-                    for(var x = 0; x < 29; x++)
+                    
+                    if(!gameinfo.characters[sessionStorage.charid])
                     {
-                        if(x < 14) var alliance = "friend";
-                        else var alliance = "enemy";
-                        
-                        charactertransform(charactergenerate(chardata.level, alliance));
+                        var playerid = sessionStorage.charid;
+                        charactertransform(chardata);
+                        gameinfo.temp.playerammolevel = playerAmmoLevelSet();
+                        for(var x = 0; x < 29; x++)
+                        {
+                            if(x < 14) var alliance = "friend";
+                            else var alliance = "enemy";
+                            
+                            charactertransform(charactergenerate(chardata.level, alliance));
+                        }
                     }
                     
                     for(var x in gameinfo.characters)
@@ -79,14 +96,15 @@
                         energySet(gameinfo.characters[x]);
                         gameinfo.temp.activeExtra[x] = [];
                     }
-                })();
-            }
-            catch(err)
-            {
-                alert("load: " + err.name + ": " + err.message);
-            }
+                    
+                    sessionStorage.game = JSON.stringify(gameinfo);
+                }
+                catch(err)
+                {
+                    alert("load: " + err.name + ": " + err.message);
+                }
+            })();
             
-            gameinfo.temp.playerammolevel = playerAmmoLevelSet();
             function playerAmmoLevelSet()
             {
                 try
@@ -457,7 +475,7 @@
                 
             
         </DIV>
-     </DIV>
+    </DIV>
     
     <DIV class='menucontainer' id='settingscontainer'>
        <DIV class='menutitle'>Beállítások</DIV>
@@ -476,12 +494,18 @@
         </TABLE>
     </DIV>
     
-    <DIV class='menucontainer' id='charactercargo'>
+    <DIV class='menucontainer' id='charactercargo' style='min-width: 100;'>
         <DIV class='menutitle'>Raktér</DIV>
         <DIV class='menuexit' id='settingsexit'><BUTTON onclick='document.getElementById("charactercargo").style.display = "none";'>X</BUTTON></DIV>
-        <TABLE id='cargotable' class='infotable'>
-        
+        <TABLE class='infotable' style='font-size: 20; border: 1px solid;'>
+            <TR>
+                <TD style='text-align: right;'>Kredit:</TD>
+                <TD style='text-align: left;' id='creditloot'></TD>
+                <TD style='text-align: right;'>Gyémánt:</TD>
+                <TD style='text-align: left;' id='diamondloot'></TD>
+            </TR>
         </TABLE>
+        <TABLE id='cargotable' class='infotable'></TABLE>
     </DIV>
     
     <SCRIPT>
@@ -534,6 +558,7 @@
                     
                     characterdisplayset(character.charid);
                 }
+                enemyOrderSet();
             }
             catch(err)
             {
@@ -740,6 +765,9 @@
                     autoPlay("stop");
                     document.getElementById("charactercargo").style.display = "block";
                     
+                    document.getElementById("creditloot").innerHTML = gameinfo.temp.creditLoot;
+                    document.getElementById("diamondloot").innerHTML = gameinfo.temp.diamondLoot;
+                    
                     var container = document.getElementById("cargotable");
                         container.innerHTML = "";
                     var cargos = gameinfo.characters[sessionStorage.charid].cargo;
@@ -789,7 +817,7 @@
                         var row = document.createElement("TR");
                             row.className = "inforow";
                                 var nameCell = document.createElement("TD");
-                                    var name = (gamedata.items[cargo.itemid]) ? gamedata.items[itemid].name : gamedata.abilities[cargo.itemid].name;
+                                    var name = (gamedata.items[cargo.itemid]) ? gamedata.items[cargo.itemid].name : gamedata.abilities[cargo.itemid].name;
                                     nameCell.innerHTML = name;
                                     nameCell.style.textAlign = "right";
                             row.appendChild(nameCell);

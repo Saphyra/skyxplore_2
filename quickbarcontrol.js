@@ -325,3 +325,38 @@ function quickBarControl(type, data)
             alert(arguments.callee.name + err.name + ": " + err.message);
         }
     }
+    
+function playerDead()
+//Megjeleníti a csata átugrásáért felelős gombot
+{
+    try
+    {
+        var container = document.getElementById("playership");
+            var div = document.createElement("DIV");
+                div.innerHTML = "Meghaltál.";
+                div.style.fontSize = 30;
+        container.appendChild(div);
+            var button = document.createElement("BUTTON");
+                button.innerHTML = "Játék átugrása";
+                button.style.fontSize = 28;
+                button.addEventListener("click", function(){skipGame()});
+        container.appendChild(button);
+    }
+    catch(err)
+    {
+        alert(arguments.callee.name + err.name + ": " + err.message);
+    }
+}
+
+    function skipGame()
+    {
+        try
+        {
+            autoPlay("stop");
+            gameinfo.newRoundInterval = setInterval(function(){newround();}, 1);
+        }
+        catch(err)
+        {
+            alert(arguments.callee.name + err.name + ": " + err.message);
+        }
+    }

@@ -1,4 +1,44 @@
 function newround()
+{
+    try
+    {
+        charactersStep();
+        
+        var friend = 0;
+        var enemy = 0;
+        for(var x in gameinfo.characters)
+        {
+            if(gameinfo.characters[x].place == "space" && gameinfo.characters[x].alliance == "friend") friend += 1;
+            else if(gameinfo.characters[x].place == "space" && gameinfo.characters[x].alliance == "enemy") enemy += 1;
+            characterdisplayset(x);
+        }
+        
+        if(!friend || !enemy)
+        {
+            autoPlay("stop");
+            
+            if(!friend) var victory = 0;
+            else if(!enemy) var victory = 1;
+            
+            endGame(victory);
+            delete sessionStorage.game;
+            return;
+        }
+        else
+        {
+            sessionStorage.game = JSON.stringify(gameinfo);
+        }
+        
+        specialBarDisplay();
+        enemyOrderSet();
+    }
+    catch(err)
+    {
+        alert(arguments.callee.name + err.name + ": " + err.message);
+    }
+}
+
+function charactersStep()
 //Új kör
 {
     try
@@ -21,15 +61,6 @@ function newround()
             gameinfo.temp.activeExtra[character.charid] = [];
         }
         
-        var friend = 0;
-        var enemy = 0;
-        for(var x in gameinfo.characters)
-        {
-            if(gameinfo.characters[x].place == "space" && gameinfo.characters[x].alliance == "friend") friend += 1;
-            else if(gameinfo.characters[x].place == "space" && gameinfo.characters[x].alliance == "enemy") enemy += 1;
-            characterdisplayset(x);
-        }
-        
         var alliances = ["friend", "enemy"];
         var abilities = ["pdma1", "mfaa1"];
         for(var x in alliances)
@@ -40,13 +71,7 @@ function newround()
             }
         }
         
-        if(!friend || !enemy)
-        {
-            autoPlay("stop");
-        }
         
-        specialBarDisplay();
-        enemyOrderSet();
     }
     catch(err)
     {

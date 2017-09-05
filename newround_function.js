@@ -721,6 +721,7 @@ function attack(character)
             {
                 try
                 {
+                    if(character.charid == sessionStorage.charid) playerDead();
                     character.place = "dead";
                     for(var x in gameinfo.characters)
                     {
