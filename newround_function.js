@@ -97,7 +97,7 @@ function targetCharacter(character)
             if(character.extras.clo01.actualactive) attackValue += rand(0, 500);
             if(gameinfo.characters[control.targettry].extras.clo01.actualactive) attackValue -= rand(0, 500);
             
-            if(attackValue > 1500)
+            if(attackValue > 1200)
             {
                 control.target = control.targettry;
                 control.targettry = null;

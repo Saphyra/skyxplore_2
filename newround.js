@@ -70,7 +70,7 @@ function charactersStep()
                 if(gameinfo.temp.globalAbilities[alliances[x]][abilities[y]].actualactive) gameinfo.temp.globalAbilities[alliances[x]][abilities[y]].actualactive -= 1;
             }
         }
-        
+        gameinfo.temp.rounds++;
         
     }
     catch(err)

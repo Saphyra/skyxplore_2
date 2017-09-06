@@ -12,6 +12,11 @@ function endGame(victory)
             
             container.appendChild(headerCreate(victory));
             container.appendChild(buttonCreate());
+            
+            var ammoContainer = document.createElement("DIV");
+                ammoContainer.id = "ammocontainer";
+            container.appendChild(ammoContainer);
+            
             container.appendChild(lootTableCreate());
             
     }
@@ -30,7 +35,9 @@ function endGame(victory)
                 div.style.textAlign = "center";
                 div.style.fontSize = "40";
                 div.style.borderBottom = "5px ridge";
-                div.innerHTML = (victory) ? "Győzelem!" : "Vereség.";
+                var text = (victory) ? "Győzelem!" : "Vereség.";
+                    text += " (" + gameinfo.temp.rounds + " kör)";
+                div.innerHTML = text;
         }
         catch(err)
         {
@@ -56,6 +63,12 @@ function endGame(victory)
                     backButton.style.fontSize = 36;
                     backButton.style.marginRight = "2em";
             div.appendChild(backButton);
+                var ammoButton = document.createElement("BUTTON");
+                    ammoButton.innerHTML = "Lőszerek mutatása";
+                    ammoButton.style.fontSize = 36;
+                    ammoButton.style.marginRight = "2em";
+                    ammoButton.addEventListener("click", function(){ammoStorageLoad()});
+            div.appendChild(ammoButton);
                 var againButton = document.createElement("BUTTON");
                     againButton.innerHTML = "Új játék";
                     againButton.addEventListener("click", function(){window.location.href = "launch.html"});
@@ -81,7 +94,6 @@ function endGame(victory)
                 table.style.margin = "auto";
                 table.style.fontSize = "24";
                 table.style.minWidth = "50%";
-                table.border = 1;
                 table.style.marginTop = "1em";
                 
                 var titleRow = document.createElement("TR");
@@ -138,6 +150,7 @@ function endGame(victory)
             try
             {
                 var row = document.createElement("TR");
+                    row.className = "inforow";
                     var nameCell = document.createElement("TD");
                         var name = (gamedata.items[cargo.itemid]) ? gamedata.items[cargo.itemid].name : gamedata.abilities[cargo.itemid].name;
                         nameCell.innerHTML = name;
@@ -193,6 +206,44 @@ function endGame(victory)
             }
             
             save();
+        }
+        catch(err)
+        {
+            alert(arguments.callee.name + err.name + ": " + err.message);
+        }
+    }
+    
+    function ammoStorageLoad()
+    {
+        try
+        {
+            var container = document.getElementById("ammocontainer");
+                container.innerHTML = "";
+                
+                var table = document.createElement("TABLE");
+                    table.style.margin = "auto";
+                    table.style.fontSize = "24";
+                    table.style.minWidth = "50%";
+                    table.style.marginTop = "1em";
+                    
+                    var titleRow = document.createElement("TR");
+                        var titleNameCell = document.createElement("TD");
+                            titleNameCell.innerHTML = "Lőszer";
+                            titleNameCell.style.textAlign = "center";
+                    titleRow.appendChild(titleNameCell);
+                        var titleAmountCell = document.createElement("TD");
+                            titleAmountCell.innerHTML = "Mennyiség";
+                            titleAmountCell.style.textAlign = "center";
+                    titleRow.appendChild(titleAmountCell);
+                table.appendChild(titleRow);
+            container.appendChild(table);
+                
+                var ammos = gameinfo.characters[sessionStorage.charid].ammo;
+                
+                for(var x in ammos)
+                {
+                    if(ammos[x].amount) table.appendChild(ammosRowCreate(ammos[x]));
+                }
         }
         catch(err)
         {

@@ -3,7 +3,7 @@ function loot(character)
 {
     try
     {
-        var lootNum = character.ship.level * 10 * rand(1, 3);
+        var lootNum = character.ship.level * rand(5, 15) * rand(1, 3);
         
         var characterLists = setCharacterList(character);
         
@@ -229,7 +229,7 @@ function loot(character)
         {
             try
             {
-                reward.value = rand(1, 10);
+                reward.value = rand(1, 15);
                 var num = rand(0, 3);
                 switch(num)
                 {

@@ -233,7 +233,7 @@
                     div.appendChild(namediv);
                         var bardiv = document.createElement("DIV");
                             bardiv.className = "bardiv";
-                            bardiv.style.backgroundSize = item.parts / item.construction * 100 + "% 20";
+                            bardiv.style.backgroundSize = item.parts / item.construction * 100 + "% 20px";
                             var bartext = document.createTextNode(Math.floor(item.parts / item.construction * 100) + "% (" + item.parts + " / " + item.construction + " rész)");
                         bardiv.appendChild(bartext);
                     div.appendChild(bardiv);

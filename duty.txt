@@ -11,6 +11,3 @@
             képességek leírása
             tárgyak
     -->
-
-    mfap
-skip
