@@ -1128,7 +1128,7 @@
                     div.appendChild(document.createTextNode("Ágyú: " + itemdata.cannonslot + " (" + itemdata.maxcannonlevel + ") - Rakétakilövő: " + itemdata.rocketlauncherslot + " (" + itemdata.maxrocketlauncherlevel + ") - Gépágyú: " + itemdata.rifleslot + " (" + itemdata.maxriflelevel + ")"));
                     div.appendChild(document.createElement("BR"));
                     
-                    div.appendChild(document.createTextNode("Generátor: " + itemdata.maxgeneratorlevel + " (" + itemdata.maxgeneratorlevel + ") - Akkumulátor: " + itemdata.batteryslot + " (" + itemdata.maxbatterylevel + ")"));
+                    div.appendChild(document.createTextNode("Generátor: " + itemdata.generatorslot + " (" + itemdata.maxgeneratorlevel + ") - Akkumulátor: " + itemdata.batteryslot + " (" + itemdata.maxbatterylevel + ")"));
                     div.appendChild(document.createElement("BR"));
                     
                     div.appendChild(document.createTextNode("Hangár: " + itemdata.hangarslot + " (" + itemdata.maxhangarlevel + ") - Max. raj szint: " + itemdata.maxsquadronlevel));

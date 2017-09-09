@@ -370,6 +370,7 @@
                         for(x in equipment)
                         {
                             item = equipment[x];
+                            if(!item) continue;
                             if(item.place == id)
                             {
                                 itemdata = gamedata.items[item.itemid];
@@ -408,7 +409,8 @@
                             var shipdata;
                             if(id == 0) shipdata = null;
                             else if(id == "ship") shipdata = chardata.characterdata.ship;
-                            else shipdata = chardata.squadrons[id].squadrondata;
+                            else if(chardata.squadrons[id]) shipdata = chardata.squadrons[id].squadrondata;
+                            else return;
                         }
                         catch(err)
                         {
@@ -439,6 +441,7 @@
                         for(x in equipment)
                         {
                             item = equipment[x];
+                            if(!item) continue;
                             if(item.place == id)
                             {
                                 itemdata = gamedata.items[item.itemid];
@@ -754,6 +757,7 @@
                     for(x in items)
                     {
                         item = items[x];
+                        if(!item) continue;
                         itemdata = gamedata.items[item.itemid];
                         
                         if(item.place == "hangar")
@@ -994,6 +998,7 @@
                                     for(x in equipment)
                                     {
                                         item = equipment[x];
+                                        if(!item) continue;
                                         itemdata = gamedata.items[item.itemid];
                                         if(item.place == "ship" && itemdata.slot == "hangar")
                                         {
@@ -1137,6 +1142,7 @@
                     chardata.characterdata.ship = new charactership(itemid);
                     chardata.company = chardata.characterdata.ship.company;
                     chardata.shipid = itemid;
+                    chardata.level = chardata.characterdata.ship.level;
                     
                     save();
                     //characterload();
@@ -1180,6 +1186,17 @@
                         }
                         else
                         {
+                            var equipments = chardata.characterdata.equipment;
+                            for(var x in equipments)
+                            {
+                                var item = equipments[x];
+                                if(item.itemid == itemid && item.place == "hangar")
+                                {
+                                    item.place = "ship";
+                                    break;
+                                }
+                            }
+                            save();
                             characterload();
                         }
                         
@@ -1249,7 +1266,8 @@
                             
                             if(item.itemid == itemid && item.place == "hangar" && amount)
                             {
-                                delete equipment[x];
+                                //delete equipment[x];
+                                equipment.splice(x, 1);
                                 amount--;
                                 chardata.credit += itemdata.sellprice;
                             }

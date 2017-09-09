@@ -97,6 +97,7 @@ function endGame(victory)
                 table.style.marginTop = "1em";
                 
                 var titleRow = document.createElement("TR");
+                    titleRow.className = "inforow";
                     var titleNameCell = document.createElement("TD");
                         titleNameCell.innerHTML = "Tárgy";
                         titleNameCell.style.textAlign = "center";
@@ -108,6 +109,7 @@ function endGame(victory)
             table.appendChild(titleRow);
             
                 var creditLootRow = document.createElement("TR");
+                    creditLootRow.className = "inforow";
                     var creditLootNameCell = document.createElement("TD");
                         creditLootNameCell.innerHTML = "Kredit";
                         creditLootNameCell.style.textAlign = "right";
@@ -118,6 +120,7 @@ function endGame(victory)
             table.appendChild(creditLootRow);
             
                 var diamondLootRow = document.createElement("TR");
+                    diamondLootRow.className = "inforow";
                     var diamondLootNameCell = document.createElement("TD");
                         diamondLootNameCell.innerHTML = "Gyémánt";
                         diamondLootNameCell.style.textAlign = "right";
@@ -227,6 +230,7 @@ function endGame(victory)
                     table.style.marginTop = "1em";
                     
                     var titleRow = document.createElement("TR");
+                        titleRow.className = "inforow"
                         var titleNameCell = document.createElement("TD");
                             titleNameCell.innerHTML = "Lőszer";
                             titleNameCell.style.textAlign = "center";

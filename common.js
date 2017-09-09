@@ -155,19 +155,10 @@ function save()
     try
     {
         var request = new XMLHttpRequest();
-            request.open("POST", "save.php", 1);
+            request.open("POST", "save.php", 0);
             request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             request.send("data=" + JSON.stringify(chardata));
-            request.onreadystatechange = function()
-            {
-                if(request.readyState == 4)
-                {
-                    if(request.status != 200 || request.responseText != 1)
-                    {
-                        alert("Error: " + request.responseText);
-                    }
-                }
-            }
+            if(request.responseText != 1) alert("Error: " + request.responseText);
             
         var c = document.getElementById("description");
         if(c) c.innerHTML = "";

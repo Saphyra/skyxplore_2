@@ -206,7 +206,7 @@ function quickBarControl(type, data)
                                 div.style.borderColor = "black";
                             break;
                             case 2:
-                                span.innerHTML = " Nincs elég energia.";
+                                span.innerHTML = " Nincs elég energia. (Energiahasználat: " + ability.energyusage + ")";
                                 div.style.borderColor = "black";
                             break;
                             case 3:
@@ -287,12 +287,16 @@ function quickBarControl(type, data)
                                 div.addEventListener("click", function(){itemUse(equipment.itemid); closeBar()});
                                 span.innerHTML = " (Energiahasználat: " + equipment.energyusage + " - Használható: " + Math.floor(gameinfo.characters[sessionStorage.charid].ammo[equipment.ammotype].amount / equipment.ammousage) + ")";
                             break;
+                            case 0.5:
+                                div.style.borderColor = "black";
+                                span.innerHTML = "Blokkolva - " + gameinfo.characters[sessionStorage.charid].ability.gaaa2.actualactive;
+                            break;
                             case 1:
                                 span.innerHTML = " Tölt: " + equipment.actualreload;
                                 div.style.borderColor = "black";
                             break;
                             case 2:
-                                span.innerHTML = " Nincs elég energia.";
+                                span.innerHTML = " Nincs elég energia. (Energiahasználat: " + equipment.energyusage + ")";
                                 div.style.borderColor = "black";
                             break;
                             case 3:
@@ -353,7 +357,7 @@ function playerDead()
         try
         {
             autoPlay("stop");
-            gameinfo.newRoundInterval = setInterval(function(){newround();}, 1);
+            gameinfo.newRoundInterval = setInterval(function(){newround();}, 100);
         }
         catch(err)
         {

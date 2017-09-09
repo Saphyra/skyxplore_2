@@ -478,6 +478,7 @@
                     for(x in equipments)
                     {
                         equipment = equipments[x];
+                        if(!equipment) continue;
                         if(equipment.place == "ship")
                         {
                             equipmentdata = gamedata.items[equipment.itemid];
@@ -577,6 +578,7 @@
                         var itemdata, place;
                         for(x in equipment)
                         {
+                            if(!equipment[x]) continue;
                             place = equipment[x].place;
                             if(place != "hangar" && place != "ship")
                             {

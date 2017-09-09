@@ -44,7 +44,7 @@ function characterdisplayset(charid)
         
         if(character.type == "squadron" && character.control.callbackcount)
         {
-            document.getElementById("callback" + character.charid).innerHTML = "Visszatér: " + (3 - character.control.callbackcount);
+            document.getElementById("callback" + character.charid).innerHTML = "Visszatér: " + (character.control.callbackcount);
         }
         else if(character.type == "squadron" && character.place != "space" && character.place != "dead")
         {
@@ -458,7 +458,10 @@ function characterdisplayset(charid)
             character.ship.actualammostorage = 0;
             if(character.ammo)
             {
-                for(var x in character.ammo) character.ship.actualammostorage += character.ammo[x].amount;
+                for(var x in character.ammo)
+                {
+                    character.ship.actualammostorage += character.ammo[x].amount;
+                }
             }
             
         }

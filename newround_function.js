@@ -905,7 +905,7 @@ function reCallSet(character)
         if(reCallValueSet(character) || character.control.callbackcount)
         {
             character.control.callbackcount += 1;
-            if(character.control.dmgreceived > 2) character.control.callbackcount += 2;
+            if(character.control.dmgreceived > 2) character.control.callbackcount += 1;
         }
         else
         {
@@ -971,7 +971,7 @@ function reCall(character)
 {
     try
     {
-        if(character.control.callbackcount > 2)
+        if(character.control.callbackcount > 4)
         {
             var owner = gameinfo.characters[character.owner];
             
@@ -1225,6 +1225,7 @@ function squadronAttack(character)
                     {
                         if(character.control.target == null) return;
                         var weapon = weapons.cannon[x];
+                        if(character.ship.actualammostorage < weapon.ammousage) continue;
                         
                         switch(weapon.itemtype)
                         {

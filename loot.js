@@ -145,7 +145,7 @@ function loot(character)
                     partRewardSet(level, reward);
                 break;
                 case "ammo":
-                    var ammoReward = ammoRewardSet();
+                    var ammoReward = ammoRewardSet(level);
                     reward.id.itemid = ammoReward.itemid;
                     reward.value = ammoReward.value;
                 break;
@@ -161,7 +161,7 @@ function loot(character)
         }
     }
     
-        function ammoRewardSet()
+        function ammoRewardSet(level)
         //Lőszer zsákmányolása
         {
             try
@@ -172,7 +172,7 @@ function loot(character)
                 {
                     var items = gamedata.search({itemtype: "specialammo"});
                     reward.itemid = items[rand(0, items.length - 1)];
-                    reward.value = rand(1, 2);
+                    reward.value = rand(1, level * 2);
                 }
                 else
                 {

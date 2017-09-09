@@ -110,17 +110,17 @@ function activateSet(character)
             break;
         }
         
-        if(attackers && shipStatus < 50 && !character.extras.edi01.actualreload) activeArr.push("edi01"); //Elektronikus zavaróimpulzus
-        if(attackers && shipStatus < 70 && !character.extras.efi01.actualreload) activeArr.push("efi01"); //Energiamező
+        if(character.extras.edi01.equipped && attackers && shipStatus < 50 && !character.extras.edi01.actualreload) activeArr.push("edi01"); //Elektronikus zavaróimpulzus
+        if(character.extras.efi01.equipped && attackers && shipStatus < 70 && !character.extras.efi01.actualreload) activeArr.push("efi01"); //Energiamező
         if(hullStatus < 70) activeArr.push("rep"); //Javító robot
-        if(energyStatus < 70 && !character.extras.bol01.actualreload && character.equipment.battery) activeArr.push("bol01"); //Akkumulátor túltöltés
-        if(attackers && !character.extras.mac01.actualreload) activeArr.push("mac01"); //Mágneses köd
-        if(attackerSquadrons && !character.extras.ser01.actualreload && !character.extras.efi01.actualactive) activeArr.push("ser01"); //Rajzavaró elektronsugár
-        if(attackers && !character.extras.mdl01.actualreload) activeArr.push("mdl01"); //Rakétaelhárító lézer
-        if(character.control.target && !character.extras.pdu01.actualreload) activeArr.push("pdu01"); //Plazma Zavaró Egység
-        if(attackers && shieldStatus < 70 && !character.extras.sre01.actualreload) activeArr.push("sre01"); //Pajzsregeneráció Növelés
-        if(!character.extras.clo01.actualreload && !character.extras.clo01.actualreload) activeArr.push("clo01") //Álcázó berendezés
-        if(negativeEffects(character) && !character.extras.abs01.actualreload && activeArr.length) activeArr.push("abs01"); //Rendszertisztítás
+        if(character.extras.bol01.equipped && energyStatus < 70 && !character.extras.bol01.actualreload && character.equipment.battery) activeArr.push("bol01"); //Akkumulátor túltöltés
+        if(character.extras.mac01.equipped && attackers && !character.extras.mac01.actualreload) activeArr.push("mac01"); //Mágneses köd
+        if(character.extras.ser01.equipped && attackerSquadrons && !character.extras.ser01.actualreload && !character.extras.efi01.actualactive) activeArr.push("ser01"); //Rajzavaró elektronsugár
+        if(character.extras.mdl01.equipped && attackers && !character.extras.mdl01.actualreload) activeArr.push("mdl01"); //Rakétaelhárító lézer
+        if(character.extras.pdu01.equipped && character.control.target && !character.extras.pdu01.actualreload) activeArr.push("pdu01"); //Plazma Zavaró Egység
+        if(character.extras.sre01.equipped && attackers && shieldStatus < 70 && !character.extras.sre01.actualreload) activeArr.push("sre01"); //Pajzsregeneráció Növelés
+        if(character.extras.clo01.equipped && !character.extras.clo01.actualreload && !character.extras.clo01.actualreload) activeArr.push("clo01") //Álcázó berendezés
+        if(character.extras.abs01.equipped && negativeEffects(character) && !character.extras.abs01.actualreload && activeArr.length) activeArr.push("abs01"); //Rendszertisztítás
     }
     catch(err)
     {
@@ -479,7 +479,7 @@ function activateSpecial(character)
                 specialData.actualreload = specialData.reload;
                 specialData.actualactive = specialData.active;
             }
-            else if(itemid == "rep01" || itemid == "rep02" || itemid == "rep03")
+            else if(itemid == "rep01" || itemid == "rep02" || itemid == "rep03" || itemid == "rep")
             {
                 if(specialData.actualreload) continue;
                 if(!character.ammo[specialData.ammotype] || character.ammo[specialData.ammotype].amount < specialData.ammousage) continue;
