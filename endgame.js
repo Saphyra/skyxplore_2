@@ -243,10 +243,15 @@ function endGame(victory)
             container.appendChild(table);
                 
                 var ammos = gameinfo.characters[sessionStorage.charid].ammo;
+                    var ammoIds = [];
+                    for(var x in ammos) ammoIds.push(x);
+                    ammoIds.sort();
+                    
+                    
                 
-                for(var x in ammos)
+                for(var x in ammoIds)
                 {
-                    if(ammos[x].amount) table.appendChild(ammosRowCreate(ammos[x]));
+                    if(ammos[ammoIds[x]].amount) table.appendChild(ammosRowCreate(ammos[ammoIds[x]]));
                 }
         }
         catch(err)

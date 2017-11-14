@@ -195,8 +195,10 @@ function loot(character)
                     else if(levelRate <= 5) level = 2;
                     else level = 3;
                     
+                    var max = (itemtype == "rocket" || itemtype == "sabrocket") ? 5 : 20;
+                    
                     reward.itemid = gamedata.search({itemtype: itemtype, level: level});
-                    reward.value = rand(1, 20);
+                    reward.value = rand(1, max);
                 }
             }
             catch(err)

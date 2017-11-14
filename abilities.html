@@ -205,7 +205,8 @@
                         var ability = chardata.characterdata.abilities[abilitydata.itemid];
                         var partsneed = (ability.level + 1) * (ability.level + 1) * abilitydata.upgradecost;
                         var partsleft = partsneed - ability.parts
-                        var upgradecost = partsleft * 10;
+                        var upgradecost = partsleft * 10 + 1000;
+                        if(partsleft < 0) upgradecost = 0 + 1000;
                         
                         var namediv = document.createElement("DIV");
                             namediv.className = "itemname";

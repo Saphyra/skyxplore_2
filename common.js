@@ -109,6 +109,9 @@ function characterload()
             request.send("charid=" + sessionStorage.charid);
             
             window.chardata = JSON.parse(request.responseText);
+            
+            chardata.characterdata.ammo.sort(function(a, b){if(a.itemid < b.itemid) return -1; else if(a.itemid > b.itemid) return 1; else return 0});
+            chardata.characterdata.equipment.sort(function(a, b){if(a.itemid < b.itemid) return -1; else if(a.itemid > b.itemid) return 1; else return 0});
     }
     catch(err)
     {
